@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.util.HashMap;
 
+import com.pathplanner.lib.util.PIDConstants;
+
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -75,9 +77,12 @@ public final class Constants {
     public static final double kRadiusFromCenterToSwerves = 1.0;
 
     // Last years values
-    public static final double kRadiusFromCenterToSwerveDrives = 0;
+    
     public static final double kDistanceBetweenCentersOfRightAndLeftWheels = .60325;//0.6096;
     public static final double kDistanceBetweenCentersOfFrontAndBackWheels = .60325;//0.6096;
+    public static final double kRadiusFromCenterToFarthestSwerveModule = Math.sqrt(((kDistanceBetweenCentersOfRightAndLeftWheels * kDistanceBetweenCentersOfRightAndLeftWheels) 
+    + (kDistanceBetweenCentersOfFrontAndBackWheels * kDistanceBetweenCentersOfFrontAndBackWheels)));
+
 
     // These are 100% Good
     public static final SwerveDriveKinematics kDriveKinematics =
@@ -168,8 +173,10 @@ public final class Constants {
     public static final double kMaxAutonSpeedInMetersPerSecond = 4.1;
     public static final double kMaxAutonAccelerationInMetersPerSecondSqr = 4.1;
 
-    // These need to be changed to have something to do with pi
     public static final double kMaxAutonAngulerSpeedInMetersPerSecond = 4.1;
     public static final double kMaxAutonAngulerAccelerationInMetersPerSecondSqr = 4.1;
+
+    public static final PIDConstants kTranslationAutoPID = new PIDConstants(5.0, 0.0, 0.0);
+    public static final PIDConstants kRotationAutoPID = new PIDConstants(5.0, 0.0, 0.0);
   }
 }

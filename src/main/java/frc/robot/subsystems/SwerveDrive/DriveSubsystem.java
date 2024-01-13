@@ -1,5 +1,7 @@
 package frc.robot.subsystems.SwerveDrive;
 
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 import org.photonvision.PhotonCamera;
@@ -12,7 +14,9 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.REVLibError;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -20,12 +24,19 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.utils.InTeleop;
+import frc.robot.utils.LimelightUtil;
+import frc.robot.utils.VisionPose;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -37,10 +48,14 @@ public class DriveSubsystem extends SubsystemBase {
     private final SwerveModule backRightSwerveModule;
 
     private Pigeon2 m_gyro;
-    private final PoseEstimatorSubsystem m_poseEstimatorSubsystem;
     //private Pose2d startingPosition = new Pose2d(0, 0, new Rotation2d(0));
 
     private final ProfiledPIDController turningPIDController; 
+
+    private final SwerveDrivePoseEstimator poseEstimator;
+    private final Pose2d startingPose = new Pose2d();
+
+    private final Field2d field2d = new Field2d();
 
     public DriveSubsystem() {
         this.frontLeftSwerveModule =  new SwerveModule(
@@ -73,26 +88,31 @@ public class DriveSubsystem extends SubsystemBase {
         this.turningPIDController.setIntegratorRange(-0.3, 0.3);
         this.m_gyro.reset();  
 
-        this.m_poseEstimatorSubsystem = new PoseEstimatorSubsystem(new PhotonCamera(VisionConstants.cameraName), this);
-/*
+        this.poseEstimator = new SwerveDrivePoseEstimator(SwerveDriveConstants.kDriveKinematics, this.m_gyro.getRotation2d(), 
+        getModulePositions(), startingPose);
+
+        ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
+        visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
+        visionTab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
+
          AutoBuilder.configureHolonomic(
-                this::getPose, // Robot pose supplier
-                this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                this.poseEstimator::getEstimatedPosition, // Robot pose supplier
+                this::resetRobotPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-                        4.5, // Max module speed, in m/s
-                        0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                        AutoConstants.kTranslationAutoPID, // Translation PID constants
+                        AutoConstants.kRotationAutoPID, // Rotation PID constants
+                        AutoConstants.kMaxAutonSpeedInMetersPerSecond , // Max module speed, in m/s
+                        SwerveDriveConstants.kRadiusFromCenterToFarthestSwerveModule, // Drive base radius in meters. Distance from robot center to furthest module.
+                        new ReplanningConfig(true, true) // Default path replanning config. See the API for the options here
                 ),
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red alliance
                     // This will flip the path being followed to the red side of the field.
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-                    var alliance = DriverStation.getAlliance();
+                    Optional<Alliance> alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
                         return alliance.get() == DriverStation.Alliance.Red;
                     }
@@ -100,12 +120,14 @@ public class DriveSubsystem extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
         );
- */
+ 
         SmartDashboard.updateValues();    
     }
 
   @Override
   public void periodic() {
+    updateOdometry();
+
     if (desiredChassisSpeeds != null) {  
           SwerveModuleState[] desiredStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(desiredChassisSpeeds);   
       // If we're not trying to move, we lock the angles of the wheels
@@ -125,6 +147,25 @@ public class DriveSubsystem extends SubsystemBase {
     updateDashboard();
   }
 
+ private void updateOdometry() {
+    this.poseEstimator.update(this.m_gyro.getRotation2d(), getModulePositions());
+    VisionPose estimatedPose = LimelightUtil.getBotpose(DriverStation.getAlliance());
+    Pose2d currentEstimatedPose = this.poseEstimator.getEstimatedPosition();
+
+    boolean withInOneMeterX = ((Math.abs(currentEstimatedPose.getX()) + 1) > estimatedPose.getPose().getX() &&
+     (Math.abs(currentEstimatedPose.getX()) - 1) < estimatedPose.getPose().getX());
+
+    boolean withInOneMeterY = ((Math.abs(currentEstimatedPose.getY()) + 1) > estimatedPose.getPose().getY() &&
+     (Math.abs(currentEstimatedPose.getY()) - 1) < estimatedPose.getPose().getY());
+
+    boolean withInOneMeter = withInOneMeterX && withInOneMeterY;
+    
+    if(estimatedPose.isValidTarget() && withInOneMeter) {
+      this.poseEstimator.addVisionMeasurement(estimatedPose.getPose(), estimatedPose.getTimeStamp());
+    }
+    this.field2d.setRobotPose(this.poseEstimator.getEstimatedPosition());
+  }
+
   private void updateDashboard() {
       // Real
       SmartDashboard.putNumber("FL MPS", this.frontLeftSwerveModule.getDriveMotorSpeedInMetersPerSecond());
@@ -140,10 +181,6 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("BR Angle", this.backRightSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
 
       SmartDashboard.putNumber("Robot Heading in Degrees", this.m_gyro.getAngle()); 
-  }
-
-  public PoseEstimatorSubsystem getPoseEstimatorSubsystem() {
-    return this.m_poseEstimatorSubsystem;
   }
 
   public SwerveModulePosition[] getModulePositions() {
@@ -276,6 +313,22 @@ public class DriveSubsystem extends SubsystemBase {
     this.frontRightSwerveModule.setDesiredState(m_frontRightLockupState);
     this.backLeftSwerveModule.setDesiredState(m_rearLeftLockupState);
     this.backRightSwerveModule.setDesiredState(m_rearRightLockupState);
+  }
+
+  private String getFomattedPose() {
+    Pose2d pose = this.poseEstimator.getEstimatedPosition();
+    return String.format("(%.2f, %.2f) %.2f degrees",
+        pose.getX(),
+        pose.getY(),
+        pose.getRotation().getDegrees());
+  }
+
+  public Pose2d getRobotPose() {
+    return this.poseEstimator.getEstimatedPosition();
+  }
+
+  public void resetRobotPose(Pose2d newPose) {
+    this.poseEstimator.resetPosition(newPose.getRotation(), getModulePositions(), newPose);
   }
 
 

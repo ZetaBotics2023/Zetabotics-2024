@@ -60,7 +60,7 @@ public class FieldOrientedDriveCommand extends Command {
             this.translationXSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond,
             this.translationYSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond,
             this.rotationSupplier.getAsDouble() * SwerveDriveConstants.kMaxRotationAnglePerSecond, 
-            this.m_driveSubsystem.getPoseEstimatorSubsystem().getCurrentPose().getRotation()));
+            this.m_driveSubsystem.getRobotPose().getRotation()));
   }
 
   @Override
