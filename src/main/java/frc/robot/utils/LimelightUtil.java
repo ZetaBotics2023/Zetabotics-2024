@@ -6,14 +6,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.Optional;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTableValue;
 
  public class LimelightUtil {
     private static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -37,7 +36,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
         SmartDashboard.putNumber("Botpose Y", position.getY());
         SmartDashboard.putNumber("Botpose Z", position.getZ());
         SmartDashboard.putNumber("Botpose Rotation", position.getRotation().getAngle());
-        SmartDashboard.putNumber("Letency", latency);
+        SmartDashboard.putNumber("Latency", latency);
         SmartDashboard.putBoolean("Valid Target", validTarget);
 
         return new VisionPose(position, latency, validTarget);

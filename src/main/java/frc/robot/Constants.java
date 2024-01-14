@@ -118,7 +118,7 @@ public final class Constants {
     public static final double kIModuleTurningController = 0;
     public static final double kDModuleTurningController = 0;
     public static final double kFModuleTurningController = 0;
-    public static final double kIZoneModuleTurningController = 0.01;
+    public static final double kIZoneModuleTurningController = 0.5/360; // .5 degrees converted to rotations
   
     // Updated for this year
     public static final double kAbsoluteTurningEncoderCPR = 4096.0;
@@ -164,7 +164,7 @@ public final class Constants {
     public static final String cameraName = "photonvision";
     public static final Transform3d robotToCam = new Transform3d(new Translation3d(.26, .2, 0), new Rotation3d()); 
     //public static final Transform3d ROBOT_TO_CAMERA = robotToCam.inverse();
-    
+    public static final double[] cameraPosition = new double[]{0.0, 0.0, 0.0};
   };
 
   public static final class AutoConstants {
@@ -178,5 +178,41 @@ public final class Constants {
 
     public static final PIDConstants kTranslationAutoPID = new PIDConstants(5.0, 0.0, 0.0);
     public static final PIDConstants kRotationAutoPID = new PIDConstants(5.0, 0.0, 0.0);
+  }
+  public static final class IntakeConstants {
+    public static final int kPivotMotorControllerID = 14; //TODO: Change this to the real one
+    public static final int kIntakeMotorControllerID = 15; //TODO: This one too
+
+
+    public static final double kPivotGearRatio = 100.0/1.0;
+    public static final double kIntakeGearRatio = 3.0/1.0;
+
+    //TODO: Tune me!
+    public static final double kPPivotController = 0.0003;
+    public static final double kIPivotController = .00000;
+    public static final double kDPivotController = 0.0;
+    public static final double kFPivotController = 0.0;
+    public static final double kIZonePivotController = 0.5/360.0; // .5 degrees in rotations
+
+    public static final double kPIntakeController = 0.0003;
+    public static final double kIIntakeController = .00000;
+    public static final double kDIntakeController = 0.0;
+    public static final double kFIntakeController = 0.0;
+    public static final double kIZoneIntakeController = 0.0;
+
+    // Rotation constants
+    public static final double kGroundPickupPivotRotationDegrees = 0.0;
+    public static final double kGroundPickupIntakeRPM = 0.0;
+
+
+    public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
+    public static final double kHumanPlayerPickupIntakeRPM = 0.0;
+
+    public static final double kShootInAmpPivotRotationDegrees = 0.0;
+    public static final double kShootInAmpIntakeRPM = 0.0;
+
+    public static final double kPassIntoShooterPivotRotationDegrees = 0.0;
+    public static final double kPassIntoShooterIntakeRPM = 0.0;
+
   }
 }

@@ -1,28 +1,25 @@
 package frc.robot.subsystems.SwerveDrive;
 
 import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.stream.IntStream;
 
-import org.photonvision.PhotonCamera;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import com.revrobotics.REVLibError;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTableValue;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -30,11 +27,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveDriveConstants;
-import frc.robot.Constants.VisionConstants;
-import frc.robot.utils.InTeleop;
 import frc.robot.utils.LimelightUtil;
 import frc.robot.utils.VisionPose;
 
@@ -90,6 +85,11 @@ public class DriveSubsystem extends SubsystemBase {
 
         this.poseEstimator = new SwerveDrivePoseEstimator(SwerveDriveConstants.kDriveKinematics, this.m_gyro.getRotation2d(), 
         getModulePositions(), startingPose);
+
+        NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+
+        limelightTable.putValue("camerapose_robotspace_set", NetworkTableValue.makeDoubleArray(Constants.VisionConstants.cameraPosition));
+
 
         ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
         visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
@@ -152,11 +152,9 @@ public class DriveSubsystem extends SubsystemBase {
     VisionPose estimatedPose = LimelightUtil.getBotpose(DriverStation.getAlliance());
     Pose2d currentEstimatedPose = this.poseEstimator.getEstimatedPosition();
 
-    boolean withInOneMeterX = ((Math.abs(currentEstimatedPose.getX()) + 1) > estimatedPose.getPose().getX() &&
-     (Math.abs(currentEstimatedPose.getX()) - 1) < estimatedPose.getPose().getX());
+    boolean withInOneMeterX = Math.abs(currentEstimatedPose.getX() - estimatedPose.getPose().getX()) <= 1;
 
-    boolean withInOneMeterY = ((Math.abs(currentEstimatedPose.getY()) + 1) > estimatedPose.getPose().getY() &&
-     (Math.abs(currentEstimatedPose.getY()) - 1) < estimatedPose.getPose().getY());
+    boolean withInOneMeterY = Math.abs(currentEstimatedPose.getY() - estimatedPose.getPose().getY()) <= 1;
 
     boolean withInOneMeter = withInOneMeterX && withInOneMeterY;
     
