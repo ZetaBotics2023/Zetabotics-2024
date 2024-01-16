@@ -10,11 +10,11 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.DeprecatedSystems.PoseEstimatorSubsystemDeprecated;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.FollowAutonomousPath;
 import frc.robot.commands.LockSwerves;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.subsystems.SwerveDrive.PoseEstimatorSubsystem;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -23,6 +23,7 @@ import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -46,7 +47,7 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem;
   private final LockSwerves lockSwerves;
   private final FieldOrientedDriveCommand fieldOrientedDriveCommand;
-  private SendableChooser<Command> autoChooser;
+  private SendableChooser<Command> autonSelector;
 
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
 
@@ -66,26 +67,15 @@ public class RobotContainer {
 
    
     configureBindings();
-/* 
-    Supplier<Pose2d> currentPoseSupplier = () -> m_driveSubsystem.getCurrentPose();
-    Consumer<Pose2d> resetPoseConsumer = (Pose2d) -> poseEstimator.setCurrentPose(Pose2d);
-    Supplier<ChassisSpeeds> robotRelativeSpeedsSupplier = () -> m_driveSubsystem.getChassisSpeeds();
-    Consumer<ChassisSpeeds> robotRelativeSpeedsConsumer = (newChassisSpeeds) -> m_driveSubsystem.setModuleStates(SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(newChassisSpeeds));
-    AutoBuilder.configureHolonomic(currentPoseSupplier, resetPoseConsumer, robotRelativeSpeedsSupplier, robotRelativeSpeedsConsumer, null, m_driveSubsystem);
 
-
+    
     NamedCommands.registerCommands(Constants.AutoConstants.namedEventMap);
+    this.autonSelector = AutoBuilder.buildAutoChooser();
+    // Autos go here
+    //this.autonSelector.addOption("Example Auton", AutoBuilder.followPath(PathPlannerPath.fromPathFile("Example Path")));
 
-    this.autoChooser = AutoBuilder.buildAutoChooser();
-
-    this.autoChooser.addOption("Example Auton", FollowAutonomousPath.followPathCommand(poseEstimator, m_driveSubsystem, "benjaminsmom"));
-
-    // Another option that allows you to specify the default auto by its name
-    autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
-
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-    */
-  }
+    SmartDashboard.putData("Auton Selector", autonSelector);
+  } 
 
  
   private void configureBindings() {
@@ -95,7 +85,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return autonSelector.getSelected();
   }
 
   
@@ -111,6 +101,6 @@ public class RobotContainer {
   }
 
   public void onAllianceChanged(Alliance currentAlliance) {
-    this.m_driveSubsystem.getPoseEstimatorSubsystem().setAlliance(currentAlliance);
+
   }
 }

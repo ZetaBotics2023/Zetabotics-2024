@@ -1,4 +1,4 @@
-package frc.robot.subsystems.SwerveDrive;
+package frc.robot.DeprecatedSystems;
 
 import java.io.IOException;
 import java.lang.reflect.AnnotatedType;
@@ -27,11 +27,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveDriveConstants;
+import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.InTeleop;
 import frc.robot.Constants.FieldConstants;
 
 // We should probable swich this over to make use of WPILib SwerveDrive PoseEstimator and Limelight tag reading rather than photon vission
-public class PoseEstimatorSubsystem extends SubsystemBase {
+public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
 
   // Kalman Filter Configuration. These can be "tuned-to-taste" based on how much
   // you trust your various sensors. Smaller numbers will cause the filter to
@@ -66,7 +67,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private final ArrayList<Double> xValues = new ArrayList<Double>();
   private final ArrayList<Double> yValues = new ArrayList<Double>();
 
-  public PoseEstimatorSubsystem(PhotonCamera photonCamera, DriveSubsystem m_driveSubsystem) {
+  public PoseEstimatorSubsystemDeprecated(PhotonCamera photonCamera, DriveSubsystem m_driveSubsystem) {
     this.m_driveSubsystem = m_driveSubsystem;
     PhotonPoseEstimator photonPoseEstimator;
     //try {

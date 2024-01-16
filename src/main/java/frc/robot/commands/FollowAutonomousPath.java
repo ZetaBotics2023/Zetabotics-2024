@@ -35,13 +35,13 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.DeprecatedSystems.PoseEstimatorSubsystemDeprecated;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.subsystems.SwerveDrive.PoseEstimatorSubsystem;
 
 public class FollowAutonomousPath {
 
   // Assuming this is a method in your drive subsystem
-public static Command followPathCommand(PoseEstimatorSubsystem poseEstimatorSubsystem, DriveSubsystem driveSubsystem, String pathName){
+public static Command followPathCommand(PoseEstimatorSubsystemDeprecated poseEstimatorSubsystem, DriveSubsystem driveSubsystem, String pathName){
 
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
     // You must wrap the path following command in a FollowPathWithEvents command in order for event markers to work
