@@ -179,6 +179,10 @@ public final class Constants {
     public static final PIDConstants kTranslationAutoPID = new PIDConstants(5.0, 0.0, 0.0);
     public static final PIDConstants kRotationAutoPID = new PIDConstants(5.0, 0.0, 0.0);
   }
+  public static final class ShooterConstants {
+    public static final int kLeftShooterMotorControllerID = 16;
+    public static final int kRightShooterMotorControllerID = 17;
+  }
   public static final class IntakeConstants {
     public static final int kPivotMotorControllerID = 14; //TODO: Change this to the real one
     public static final int kIntakeMotorControllerID = 15; //TODO: This one too
