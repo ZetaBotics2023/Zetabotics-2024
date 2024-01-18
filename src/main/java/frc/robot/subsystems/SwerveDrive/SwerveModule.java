@@ -109,6 +109,10 @@ public class SwerveModule{
     resetTurningMotorToAbsolute(turningEncoderOffset);
   }
 
+  public double getBusVoltage() {
+    return this.m_driveMotor.getBusVoltage();
+  }
+
   public void resetTurningMotorToAbsolute(double turningEncoderOffset) {
     this.turningRelativeEncoder.setPosition((this.turningAbsoluteEncoder.getAbsolutePosition().getValueAsDouble() - turningEncoderOffset) * SwerveModuleConstants.kTurningGearRatio);
   

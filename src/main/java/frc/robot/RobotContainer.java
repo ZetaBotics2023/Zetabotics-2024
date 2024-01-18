@@ -10,7 +10,6 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.DeprecatedSystems.PoseEstimatorSubsystemDeprecated;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.FollowAutonomousPath;
 import frc.robot.commands.LockSwerves;

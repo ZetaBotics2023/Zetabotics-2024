@@ -17,7 +17,7 @@ public class VisionPose {
     }
 
     public Pose2d getPose() {
-        return new Pose2d(new Translation2d(this.pose.getX(), this.pose.getY()), Rotation2d.fromDegrees(this.getPose().getRotation().getDegrees()));
+        return new Pose2d(new Translation2d(this.pose.getX(), this.pose.getY()), Rotation2d.fromDegrees(this.pose.getRotation().getAngle()));
     }
 
     public double getTimeStamp() {
