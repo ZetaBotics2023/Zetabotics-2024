@@ -71,7 +71,7 @@ public final class Constants {
 
     public static final double kMaxSpeedMetersPerSecond = 4.1;
     public static final double kMaxRotationAnglePerSecond = 6;
-    
+
     public static final double kRadiusFromCenterToSwerves = 1.0;
 
     // Last years values
@@ -176,13 +176,18 @@ public final class Constants {
     public static final PIDConstants kTranslationAutoPID = new PIDConstants(5.0, 0.0, 0.0);
     public static final PIDConstants kRotationAutoPID = new PIDConstants(5.0, 0.0, 0.0);
   }
+
   public static final class ShooterConstants {
-    public static final int kLeftShooterMotorControllerID = 16;
-    public static final int kRightShooterMotorControllerID = 17;
+    public static final int kLeftShooterMotorControllerID = 17;
+    public static final int kRightShooterMotorControllerID = 18;
   }
+
   public static final class IntakeConstants {
     public static final int kPivotMotorControllerID = 14; //TODO: Change this to the real one
     public static final int kIntakeMotorControllerID = 15; //TODO: This one too
+    public static final int distenceSensorID = 16;
+
+    public static final double farthestNotePositionMilameters = Units.inchesToMeters(11) * 1000; 
 
 
     public static final double kPivotGearRatio = 100.0/1.0;
@@ -205,7 +210,6 @@ public final class Constants {
     public static final double kGroundPickupPivotRotationDegrees = 0.0;
     public static final double kGroundPickupIntakeRPM = 0.0;
 
-
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
     public static final double kHumanPlayerPickupIntakeRPM = 0.0;
 
@@ -214,6 +218,5 @@ public final class Constants {
 
     public static final double kPassIntoShooterPivotRotationDegrees = 0.0;
     public static final double kPassIntoShooterIntakeRPM = 0.0;
-
   }
 }
