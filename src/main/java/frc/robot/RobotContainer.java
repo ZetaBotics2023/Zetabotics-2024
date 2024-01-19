@@ -72,7 +72,7 @@ public class RobotContainer {
     NamedCommands.registerCommands(Constants.AutoConstants.namedEventMap);
     this.autonSelector = AutoBuilder.buildAutoChooser();
     // Autos go here
-    //this.autonSelector.addOption("Example Auton", AutoBuilder.followPath(PathPlannerPath.fromPathFile("Example Path")));
+    this.autonSelector.addOption("Example Auton", AutoBuilder.followPath(PathPlannerPath.fromPathFile("Example Path")));
 
     SmartDashboard.putData("Auton Selector", autonSelector);
   } 
