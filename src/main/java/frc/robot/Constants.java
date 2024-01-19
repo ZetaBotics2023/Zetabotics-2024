@@ -30,12 +30,10 @@ public final class Constants {
     public static final int kBackLeftDriveMotorId = 3;
     public static final int kBackRightDriveMotorId = 4;
 
-
     public static final int kFrontLeftTurnMotorId = 5;
     public static final int kFrontRightTurnMotorId = 6;
     public static final int kBackLeftTurnMotorId = 7;
     public static final int kBackRightTurnMotorId = 8;
-
 
     public static final int kFrontLeftTurnEncoderId = 9;
     public static final int kFrontRightTurnEncoderId = 10;
@@ -72,8 +70,8 @@ public final class Constants {
     public static final boolean kGyroReversed = false;
 
     public static final double kMaxSpeedMetersPerSecond = 4.1;
-    public static final double kMaxRotationAnglePerSecond = 2.0;
-
+    public static final double kMaxRotationAnglePerSecond = 6;
+    
     public static final double kRadiusFromCenterToSwerves = 1.0;
 
     // Last years values
@@ -92,7 +90,7 @@ public final class Constants {
                 new Translation2d(-kDistanceBetweenCentersOfFrontAndBackWheels / 2, kDistanceBetweenCentersOfRightAndLeftWheels / 2),
                 new Translation2d(-kDistanceBetweenCentersOfFrontAndBackWheels / 2, -kDistanceBetweenCentersOfRightAndLeftWheels / 2));
 
-    public static final double kPModuleTurningController = .2;
+    public static final double kPModuleTurningController = 3;//.000000000000000001;//.00000001;
     public static final double kIModuleTurningController = .0;
     public static final double kDModuleTurningController = .0;
 
@@ -108,8 +106,8 @@ public final class Constants {
     public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 4 * 2 * Math.PI;
 
     // Set to the last years values
-    public static final double kPModuleDriveController = .0001;//0.0003;
-    public static final double kIModuleDriveController = .000002;
+    public static final double kPModuleDriveController = 0.0003;
+    public static final double kIModuleDriveController =  .000003;//.0000025;//.000002;
     public static final double kDModuleDriveController = 0.0;
     public static final double kFModuleDriveController = 0.0;
     public static final double kIZoneModuleDriveController = 0.0;
@@ -163,7 +161,7 @@ public final class Constants {
     //19 3/4 v
     public static final String cameraName = "photonvision";
     //public static final Transform3d ROBOT_TO_CAMERA = robotToCam.inverse();
-    public static final double[] cameraPosition = new double[]{1.0, 1.0, 1.0};
+    public static final double[] cameraPosition = new double[]{0, 0, 0};
   };
 
   public static final class AutoConstants {

@@ -31,6 +31,7 @@ import edu.wpi.first.networktables.NetworkTableValue;
             new Rotation3d(Units.degreesToRadians(botpose[3]), Units.degreesToRadians(botpose[4]),
                     Units.degreesToRadians(botpose[5])));
 
+        /* 
         SmartDashboard.putNumberArray("Botpose Data", botpose);
         SmartDashboard.putNumberArray("Tag ID", table.getEntry("tid").getDoubleArray(new double[6]));
         SmartDashboard.putNumber("Botpose X", position.getX());
@@ -39,6 +40,7 @@ import edu.wpi.first.networktables.NetworkTableValue;
         SmartDashboard.putNumber("Botpose Rotation", position.getRotation().getAngle());
         SmartDashboard.putNumber("Time Stamp", timeStamp);
         SmartDashboard.putBoolean("Valid Target", validTarget);
+        */
 
         return new VisionPose(position, timeStamp, validTarget);
     }

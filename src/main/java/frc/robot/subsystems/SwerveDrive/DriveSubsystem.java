@@ -42,10 +42,11 @@ public class DriveSubsystem extends SubsystemBase {
     private final SwerveModule backLeftSwerveModule;
     private final SwerveModule backRightSwerveModule;
 
+    private int _updateCount;
+
+
     private Pigeon2 m_gyro;
     //private Pose2d startingPosition = new Pose2d(0, 0, new Rotation2d(0));
-
-    private final ProfiledPIDController turningPIDController; 
 
     private final SwerveDrivePoseEstimator poseEstimator;
     private final Pose2d startingPose = new Pose2d();
@@ -71,16 +72,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         this.m_gyro = new Pigeon2(SwerveDriveConstants.kGyroId);
 
-        this.turningPIDController = new ProfiledPIDController(
-            SwerveDriveConstants.kPModuleTurningController,
-            SwerveDriveConstants.kIModuleTurningController,
-            SwerveDriveConstants.kDModuleTurningController,
-            new TrapezoidProfile.Constraints(
-                SwerveDriveConstants.kMaxModuleAngularSpeedDegreesPerSecond,
-                SwerveDriveConstants.kMaxModuleAngularAccelDegreesPerSecondSquared), 0.08);
-
-        this.turningPIDController.setTolerance(SwerveDriveConstants.kPostitionToleranceDegrees, SwerveDriveConstants.kVelocityToleranceDegreesPerSec);
-        this.turningPIDController.setIntegratorRange(-0.3, 0.3);
         this.m_gyro.reset();  
 
         this.poseEstimator = new SwerveDrivePoseEstimator(SwerveDriveConstants.kDriveKinematics, this.m_gyro.getRotation2d(), 
@@ -134,7 +125,7 @@ public class DriveSubsystem extends SubsystemBase {
           && desiredChassisSpeeds.omegaRadiansPerSecond == 0.0) {
         SwerveModuleState[] currentStates = getModuleStates();
         for(int i = 0; i < currentStates.length; i++) {
-            desiredStates[i].angle = new Rotation2d(0);
+            desiredStates[i].angle = currentStates[i].angle;
         }
       }
 
@@ -157,7 +148,6 @@ public class DriveSubsystem extends SubsystemBase {
     boolean withInOneMeterY = Math.abs(currentEstimatedPose.getY() - estimatedPose.getPose().getY()) <= 1;
 
     boolean withInOneMeter = withInOneMeterX && withInOneMeterY;
-    SmartDashboard.putBoolean("Is Valid Target For Limelight",estimatedPose.isValidTarget());
     if(estimatedPose.isValidTarget()) { //&& withInOneMeter) {
       this.poseEstimator.addVisionMeasurement(estimatedPose.getPose(), estimatedPose.getTimeStamp());
     }
@@ -166,7 +156,10 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   private void updateDashboard() {
-      // Real
+    if(_updateCount++ > 20)
+    {
+      _updateCount = 0;
+
       SmartDashboard.putNumber("FL MPS", Math.abs(this.frontLeftSwerveModule.getDriveMotorSpeedInMetersPerSecond()));
       SmartDashboard.putNumber("FL Angle", this.frontLeftSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
 
@@ -180,10 +173,8 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("BR Angle", this.backRightSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
 
       SmartDashboard.putNumber("Robot Heading in Degrees", this.m_gyro.getAngle()); 
-
-      SmartDashboard.putNumber("Not Dingus Voltage", this.frontLeftSwerveModule.getBusVoltage());
-      SmartDashboard.putNumber("Misbehaving Voltage", this.backRightSwerveModule.getBusVoltage());
-  }
+      }
+    }
 
   public SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] positions = {
@@ -215,8 +206,10 @@ public class DriveSubsystem extends SubsystemBase {
     this.backRightSwerveModule.setDesiredState(desiredStates[3]); 
 
     SmartDashboard.putNumber("FL Desired MPS", desiredStates[0].speedMetersPerSecond);
+    /* 
     SmartDashboard.putNumber("FL Desired Angle", desiredStates[0].angle.getDegrees());
 
+    
     SmartDashboard.putNumber("FR Desired MPS", desiredStates[1].speedMetersPerSecond);
     SmartDashboard.putNumber("FR Desired Angle", desiredStates[1].angle.getDegrees());
 
@@ -225,6 +218,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("BR Desired MPS", desiredStates[3].speedMetersPerSecond);
     SmartDashboard.putNumber("BR Desired Angle", desiredStates[3].angle.getDegrees());
+    */
   }
 
   public ChassisSpeeds getChassisSpeeds() {
