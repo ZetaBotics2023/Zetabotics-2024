@@ -18,7 +18,7 @@ public class PickupFromGroundCommand extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        //this.intakeSubsystem.runAtSpeedForTime(IntakeConstants.kGroundPickupIntakeRPM, ); 
+        //this.intakeSubsystem.runAtSpeedForTime(IntakeConstants.kGroundPickupIntakeRPM, IntakeConstants.kGro); 
     }
 
     // Called every time the scheduler runs while the command is scheduled.

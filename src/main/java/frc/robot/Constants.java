@@ -71,7 +71,7 @@ public final class Constants {
     public static final int kGyroId = 13;
     public static final boolean kGyroReversed = false;
 
-    public static final double kMaxSpeedMetersPerSecond = 4.4196;
+    public static final double kMaxSpeedMetersPerSecond = 4.1;
     public static final double kMaxRotationAnglePerSecond = 2.0;
 
     public static final double kRadiusFromCenterToSwerves = 1.0;
@@ -92,8 +92,8 @@ public final class Constants {
                 new Translation2d(-kDistanceBetweenCentersOfFrontAndBackWheels / 2, kDistanceBetweenCentersOfRightAndLeftWheels / 2),
                 new Translation2d(-kDistanceBetweenCentersOfFrontAndBackWheels / 2, -kDistanceBetweenCentersOfRightAndLeftWheels / 2));
 
-    public static final double kPModuleTurningController = .3;
-    public static final double kIModuleTurningController = 0;
+    public static final double kPModuleTurningController = .2;
+    public static final double kIModuleTurningController = .0;
     public static final double kDModuleTurningController = .0;
 
     public static final double kPostitionToleranceDegrees = .1;
@@ -108,8 +108,8 @@ public final class Constants {
     public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 4 * 2 * Math.PI;
 
     // Set to the last years values
-    public static final double kPModuleDriveController = 0.0003;
-    public static final double kIModuleDriveController = .00000;
+    public static final double kPModuleDriveController = .0001;//0.0003;
+    public static final double kIModuleDriveController = .000002;
     public static final double kDModuleDriveController = 0.0;
     public static final double kFModuleDriveController = 0.0;
     public static final double kIZoneModuleDriveController = 0.0;
@@ -162,9 +162,8 @@ public final class Constants {
     //15.25 inch h
     //19 3/4 v
     public static final String cameraName = "photonvision";
-    public static final Transform3d robotToCam = new Transform3d(new Translation3d(.26, .2, 0), new Rotation3d()); 
     //public static final Transform3d ROBOT_TO_CAMERA = robotToCam.inverse();
-    public static final double[] cameraPosition = new double[]{0.0, 0.0, 0.0};
+    public static final double[] cameraPosition = new double[]{1.0, 1.0, 1.0};
   };
 
   public static final class AutoConstants {
@@ -178,6 +177,10 @@ public final class Constants {
 
     public static final PIDConstants kTranslationAutoPID = new PIDConstants(5.0, 0.0, 0.0);
     public static final PIDConstants kRotationAutoPID = new PIDConstants(5.0, 0.0, 0.0);
+  }
+  public static final class ShooterConstants {
+    public static final int kLeftShooterMotorControllerID = 16;
+    public static final int kRightShooterMotorControllerID = 17;
   }
   public static final class IntakeConstants {
     public static final int kPivotMotorControllerID = 14; //TODO: Change this to the real one

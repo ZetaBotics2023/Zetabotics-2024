@@ -86,10 +86,9 @@ public class DriveSubsystem extends SubsystemBase {
         this.poseEstimator = new SwerveDrivePoseEstimator(SwerveDriveConstants.kDriveKinematics, this.m_gyro.getRotation2d(), 
         getModulePositions(), startingPose);
 
-        NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+        NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight-zeta");
 
         limelightTable.putValue("camerapose_robotspace_set", NetworkTableValue.makeDoubleArray(Constants.VisionConstants.cameraPosition));
-
 
         ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
         visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
@@ -149,6 +148,7 @@ public class DriveSubsystem extends SubsystemBase {
 
  private void updateOdometry() {
     this.poseEstimator.update(this.m_gyro.getRotation2d(), getModulePositions());
+    
     VisionPose estimatedPose = LimelightUtil.getBotpose(DriverStation.getAlliance());
     Pose2d currentEstimatedPose = this.poseEstimator.getEstimatedPosition();
 
@@ -157,16 +157,17 @@ public class DriveSubsystem extends SubsystemBase {
     boolean withInOneMeterY = Math.abs(currentEstimatedPose.getY() - estimatedPose.getPose().getY()) <= 1;
 
     boolean withInOneMeter = withInOneMeterX && withInOneMeterY;
-    
-    if(estimatedPose.isValidTarget() && withInOneMeter) {
+    SmartDashboard.putBoolean("Is Valid Target For Limelight",estimatedPose.isValidTarget());
+    if(estimatedPose.isValidTarget()) { //&& withInOneMeter) {
       this.poseEstimator.addVisionMeasurement(estimatedPose.getPose(), estimatedPose.getTimeStamp());
     }
     this.field2d.setRobotPose(this.poseEstimator.getEstimatedPosition());
+    
   }
 
   private void updateDashboard() {
       // Real
-      SmartDashboard.putNumber("FL MPS", this.frontLeftSwerveModule.getDriveMotorSpeedInMetersPerSecond());
+      SmartDashboard.putNumber("FL MPS", Math.abs(this.frontLeftSwerveModule.getDriveMotorSpeedInMetersPerSecond()));
       SmartDashboard.putNumber("FL Angle", this.frontLeftSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
 
       SmartDashboard.putNumber("FR MPS", this.frontRightSwerveModule.getDriveMotorSpeedInMetersPerSecond());
@@ -179,6 +180,9 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("BR Angle", this.backRightSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
 
       SmartDashboard.putNumber("Robot Heading in Degrees", this.m_gyro.getAngle()); 
+
+      SmartDashboard.putNumber("Not Dingus Voltage", this.frontLeftSwerveModule.getBusVoltage());
+      SmartDashboard.putNumber("Misbehaving Voltage", this.backRightSwerveModule.getBusVoltage());
   }
 
   public SwerveModulePosition[] getModulePositions() {

@@ -15,16 +15,17 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableValue;
 
  public class LimelightUtil {
-    private static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    private static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-zeta");
 
     public static VisionPose getBotpose(Optional<Alliance> alliance) {
-        double[] botpose = table.getEntry("botpose_wpi" + (alliance.get() == Alliance.Blue ? "blue" : "red")).getDoubleArray(new double[6]);
+
+        double[] botpose = table.getEntry("botpose_wpi" + (alliance.isPresent() ? (alliance.get() == Alliance.Blue ? "blue" : "red") : "blue")).getDoubleArray(new double[6]);
         double piplineLatency = table.getEntry("tl").getDouble(0);
         double capturePiplineLatency = table.getEntry("cl").getDouble(0);
-        boolean validTarget = (1 == NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").getDouble(0));
+        boolean validTarget = (1 == table.getEntry("tv").getDouble(0));
         // From docs Timer.getFPGATimestamp() - (tl/1000.0) - (cl/1000.0)
         // I feel like it should be multipication to get ms up to seconds but the docs show this so that is what we are starting with
-        double latency = Timer.getFPGATimestamp() - (piplineLatency/1000.0) - (capturePiplineLatency/1000.0);
+        double timeStamp = Timer.getFPGATimestamp() - (piplineLatency/1000.0) - (capturePiplineLatency/1000.0);
         Pose3d position = new Pose3d(
             new Translation3d(botpose[0], botpose[1], botpose[2]),
             new Rotation3d(Units.degreesToRadians(botpose[3]), Units.degreesToRadians(botpose[4]),
@@ -36,9 +37,9 @@ import edu.wpi.first.networktables.NetworkTableValue;
         SmartDashboard.putNumber("Botpose Y", position.getY());
         SmartDashboard.putNumber("Botpose Z", position.getZ());
         SmartDashboard.putNumber("Botpose Rotation", position.getRotation().getAngle());
-        SmartDashboard.putNumber("Latency", latency);
+        SmartDashboard.putNumber("Time Stamp", timeStamp);
         SmartDashboard.putBoolean("Valid Target", validTarget);
 
-        return new VisionPose(position, latency, validTarget);
+        return new VisionPose(position, timeStamp, validTarget);
     }
 }

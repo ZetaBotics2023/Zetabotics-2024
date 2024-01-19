@@ -75,7 +75,7 @@ public class SwerveModule{
     this.m_turningMotor.setInverted(turnMotorRev);
 
     // This may need to be changed
-    this.m_driveMotor.setSmartCurrentLimit(20);
+    this.m_driveMotor.setSmartCurrentLimit(40);
     this.m_turningMotor.setSmartCurrentLimit(20);
 
     //this.turningRelativeEncoder.setVelocityConversionFactor(SwerveModuleConstants.kDriveConversionVelocityFactor);
@@ -107,6 +107,10 @@ public class SwerveModule{
 
     this.absoluteEncoderOffset = turningEncoderOffset;
     resetTurningMotorToAbsolute(turningEncoderOffset);
+  }
+
+  public double getBusVoltage() {
+    return this.m_driveMotor.getBusVoltage();
   }
 
   public void resetTurningMotorToAbsolute(double turningEncoderOffset) {
