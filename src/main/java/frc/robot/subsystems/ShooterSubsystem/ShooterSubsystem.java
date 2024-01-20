@@ -1,5 +1,6 @@
 package frc.robot.subsystems.ShooterSubsystem;
 
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
@@ -9,6 +10,8 @@ import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase{
     private final CANSparkMax m_leftShooter; 
@@ -43,8 +46,34 @@ public class ShooterSubsystem extends SubsystemBase{
         this.m_leftShooter.setInverted(leftShooterRev);
         this.m_rightShooter.setInverted(rightShooterRev);
 
+        this.m_leftShooter.setSmartCurrentLimit(0);
+        this.m_rightShooter.setSmartCurrentLimit(0);
+
         
+        this.leftShooterPID.setP(ShooterConstants.kPLeftShooterController);
+        this.leftShooterPID.setI(ShooterConstants.kILeftShooterController);
+        this.leftShooterPID.setD(ShooterConstants.kDLeftShooterController);
+        this.leftShooterPID.setIZone(ShooterConstants.kIZoneLeftShooterController);
+        this.rightShooterPID.setP(ShooterConstants.kPRightShooterController);
+        this.rightShooterPID.setI(ShooterConstants.kIRightShooterController);
+        this.rightShooterPID.setD(ShooterConstants.kDRightShooterController);
+        this.rightShooterPID.setIZone(ShooterConstants.kIZoneRightShooterController);
+           
+        this.m_leftShooter.burnFlash();
+        this.m_rightShooter.burnFlash();
+
         }
+
+        public void setTargetVelocityRPM(double rpm) {
+        this.targetVelocityRPM = rpm;
+        this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
+        this.rightShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
+    }
+
+    // We want a method to check if the pivot motor is at the correct position of degrees
+    public boolean isMotorAtTargetVelocity() {
+        return Math.abs(this.m_leftEncoder.getVelocity() - this.targetVelocityRPM) <= this.leftShooterPID.getIZone();
+    }
 }
 
 
