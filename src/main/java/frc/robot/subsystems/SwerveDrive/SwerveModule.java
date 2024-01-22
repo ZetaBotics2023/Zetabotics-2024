@@ -76,7 +76,7 @@ public class SwerveModule{
 
     // This may need to be changed
     this.m_driveMotor.setSmartCurrentLimit(40);
-    this.m_turningMotor.setSmartCurrentLimit(20);
+    this.m_turningMotor.setSmartCurrentLimit(5);
 
     //this.turningRelativeEncoder.setVelocityConversionFactor(SwerveModuleConstants.kDriveConversionVelocityFactor);
 
