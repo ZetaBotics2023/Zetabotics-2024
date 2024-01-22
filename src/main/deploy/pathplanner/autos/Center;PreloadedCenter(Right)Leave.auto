@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4,
-      "y": 7.0
+      "x": 1.35,
+      "y": 5.57
     },
     "rotation": 0
   },
@@ -14,30 +14,30 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left;Preloaded"
+            "pathName": "CenterPreloaded"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeLeftNote"
+            "pathName": "IntakeCenterNote"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MoveCenterFromLeftShootLeftNote"
+            "pathName": "MoveRightFromCenterShootCenterNote"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LeaveStartZoneCenterNote"
+            "pathName": "LeaveStartingZoneRightNote"
           }
         }
       ]
     }
   },
-  "folder": "LeftAutons",
+  "folder": "CenterAutons",
   "choreoAuto": false
 }

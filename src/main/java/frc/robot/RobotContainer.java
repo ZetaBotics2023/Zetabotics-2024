@@ -22,6 +22,7 @@ import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
@@ -71,7 +72,7 @@ public class RobotContainer {
     NamedCommands.registerCommands(Constants.AutoConstants.namedEventMap);
     this.autonSelector = AutoBuilder.buildAutoChooser();
     // Autos go here
-    this.autonSelector.addOption("Example Auton", AutoBuilder.followPath(PathPlannerPath.fromPathFile("Example Path")));
+    this.autonSelector.addOption("Example Auton", new PathPlannerAuto("ExampleAuto"));
 
     SmartDashboard.putData("Auton Selector", autonSelector);
   } 
