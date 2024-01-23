@@ -28,10 +28,40 @@
           "data": {
             "pathName": "MoveCenterFromLeftShootLeftNote"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "IntakeCenterNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MoveRightFromCenterShootCenterNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "IntakeRightNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ShootRightNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeaveStartingZoneRightNote"
+          }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "LeftAutons",
   "choreoAuto": false
 }
