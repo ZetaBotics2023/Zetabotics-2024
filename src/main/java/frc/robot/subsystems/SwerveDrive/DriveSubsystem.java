@@ -87,7 +87,7 @@ public class DriveSubsystem extends SubsystemBase {
 
          AutoBuilder.configureHolonomic(
                 this.poseEstimator::getEstimatedPosition, // Robot pose supplier
-                this::resetRobotPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::setRobotPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
@@ -95,7 +95,7 @@ public class DriveSubsystem extends SubsystemBase {
                         AutoConstants.kRotationAutoPID, // Rotation PID constants
                         AutoConstants.kMaxAutonSpeedInMetersPerSecond , // Max module speed, in m/s
                         SwerveDriveConstants.kRadiusFromCenterToFarthestSwerveModule, // Drive base radius in meters. Distance from robot center to furthest module.
-                        new ReplanningConfig(true, true) // Default path replanning config. See the API for the options here
+                        new ReplanningConfig(true, false) // Default path replanning config. See the API for the options here
                 ),
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red alliance
@@ -162,6 +162,9 @@ public class DriveSubsystem extends SubsystemBase {
 
       SmartDashboard.putNumber("FL MPS", Math.abs(this.frontLeftSwerveModule.getDriveMotorSpeedInMetersPerSecond()));
       SmartDashboard.putNumber("FL Angle", this.frontLeftSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
+      SmartDashboard.putNumber("FL Angle From Swerve Module Position", this.frontLeftSwerveModule.getPosition().angle.getDegrees());
+      SmartDashboard.putNumber("FL Distence", this.frontLeftSwerveModule.getDistance());
+      SmartDashboard.putNumber("FL Distence In Meters From SwerveModule Position", this.frontLeftSwerveModule.getPosition().distanceMeters);
 
       SmartDashboard.putNumber("FR MPS", this.frontRightSwerveModule.getDriveMotorSpeedInMetersPerSecond());
       SmartDashboard.putNumber("FR Angle", this.frontRightSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
@@ -323,8 +326,18 @@ public class DriveSubsystem extends SubsystemBase {
     return this.poseEstimator.getEstimatedPosition();
   }
 
-  public void resetRobotPose(Pose2d newPose) {
+  public void setRobotPose(Pose2d newPose) {
     this.poseEstimator.resetPosition(newPose.getRotation(), getModulePositions(), newPose);
+  }
+
+  public void resetRobotPose() {
+    Pose2d newPose = new Pose2d();
+    this.poseEstimator.resetPosition(newPose.getRotation(), getModulePositions(), newPose);
+  }
+
+
+  public void resetRobotHeading() {
+    this.m_gyro.reset();
   }
 
 

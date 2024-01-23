@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -24,6 +25,12 @@ public class FieldOrientedDriveCommand extends Command {
   private final DoubleSupplier translationXSupplier;
   private final DoubleSupplier translationYSupplier;
   private final DoubleSupplier rotationSupplier;
+
+  private final SlewRateLimiter translationXLimiter;
+  private final SlewRateLimiter translationYLimiter;
+  private final SlewRateLimiter rotationLimiter;
+
+
   /**
    * Constructor
    * 
@@ -46,21 +53,34 @@ public class FieldOrientedDriveCommand extends Command {
     this.translationYSupplier = translationYSupplier;
     this.rotationSupplier = rotationSupplier;
 
+    this.translationXLimiter = new SlewRateLimiter(SwerveDriveConstants.kTranslationRateLimiter);
+    this.translationYLimiter = new SlewRateLimiter(SwerveDriveConstants.kTranslationRateLimiter);
+    this.rotationLimiter = new SlewRateLimiter(SwerveDriveConstants.kRotationRateLimiter);
+    this.translationXLimiter.reset(0);
+    this.translationYLimiter.reset(0);
+    this.rotationLimiter.reset(0);
+
+        
     addRequirements(m_driveSubsystem);
   }
 
   @Override
   public void initialize() {
+
   }
 
   @Override
   public void execute() {
-      m_driveSubsystem.drive(
-        ChassisSpeeds.fromFieldRelativeSpeeds(
-            this.translationXSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond,
-            this.translationYSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond,
-            this.rotationSupplier.getAsDouble() * SwerveDriveConstants.kMaxRotationAnglePerSecond, 
-            this.m_driveSubsystem.getRobotPose().getRotation()));
+    double translationX = this.translationXLimiter.calculate(this.translationXSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond);
+    double translationY = this.translationYLimiter.calculate(this.translationYSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond);
+    double rotation = this.rotationLimiter.calculate(this.rotationSupplier.getAsDouble() * SwerveDriveConstants.kMaxRotationAnglePerSecond);
+
+    m_driveSubsystem.drive(
+      ChassisSpeeds.fromFieldRelativeSpeeds(
+        translationX,
+        translationY,
+        rotation,
+        this.m_driveSubsystem.getRobotPose().getRotation()));
   }
 
   @Override
