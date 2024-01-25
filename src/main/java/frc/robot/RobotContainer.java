@@ -11,8 +11,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.FieldOrientedDriveCommand;
-import frc.robot.commands.FollowAutonomousPath;
 import frc.robot.commands.LockSwerves;
+import frc.robot.commands.AutoCommands.FollowAutonomousPath;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 
 import java.util.function.Consumer;

@@ -100,7 +100,7 @@ public final class Constants {
     public static final double kMaxModuleAngularSpeedDegreesPerSecond =  30.0;
     public static final double kMaxModuleAngularAccelDegreesPerSecondSquared = 30.0;
 
-    public static final double kTranslationRateLimiter = 9;
+    public static final double kTranslationRateLimiter = 6;//9;
     public static final double kRotationRateLimiter = 20;
   }
 
@@ -111,7 +111,7 @@ public final class Constants {
     // Set to the last years values
     public static final double kPModuleDriveController = 0.0001;
     public static final double kIModuleDriveController =  .00000125;//.0000025;//.000002;
-    public static final double kDModuleDriveController = 0.0;
+    public static final double kDModuleDriveController = 0.0001;
     public static final double kFModuleDriveController = 0;
     public static final double kIZoneModuleDriveController = 0.0;
 
@@ -125,7 +125,7 @@ public final class Constants {
     public static final double kAbsoluteTurningEncoderCPR = 4096.0;
     public static final double kNeoEncoderCPR = 4096.0;
     public static final double kMaxRPM = 5676.0;
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(4);//0.1016;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.685);//0.1016;
     public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);//6.75/1.0;
     public static final double kTurningGearRatio = 150.0/7.0; 
 
@@ -175,9 +175,9 @@ public final class Constants {
 
     public static final double kMaxAutonAngulerSpeedInMetersPerSecond = 4.1;
     public static final double kMaxAutonAngulerAccelerationInMetersPerSecondSqr = 4.1;
-
-    public static final PIDConstants kTranslationAutoPID = new PIDConstants(5.25, 0.0, 0.0);
-    public static final PIDConstants kRotationAutoPID = new PIDConstants(2.75, 0.0, 0.0);
+    //5.9
+    public static final PIDConstants kTranslationAutoPID = new PIDConstants(2.5, 0, .0001);
+    public static final PIDConstants kRotationAutoPID = new PIDConstants(4, 0.0, 0.0);
   }
 
   public static final class ShooterConstants {

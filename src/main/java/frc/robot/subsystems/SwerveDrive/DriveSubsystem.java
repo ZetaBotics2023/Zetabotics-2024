@@ -49,7 +49,7 @@ public class DriveSubsystem extends SubsystemBase {
     //private Pose2d startingPosition = new Pose2d(0, 0, new Rotation2d(0));
 
     private final SwerveDrivePoseEstimator poseEstimator;
-    private final Pose2d startingPose = new Pose2d();
+    private final Pose2d startingPose = new Pose2d(0, 0, new Rotation2d(0));
 
     private final Field2d field2d = new Field2d();
 
@@ -111,7 +111,7 @@ public class DriveSubsystem extends SubsystemBase {
                 this // Reference to this subsystem to set requirements
         );
  
-        SmartDashboard.updateValues();    
+        SmartDashboard.updateValues(); 
     }
 
   @Override
@@ -156,7 +156,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   private void updateDashboard() {
-    if(_updateCount++ > 20)
+    if(_updateCount++ >= 0)
     {
       _updateCount = 0;
 
@@ -226,18 +226,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   public ChassisSpeeds getChassisSpeeds() {
     return SwerveDriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
-  }
-
-  public double getCurrentChassisSpeeds() {
-    ChassisSpeeds currentSpeeds = getChassisSpeeds();
-    double linearVeloicity = Math.sqrt((currentSpeeds.vxMetersPerSecond * currentSpeeds.vxMetersPerSecond) * (currentSpeeds.vyMetersPerSecond * currentSpeeds.vyMetersPerSecond));
-    return linearVeloicity;
-  }
-
-  public Rotation2d getCurrentChassisHeading() {
-    ChassisSpeeds currentSpeeds = getChassisSpeeds();
-    Rotation2d robotHeading = new Rotation2d(Math.atan2(currentSpeeds.vyMetersPerSecond, currentSpeeds.vxMetersPerSecond));
-    return robotHeading;
   }
 
   /* 
@@ -327,7 +315,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void setRobotPose(Pose2d newPose) {
-    this.poseEstimator.resetPosition(newPose.getRotation(), getModulePositions(), newPose);
+    this.poseEstimator.resetPosition(this.m_gyro.getRotation2d(), getModulePositions(), newPose);
   }
 
   public void resetRobotPose() {
