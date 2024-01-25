@@ -79,7 +79,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight-zeta");
 
-        limelightTable.putValue("camerapose_robotspace_set", NetworkTableValue.makeDoubleArray(Constants.VisionConstants.cameraPosition));
 
         ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
         visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
@@ -140,7 +139,7 @@ public class DriveSubsystem extends SubsystemBase {
  private void updateOdometry() {
     this.poseEstimator.update(this.m_gyro.getRotation2d(), getModulePositions());
     
-    VisionPose estimatedPose = LimelightUtil.getBotpose(DriverStation.getAlliance());
+    VisionPose estimatedPose = LimelightUtil.getBotpose();
     Pose2d currentEstimatedPose = this.poseEstimator.getEstimatedPosition();
 
     boolean withInOneMeterX = Math.abs(currentEstimatedPose.getX() - estimatedPose.getPose().getX()) <= 1;
