@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 import com.pathplanner.lib.util.PIDConstants;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -159,12 +161,12 @@ public final class Constants {
     public static final double kWidth = Units.feetToMeters(27);
   }
 
+
   public static final class VisionConstants {
-    //15.25 inch h
-    //19 3/4 v
-    public static final String cameraName = "photonvision";
-    //public static final Transform3d ROBOT_TO_CAMERA = robotToCam.inverse();
-    public static final double[] cameraPosition = new double[]{0, 0, 0};
+
+    public static final Pose2d kRedAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(16.579342, 5.547868), Rotation2d.fromDegrees(180));
+    public static final Pose2d kBlueAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(-0.0381, 5.547868), Rotation2d.fromDegrees(0));
+
   };
 
   public static final class AutoConstants {
@@ -183,6 +185,10 @@ public final class Constants {
   public static final class ShooterConstants {
     public static final int kLeftShooterMotorControllerID = 17;
     public static final int kRightShooterMotorControllerID = 18;
+
+    public static final double kMinShootingDistanceMeters = 2.286;
+    public static final double kMaxShootingDistanceMeters = 2.8956;
+
   }
 
   public static final class IntakeConstants {
