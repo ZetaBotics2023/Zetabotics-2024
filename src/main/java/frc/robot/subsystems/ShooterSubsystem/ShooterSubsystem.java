@@ -8,6 +8,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
@@ -21,6 +22,8 @@ public class ShooterSubsystem extends SubsystemBase{
     private final SparkPIDController leftShooterPID;
     private final SparkPIDController rightShooterPID; 
     private double targetVelocityRPM = 0;
+    private double finishedRunningTimestamp = 0;
+
 
     public ShooterSubsystem(boolean leftShooterRev, boolean rightShooterRev)
     {
@@ -36,7 +39,17 @@ public class ShooterSubsystem extends SubsystemBase{
         this.m_rightShooter.restoreFactoryDefaults();
         this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-        this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+        this.m_this.leftShooterPID.setP(ShooterConstants.kPLeftShooterController);
+        this.leftShooterPID.setI(ShooterConstants.kILeftShooterController);
+        this.leftShooterPID.setD(ShooterConstants.kDLeftShooterController);
+        this.leftShooterPID.setIZone(ShooterConstants.kIZoneLeftShooterController);
+        this.rightShooterPID.setP(ShooterConstants.kPRightShooterController);
+        this.rightShooterPID.setI(ShooterConstants.kIRightShooterController);
+        this.rightShooterPID.setD(ShooterConstants.kDRightShooterController);
+        this.rightShooterPID.setIZone(ShooterConstants.kIZoneRightShooterController);
+           
+        this.m_leftShooter.burnFlash();
+        this.m_rightShooter.burnFlash();leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
         this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
         this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
         this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
@@ -50,17 +63,7 @@ public class ShooterSubsystem extends SubsystemBase{
         this.m_rightShooter.setSmartCurrentLimit(0);
 
         
-        this.leftShooterPID.setP(ShooterConstants.kPLeftShooterController);
-        this.leftShooterPID.setI(ShooterConstants.kILeftShooterController);
-        this.leftShooterPID.setD(ShooterConstants.kDLeftShooterController);
-        this.leftShooterPID.setIZone(ShooterConstants.kIZoneLeftShooterController);
-        this.rightShooterPID.setP(ShooterConstants.kPRightShooterController);
-        this.rightShooterPID.setI(ShooterConstants.kIRightShooterController);
-        this.rightShooterPID.setD(ShooterConstants.kDRightShooterController);
-        this.rightShooterPID.setIZone(ShooterConstants.kIZoneRightShooterController);
-           
-        this.m_leftShooter.burnFlash();
-        this.m_rightShooter.burnFlash();
+        
 
         }
 
@@ -74,6 +77,31 @@ public class ShooterSubsystem extends SubsystemBase{
     public boolean isMotorAtTargetVelocity() {
         return Math.abs(this.m_leftEncoder.getVelocity() - this.targetVelocityRPM) <= this.leftShooterPID.getIZone();
     }
+    
+    //runs both motors at the same speed for x amount of time (i think)
+    public void runAtRPMForTime(double rpm, double seconds) {
+        this.leftShooterPID.setReference(rpm, ControlType.kVelocity);
+        this.rightShooterPID.setReference(rpm, ControlType.kVelocity);
+        this.finishedRunningTimestamp = Timer.getFPGATimestamp() + seconds;
+    }
+
+
+    //method that runs left at the passed rpm and right at that rpm*powerRatio
+    public void runAtRPMAndRPMRatio(double rpm) {
+        this.leftShooterPID.setReference(rpm, ControlType.kVelocity);
+        this.rightShooterPID.setReference(rpm*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
+        //i am aware that this is probably wrong ^^^^
+    }
+
+    //Checks if both motors are at the desired RPM (i did separate methods because idk how to combine them without it being clunky)
+    public boolean isLeftMotorAtTargetVelocity() {
+        return (this.m_leftEncoder.getVelocity() - this.targetVelocityRPM) <= this.leftShooterPID.getIZone();
+    }
+
+    public boolean isRightMotorAtTargetVelocity() {
+        return (this.m_rightEncoder.getVelocity() - this.targetVelocityRPM) <= this.rightShooterPID.getIZone();
+    }
+
 }
 
 

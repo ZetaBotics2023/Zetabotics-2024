@@ -16,7 +16,6 @@ public class PivotSubsystem extends SubsystemBase {
     private final CANSparkMax m_pivot;
     private final SparkAbsoluteEncoder m_pivotEncoder;
     private final SparkPIDController pivotPID;
-    private double targetPositionDegrees = 0;
 
     public PivotSubsystem(boolean pivotMotorRev) {
         this.m_pivot = new CANSparkMax(Constants.IntakeConstants.kPivotMotorControllerID, CANSparkMax.MotorType.kBrushless);
@@ -58,5 +57,7 @@ public class PivotSubsystem extends SubsystemBase {
     public boolean isMotorAtTargetRotation() {
         return Math.abs(rotationsToDegrees(this.m_pivotEncoder.getPosition()) - this.targetPositionDegrees) <= this.pivotPID.getIZone();
     }
+
+    
 }
  

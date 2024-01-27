@@ -44,9 +44,24 @@ public class IntakeSubsystem extends SubsystemBase {
 
         this.m_intake.burnFlash();
     }
-    public void runAtSpeedForTime(double rpm, double seconds) {
+    /**
+     * 
+     * @param rpm
+     * @param seconds
+     * @apiNote FOR AUTON USE ONLY
+     */
+    public void runAtRPMForTime(double rpm, double seconds) {
         this.intakePID.setReference(rpm, ControlType.kVelocity);
         this.finishedRunningTimestamp = Timer.getFPGATimestamp() + seconds;
+    }
+
+    /**
+     * 
+     * @param rpm
+     * @apiNote USE FOR TELEOP
+     */
+    public void runAtRPM(double rpm) {
+        this.intakePID.setReference(rpm, ControlType.kVelocity);
     }
 
     public boolean isRPMTimeReached() {
