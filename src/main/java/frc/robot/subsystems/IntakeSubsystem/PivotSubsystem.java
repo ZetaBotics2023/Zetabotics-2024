@@ -16,11 +16,13 @@ public class PivotSubsystem extends SubsystemBase {
     private final CANSparkMax m_pivot;
     private final SparkAbsoluteEncoder m_pivotEncoder;
     private final SparkPIDController pivotPID;
+    private double targetPositionDegrees = 0.0;
 
     public PivotSubsystem(boolean pivotMotorRev) {
         this.m_pivot = new CANSparkMax(Constants.IntakeConstants.kPivotMotorControllerID, CANSparkMax.MotorType.kBrushless);
         this.m_pivotEncoder = this.m_pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
         this.pivotPID = this.m_pivot.getPIDController();
+
 
         this.m_pivot.restoreFactoryDefaults();
         this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
