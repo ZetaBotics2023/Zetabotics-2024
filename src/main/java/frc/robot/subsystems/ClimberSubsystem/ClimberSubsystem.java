@@ -11,6 +11,7 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 
@@ -50,14 +51,15 @@ public class ClimberSubsystem extends SubsystemBase{
         this.m_leftClimber.setSmartCurrentLimit(0);
         this.m_rightClimber.setSmartCurrentLimit(0);
 
-        this.leftClimberPID.setP(ShooterConstants.kPLeftShooterController);
-        this.leftClimberPID.setI(ShooterConstants.kILeftShooterController);
-        this.leftClimberPID.setD(ShooterConstants.kDLeftShooterController);
-        this.leftClimberPID.setIZone(ShooterConstants.kIZoneLeftShooterController);
-        this.rightClimberPID.setP(ShooterConstants.kPRightShooterController);
-        this.rightClimberPID.setI(ShooterConstants.kIRightShooterController);
-        this.rightClimberPID.setD(ShooterConstants.kDRightShooterController);
-        this.rightClimberPID.setIZone(ShooterConstants.kIZoneRightShooterController);
+        this.leftClimberPID.setP(ClimberConstants.kPLeftClimberController);
+        this.leftClimberPID.setI(ClimberConstants.kILeftClimberController);
+        this.leftClimberPID.setD(ClimberConstants.kDLeftClimberController);
+        //this.leftClimberPID.setF(ClimberConstants.kFLeftClimberController);
+        this.leftClimberPID.setIZone(ClimberConstants.kIZoneLeftClimberController);
+        this.rightClimberPID.setP(ClimberConstants.kPRightClimberController);
+        this.rightClimberPID.setI(ClimberConstants.kIRightClimberController);
+        this.rightClimberPID.setD(ClimberConstants.kDRightClimberController);
+        this.rightClimberPID.setIZone(ClimberConstants.kIZoneRightClimberController);
            
         this.m_leftClimber.burnFlash();
         this.m_rightClimber.burnFlash();
