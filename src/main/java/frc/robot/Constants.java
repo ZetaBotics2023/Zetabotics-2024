@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 import com.pathplanner.lib.util.PIDConstants;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -69,7 +71,7 @@ public final class Constants {
     public static final int kGyroId = 13;
     public static final boolean kGyroReversed = false;
 
-    public static final double kMaxSpeedMetersPerSecond = 4.1;
+    public static final double kMaxSpeedMetersPerSecond = 4.6;
     public static final double kMaxRotationAnglePerSecond = 6;
 
     public static final double kRadiusFromCenterToSwerves = 1.0;
@@ -99,6 +101,9 @@ public final class Constants {
 
     public static final double kMaxModuleAngularSpeedDegreesPerSecond =  30.0;
     public static final double kMaxModuleAngularAccelDegreesPerSecondSquared = 30.0;
+
+    public static final double kTranslationRateLimiter = 6;//9;
+    public static final double kRotationRateLimiter = 20;
   }
 
   public static class SwerveModuleConstants {
@@ -106,10 +111,10 @@ public final class Constants {
     public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 4 * 2 * Math.PI;
 
     // Set to the last years values
-    public static final double kPModuleDriveController = 0.0003;
-    public static final double kIModuleDriveController =  .000003;//.0000025;//.000002;
-    public static final double kDModuleDriveController = 0.0;
-    public static final double kFModuleDriveController = 0.0;
+    public static final double kPModuleDriveController = 0.0001;
+    public static final double kIModuleDriveController =  .00000125;//.0000025;//.000002;
+    public static final double kDModuleDriveController = 0.0001;
+    public static final double kFModuleDriveController = 0;
     public static final double kIZoneModuleDriveController = 0.0;
 
     public static final double kPModuleTurningController = .1;
@@ -122,8 +127,8 @@ public final class Constants {
     public static final double kAbsoluteTurningEncoderCPR = 4096.0;
     public static final double kNeoEncoderCPR = 4096.0;
     public static final double kMaxRPM = 5676.0;
-    public static final double kWheelDiameterMeters = 0.1016;
-    public static final double kDriveGearRatio = 6.75/1.0;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.685);//0.1016;
+    public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);//6.75/1.0;
     public static final double kTurningGearRatio = 150.0/7.0; 
 
     public static final double kTurningConversionFactor = 360.0 / kTurningGearRatio;
@@ -156,12 +161,12 @@ public final class Constants {
     public static final double kWidth = Units.feetToMeters(27);
   }
 
+
   public static final class VisionConstants {
-    //15.25 inch h
-    //19 3/4 v
-    public static final String cameraName = "photonvision";
-    //public static final Transform3d ROBOT_TO_CAMERA = robotToCam.inverse();
-    public static final double[] cameraPosition = new double[]{0, 0, 0};
+
+    public static final Pose2d kRedAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(16.579342, 5.547868), Rotation2d.fromDegrees(180));
+    public static final Pose2d kBlueAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(-0.0381, 5.547868), Rotation2d.fromDegrees(0));
+
   };
 
   public static final class AutoConstants {
@@ -172,9 +177,9 @@ public final class Constants {
 
     public static final double kMaxAutonAngulerSpeedInMetersPerSecond = 4.1;
     public static final double kMaxAutonAngulerAccelerationInMetersPerSecondSqr = 4.1;
-
-    public static final PIDConstants kTranslationAutoPID = new PIDConstants(5.0, 0.0, 0.0);
-    public static final PIDConstants kRotationAutoPID = new PIDConstants(5.0, 0.0, 0.0);
+    //5.9
+    public static final PIDConstants kTranslationAutoPID = new PIDConstants(2.5, 0, .0001);
+    public static final PIDConstants kRotationAutoPID = new PIDConstants(4, 0.0, 0.0);
   }
   public static final class ShooterConstants {
     public static final int kLeftShooterMotorControllerID = 16;

@@ -11,8 +11,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.FieldOrientedDriveCommand;
-import frc.robot.commands.FollowAutonomousPath;
 import frc.robot.commands.LockSwerves;
+import frc.robot.commands.AutoCommands.FollowAutonomousPath;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 
 import java.util.function.Consumer;
@@ -22,10 +22,12 @@ import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -63,7 +65,6 @@ public class RobotContainer {
 
     m_driveSubsystem.setDefaultCommand(fieldOrientedDriveCommand);
 
-
    
     configureBindings();
 
@@ -71,8 +72,6 @@ public class RobotContainer {
     NamedCommands.registerCommands(Constants.AutoConstants.namedEventMap);
     this.autonSelector = AutoBuilder.buildAutoChooser();
     // Autos go here
-    this.autonSelector.addOption("Example Auton", AutoBuilder.buildAuto("Left;PreloadedLeave"));
-
     SmartDashboard.putData("Auton Selector", autonSelector);
   } 
 
@@ -81,6 +80,10 @@ public class RobotContainer {
     final JoystickButton lockSwerves =  new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
     lockSwerves.onTrue(Commands.runOnce(this.lockSwerves::schedule));
     lockSwerves.onFalse(Commands.runOnce(this.lockSwerves::cancel));
+    final JoystickButton resetHeading = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+    resetHeading.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotHeading));
+    final JoystickButton resetOdometry = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+    resetOdometry.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotPose));
   }
 
   public Command getAutonomousCommand() {

@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 // booba
 
-package frc.robot.commands;
+package frc.robot.commands.AutoCommands;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 
 public class GoToPose {
-    public static Command followPathCommand(DriveSubsystem driveSubsystem, Pose2d startLocation, Pose2d endLocaiton) {
+    public static Command goToPose(Pose2d startLocation, Pose2d endLocaiton) {
       List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
       startLocation,
       endLocaiton);

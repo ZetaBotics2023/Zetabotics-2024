@@ -137,12 +137,12 @@ public class SwerveModule{
   }
 
   public double getDistance() {
-    return (m_driveMotor.getEncoder().getPosition() * SwerveModuleConstants.kNeoEncoderCPR) * SwerveModuleConstants.kDriveEncoderDistancePerPulse;
+    return (this.driveRelativeEncoder.getPosition() / SwerveModuleConstants.kDriveGearRatio) * SwerveModuleConstants.kWheelDistancePerRotation;
   }
 
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
-        getDistance(), new Rotation2d((this.turningAbsoluteEncoder.getAbsolutePosition().getValueAsDouble() - this.absoluteEncoderOffset) * 360));
+        getDistance(), getTurningEncoderAngleDegrees());
   }
 
   public SwerveModuleState getState() {

@@ -32,7 +32,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeaveStartZoneCenterNote"
+            "pathName": "IntakeCenterNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MoveRightFromCenterShootCenterNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeaveStartingZoneRightNote"
           }
         }
       ]
