@@ -39,7 +39,7 @@ public class ShooterSubsystem extends SubsystemBase{
         this.m_rightShooter.restoreFactoryDefaults();
         this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-        this.m_this.leftShooterPID.setP(ShooterConstants.kPLeftShooterController);
+        this.leftShooterPID.setP(ShooterConstants.kPLeftShooterController);
         this.leftShooterPID.setI(ShooterConstants.kILeftShooterController);
         this.leftShooterPID.setD(ShooterConstants.kDLeftShooterController);
         this.leftShooterPID.setIZone(ShooterConstants.kIZoneLeftShooterController);
@@ -49,7 +49,8 @@ public class ShooterSubsystem extends SubsystemBase{
         this.rightShooterPID.setIZone(ShooterConstants.kIZoneRightShooterController);
            
         this.m_leftShooter.burnFlash();
-        this.m_rightShooter.burnFlash();leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+        this.m_rightShooter.burnFlash();
+        this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
         this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
         this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
         this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
@@ -90,7 +91,6 @@ public class ShooterSubsystem extends SubsystemBase{
     public void runAtRPMAndRPMRatio(double rpm) {
         this.leftShooterPID.setReference(rpm, ControlType.kVelocity);
         this.rightShooterPID.setReference(rpm*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
-        //i am aware that this is probably wrong ^^^^
     }
 
     //Checks if both motors are at the desired RPM (i did separate methods because idk how to combine them without it being clunky)

@@ -16,14 +16,20 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
+import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.utils.CalculateSpeakerShootingPosition;
 
 public class AutoShootPositionCommand extends Command{
     private DriveSubsystem m_driveSubsystem;
     private ShooterSubsystem m_shooterSubsystem;
-    private IntakeSubsystem = m_intakeSubsystem;
-    private PivotSubsystem = m_pivotSubsystem;
-    private IntakeSensorSubsystem = m_intakeSensorSubsystem;
+    private IntakeSubsystem m_intakeSubsystem;
+    private PivotSubsystem m_pivotSubsystem;
+    private IntakeSensorSubsystem m_intakeSensorSubsystem;
 
     private Command goToShootPosition;
 
@@ -33,7 +39,7 @@ public class AutoShootPositionCommand extends Command{
     IntakeSubsystem m_intakeSubsystem, PivotSubsystem m_pivotSubsystem, IntakeSensorSubsystem m_intakeSensorSubsystem) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.m_shooterSubsystem = m_shooterSubsystem;
-        this.m_intakeSubsystem = m)ShooterSubsystem;
+        this.m_intakeSubsystem = m_intakeSubsystem;
         this.m_pivotSubsystem = m_pivotSubsystem;
         this.m_intakeSensorSubsystem = m_intakeSensorSubsystem;
     }

@@ -200,7 +200,10 @@ public final class Constants {
     public static final double kFRightController = 0.0;
     public static final double kIZoneRightShooterController = 0.0; 
 
-
+    public static final double kMinShootingDistanceMeters = 1.0;
+    public static final double kMaxShootingDistanceMeters = 5.0; // TODO: I forgot these values, please fix them!
+  
+    public static final double kShooterPowerRatio = 5.0; // TODO: Also wrong
   }
 
   public static final class IntakeConstants {
