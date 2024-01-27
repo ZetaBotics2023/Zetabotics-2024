@@ -181,13 +181,25 @@ public final class Constants {
     public static final PIDConstants kTranslationAutoPID = new PIDConstants(1.95, 0, .0001);
     public static final PIDConstants kRotationAutoPID = new PIDConstants(3.5, 0.0, 0.0);
   }
-
   public static final class ShooterConstants {
-    public static final int kLeftShooterMotorControllerID = 17;
-    public static final int kRightShooterMotorControllerID = 18;
+    public static final int kLeftShooterMotorControllerID = 16;
+    public static final int kRightShooterMotorControllerID = 17;
 
-    public static final double kMinShootingDistanceMeters = 2.286;
-    public static final double kMaxShootingDistanceMeters = 2.8956;
+    public static final double kLeftShooterGearRatio = 1.0;
+    public static final double kRightShooterGearRatio = 1.0;
+
+    public static final double kPLeftShooterController = 0.0;
+    public static final double kILeftShooterController = 0.0;
+    public static final double kDLeftShooterController = 0.0;
+    public static final double kFLeftShooterController = 0.0;
+    public static final double kIZoneLeftShooterController = 0.0; 
+
+    public static final double kPRightShooterController = 0.0;
+    public static final double kIRightShooterController = 0.0;
+    public static final double kDRightShooterController = 0.0;
+    public static final double kFRightController = 0.0;
+    public static final double kIZoneRightShooterController = 0.0; 
+
 
   }
 
@@ -201,6 +213,8 @@ public final class Constants {
 
     public static final double kPivotGearRatio = 100.0/1.0;
     public static final double kIntakeGearRatio = 3.0/1.0;
+
+    
 
     //TODO: Tune me!
     public static final double kPPivotController = 0.0003;
@@ -227,5 +241,6 @@ public final class Constants {
 
     public static final double kPassIntoShooterPivotRotationDegrees = 0.0;
     public static final double kPassIntoShooterIntakeRPM = 0.0;
+
   }
 }
