@@ -7,12 +7,14 @@
 // St up new branch
 package frc.robot;
 
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
 import frc.robot.commands.AutoCommands.FollowAutonomousPath;
+import frc.robot.commands.AutoCommands.TestCommand;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 
 import java.util.function.Consumer;
@@ -35,6 +37,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -53,8 +56,15 @@ public class RobotContainer {
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
 
   public RobotContainer() {
+    /*  Adding our commands before we instantiat our drive subsystem,
+        so they are added before the autobuilder is configured.
+    */
+    AutoConstants.namedEventMap.put("PrintCommand", new TestCommand());
+    NamedCommands.registerCommands(AutoConstants.namedEventMap);
+    new WaitCommand(0);
     this.m_driveSubsystem = new DriveSubsystem();
     this.lockSwerves = new LockSwerves(m_driveSubsystem);
+    SmartDashboard.putBoolean("Ran Command", false);
 
     this.fieldOrientedDriveCommand = new FieldOrientedDriveCommand(
       m_driveSubsystem,
@@ -68,8 +78,6 @@ public class RobotContainer {
    
     configureBindings();
 
-    
-    NamedCommands.registerCommands(Constants.AutoConstants.namedEventMap);
     this.autonSelector = AutoBuilder.buildAutoChooser();
     // Autos go here
     SmartDashboard.putData("Auton Selector", autonSelector);

@@ -32,5 +32,6 @@ public class GoToPose {
           new GoalEndState(0.0, endLocaiton.getRotation())
       );
       return AutoBuilder.followPath(path);
+      
 }
 }
