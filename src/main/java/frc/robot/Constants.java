@@ -204,6 +204,8 @@ public final class Constants {
     public static final double kMaxShootingDistanceMeters = 5.0; // TODO: I forgot these values, please fix them!
   
     public static final double kShooterPowerRatio = 5.0; // TODO: Also wrong
+    public static final double kShooterRPM = 0;
+    public static final double kShootTime = 0;
   }
 
   public static final class ClimberConstants {

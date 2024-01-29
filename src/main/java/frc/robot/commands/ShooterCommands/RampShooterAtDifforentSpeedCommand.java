@@ -25,7 +25,7 @@ public class RampShooterAtDifforentSpeedCommand extends Command {
 
     @Override
     public void initialize(){
-        this.shooterSubsystem.runAtRPMAndRPMRatio(ShooterConstants.kShooterRPM, ShooterConstants.kShooterPowerRatio);
+        this.shooterSubsystem.runAtRPMAndRPMRatio(ShooterConstants.kShooterRPM);
     }
 
     @Override

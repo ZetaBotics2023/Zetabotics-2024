@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
+import frc.robot.commands.ShooterCommands.StopShooterCommand;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
@@ -33,9 +34,12 @@ public class AutoShootPositionCommand extends Command{
     private IntakeSensorSubsystem m_intakeSensorSubsystem;
 
     private Command goToShootPosition;
-    private RampShooterAtDifforentSpeedCommand rampShooter;
+    private RampShooterAtDifforentSpeedCommand rampShooterCommand;
+    private StopShooterCommand stopShooterCommmand;
+    private HandOffToShooterCommand handOffToShooterCommand;
 
 
+    private boolean firstRun = true;
 
     public AutoShootPositionCommand(DriveSubsystem m_driveSubsystem, ShooterSubsystem m_shooterSubsystem, 
     IntakeSubsystem m_intakeSubsystem, PivotSubsystem m_pivotSubsystem, IntakeSensorSubsystem m_intakeSensorSubsystem) {
@@ -45,13 +49,16 @@ public class AutoShootPositionCommand extends Command{
         this.m_pivotSubsystem = m_pivotSubsystem;
         this.m_intakeSensorSubsystem = m_intakeSensorSubsystem;
 
-        this.rampShooter = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
+        this.rampShooterCommand = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
+        this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
+        this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        rampShooter.schedule();
+        this.firstRun = true;
+        rampShooterCommand.schedule();
         Pose2d startingPose = this.m_driveSubsystem.getRobotPose();
         Pose2d shootingPosition = CalculateSpeakerShootingPosition.calculateTargetPosition(startingPose);
         goToShootPosition = GoToPose.goToPose(startingPose, shootingPosition);
@@ -61,20 +68,22 @@ public class AutoShootPositionCommand extends Command{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-
+        if(this.firstRun && this.rampShooterCommand.isFinished() && this.goToShootPosition.isFinished()) {
+            this.firstRun = false;
+            handOffToShooterCommand.schedule();
+        }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        HandOffToShooterCommand handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
-        handOffToShooterCommand.schedule();
+        this.stopShooterCommmand.schedule();
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return this.rampShooter.isFinished() && this.goToShootPosition.isFinished();
+        return this.handOffToShooterCommand.isFinished();
     }
 
 }
