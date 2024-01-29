@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
+import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
@@ -32,6 +33,7 @@ public class AutoShootPositionCommand extends Command{
     private IntakeSensorSubsystem m_intakeSensorSubsystem;
 
     private Command goToShootPosition;
+    private RampShooterAtDifforentSpeedCommand rampShooter;
 
 
 
@@ -42,12 +44,14 @@ public class AutoShootPositionCommand extends Command{
         this.m_intakeSubsystem = m_intakeSubsystem;
         this.m_pivotSubsystem = m_pivotSubsystem;
         this.m_intakeSensorSubsystem = m_intakeSensorSubsystem;
+
+        this.rampShooter = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        // Start shooter right away
+        rampShooter.schedule();
         Pose2d startingPose = this.m_driveSubsystem.getRobotPose();
         Pose2d shootingPosition = CalculateSpeakerShootingPosition.calculateTargetPosition(startingPose);
         goToShootPosition = GoToPose.goToPose(startingPose, shootingPosition);
@@ -70,7 +74,7 @@ public class AutoShootPositionCommand extends Command{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return this.goToShootPosition.isFinished();
+        return this.rampShooter.isFinished() && this.goToShootPosition.isFinished();
     }
 
 }
