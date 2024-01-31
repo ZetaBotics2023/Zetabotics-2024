@@ -7,6 +7,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
@@ -43,11 +44,17 @@ public class PivotSubsystem extends SubsystemBase {
         this.m_pivot.burnFlash();
     }
 
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Desired pivot angle", targetPositionDegrees);
+        SmartDashboard.putNumber("Actual pivot position degrees", rotationsToDegrees(this.m_pivotEncoder.getPosition()));
+    }
+
     private double degreesToRotations(double degrees) {
-        return (degrees / 360.0) * IntakeConstants.kPivotGearRatio;
+        return (degrees / 360.0);
     }
     private double rotationsToDegrees(double rotations) {
-        return (rotations * 360.0) / IntakeConstants.kPivotGearRatio;
+        return (rotations * 360.0);
     }
 
     // We want a set pviot position in degrees

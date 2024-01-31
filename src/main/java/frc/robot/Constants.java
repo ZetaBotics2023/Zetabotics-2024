@@ -231,22 +231,18 @@ public final class Constants {
     public static final double kClimberMinHeight = 0.0;
 
     public static final double kPassIntoClimberPositionRotationDegrees = 0.0;
-
   }
 
   public static final class IntakeConstants {
     public static final int kPivotMotorControllerID = 14; //TODO: Change this to the real one
     public static final int kIntakeMotorControllerID = 15; //TODO: This one too
-    public static final int distenceSensorID = 16;
+    public static final int distenceSensorID = 0;
 
-    public static final double farthestNotePositionMilameters = Units.inchesToMeters(11) * 1000; 
-
+    public static final double kFarthestNotePositionMilameters = Units.inchesToMeters(11) * 1000; 
 
     public static final double kPivotGearRatio = 100.0/1.0;
     public static final double kIntakeGearRatio = 3.0/1.0;
-
     
-
     //TODO: Tune me!
     public static final double kPPivotController = 0.0003;
     public static final double kIPivotController = .00000;
@@ -254,8 +250,8 @@ public final class Constants {
     public static final double kFPivotController = 0.0;
     public static final double kIZonePivotController = 0.5/360.0; // .5 degrees in rotations
 
-    public static final double kPIntakeController = 0.0003;
-    public static final double kIIntakeController = .00000;
+    public static final double kPIntakeController = 0.0001;
+    public static final double kIIntakeController = .0000001;
     public static final double kDIntakeController = 0.0;
     public static final double kFIntakeController = 0.0;
     public static final double kIZoneIntakeController = 0.0;
