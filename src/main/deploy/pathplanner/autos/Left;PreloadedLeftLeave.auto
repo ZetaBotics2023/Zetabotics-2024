@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4,
+      "x": 0.5,
       "y": 7.0
     },
     "rotation": 0
@@ -12,9 +12,27 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "StartShooter"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Left;Preloaded"
+            "pathName": "Left;DriveToLeftNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HandOffNoteToShooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftNoteLeave"
           }
         },
         {
@@ -26,13 +44,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MoveCenterFromLeftShootLeftNote"
+            "pathName": "Left;DriveToCenterNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HandOffNoteToShooter"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LeaveStartZoneCenterNote"
+            "pathName": "CenterNoteLeave"
           }
         }
       ]

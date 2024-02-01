@@ -34,7 +34,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    checkDriverStationUpdate();
   }
 
   /**
@@ -46,7 +45,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    checkDriverStationUpdate();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -86,7 +84,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    checkDriverStationUpdate();
   }
 
   /** This function is called periodically during operator control. */
@@ -111,18 +108,5 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationPeriodic() {}
 
-  
-  private void checkDriverStationUpdate() {
-    // https://www.chiefdelphi.com/t/getalliance-always-returning-red/425782/27
-    Optional<Alliance> optionalCurrentAlliance = DriverStation.getAlliance();
-    Alliance currentAlliance = optionalCurrentAlliance.orElse(Alliance.Blue);
-    
-
-    // If we have data, and have a new alliance from last time
-    if (DriverStation.isDSAttached() && currentAlliance != Constants.AutoConstants.alliance) {
-      m_robotContainer.onAllianceChanged(currentAlliance);
-      Constants.AutoConstants.alliance = currentAlliance;
-    }
-  }
-  
 }
+
