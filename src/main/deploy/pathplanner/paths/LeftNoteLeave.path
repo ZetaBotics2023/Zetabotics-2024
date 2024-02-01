@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.700000000000001,
+        "x": 2.4,
         "y": 7.0
       },
       "isLocked": false,
@@ -16,7 +16,7 @@
     },
     {
       "anchor": {
-        "x": 3.7,
+        "x": 2.4,
         "y": 7.0
       },
       "prevControl": {
@@ -29,7 +29,19 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Slow",
+      "minWaypointRelativePos": 0.4,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.0,
+        "maxAngularVelocity": 270.0,
+        "maxAngularAcceleration": 360.0
+      }
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
@@ -39,14 +51,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": {
-    "rotation": 45.0,
-    "velocity": 0.0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": false
 }
