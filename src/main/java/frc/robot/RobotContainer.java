@@ -15,6 +15,13 @@ import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
 import frc.robot.commands.AutoCommands.FollowAutonomousPath;
 import frc.robot.commands.AutoCommands.TestCommand;
+import frc.robot.commands.IntakeCommands.GoToLocation;
+import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
+import frc.robot.commands.IntakeCommands.PickupFromGroundCommand;
+import frc.robot.commands.IntakeCommands.ShootIntoAmpWithIntakeCommand;
+import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 
 import java.util.function.Consumer;
@@ -41,9 +48,12 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
@@ -53,52 +63,82 @@ public class RobotContainer {
   private final FieldOrientedDriveCommand fieldOrientedDriveCommand;
   private SendableChooser<Command> autonSelector;
 
+  private final IntakeSubsystem m_intakeSubsystem;
+  private final IntakeSensorSubsystem m_intakeSensorSubsystem;
+  private final PivotSubsystem m_pivotSubsystem;
+
+  private final PickupFromGroundCommand pickupFromGroundCommand;
+  private final HandOffToShooterCommand handOffToShooterCommand;
+  private final ShootIntoAmpWithIntakeCommand shootIntoAmpWithIntakeCommand;
+
+  private final GoToLocation goToLocation;
+
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
 
   public RobotContainer() {
-    /*  Adding our commands before we instantiat our drive subsystem,
-        so they are added before the autobuilder is configured.
-    */
+    /*
+     * Adding our commands before we instantiat our drive subsystem,
+     * so they are added before the autobuilder is configured.
+     */
     AutoConstants.namedEventMap.put("PrintCommand", new TestCommand());
     NamedCommands.registerCommands(AutoConstants.namedEventMap);
-    new WaitCommand(0);
     this.m_driveSubsystem = new DriveSubsystem();
-    this.lockSwerves = new LockSwerves(m_driveSubsystem);
     SmartDashboard.putBoolean("Ran Command", false);
 
     this.fieldOrientedDriveCommand = new FieldOrientedDriveCommand(
-      m_driveSubsystem,
-      () -> -modifyAxis(m_driverController.getLeftY()),
-      () -> -modifyAxis(m_driverController.getLeftX()),
-      () -> -modifyAxis(m_driverController.getRightX())
-      );
+        m_driveSubsystem,
+        () -> -modifyAxis(m_driverController.getLeftY()),
+        () -> -modifyAxis(m_driverController.getLeftX()),
+        () -> -modifyAxis(m_driverController.getRightX()));
 
-    m_driveSubsystem.setDefaultCommand(fieldOrientedDriveCommand);
+    this.m_driveSubsystem.setDefaultCommand(fieldOrientedDriveCommand);
+    this.m_intakeSubsystem = new IntakeSubsystem(false);
+    this.m_pivotSubsystem = new PivotSubsystem(false);
+    this.m_intakeSensorSubsystem = new IntakeSensorSubsystem();
 
-   
+    this.lockSwerves = new LockSwerves(m_driveSubsystem);
+
+    // Config Commands
+    this.pickupFromGroundCommand = new PickupFromGroundCommand(
+        this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
+    this.handOffToShooterCommand = new HandOffToShooterCommand(
+        this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
+    this.shootIntoAmpWithIntakeCommand = new ShootIntoAmpWithIntakeCommand(
+      this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
+
+    this.goToLocation = new GoToLocation(m_pivotSubsystem);
+    
     configureBindings();
 
     this.autonSelector = AutoBuilder.buildAutoChooser();
     // Autos go here
     SmartDashboard.putData("Auton Selector", autonSelector);
-  } 
+  }
 
- 
   private void configureBindings() {
-    final JoystickButton lockSwerves =  new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
+    final JoystickButton lockSwerves = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
     lockSwerves.onTrue(Commands.runOnce(this.lockSwerves::schedule));
     lockSwerves.onFalse(Commands.runOnce(this.lockSwerves::cancel));
     final JoystickButton resetHeading = new JoystickButton(m_driverController, XboxController.Button.kY.value);
     resetHeading.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotHeading));
     final JoystickButton resetOdometry = new JoystickButton(m_driverController, XboxController.Button.kA.value);
     resetOdometry.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotPose));
+    final JoystickButton pickUpFromGround = new JoystickButton(m_driverController, XboxController.Button.kX.value);
+    pickUpFromGround.onTrue(this.pickupFromGroundCommand);
+    final JoystickButton handOffToShooter = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+    //handOffToShooter.onTrue(this.handOffToShooterCommand);
+    final JoystickButton shootIntoAmpWithIntake = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+    //shootIntoAmpWithIntake.onTrue(this.shootIntoAmpWithIntakeCommand);
+    handOffToShooter.onTrue(Commands.runOnce(this.goToLocation::schedule));
+    handOffToShooter.onFalse(Commands.runOnce(this.goToLocation::cancel));
+
+    
   }
+  
 
   public Command getAutonomousCommand() {
     return autonSelector.getSelected();
   }
-
-  
 
   private static double modifyAxis(double value) {
     // Deadband
