@@ -238,27 +238,36 @@ public final class Constants {
     public static final int kIntakeMotorControllerID = 15; //TODO: This one too
     public static final int distenceSensorID = 0;
 
-    public static final double kFarthestNotePositionMilameters = Units.inchesToMeters(11) * 1000; 
+    public static final double kPivotThroughBoreZeroOffset = 94;
 
-    public static final double kPivotGearRatio = 100.0/1.0;
+    public static final double kFarthestNotePositionMilameters = 480; 
+
+    public static final double kPivotGearRatio = 125.0/1.0;
     public static final double kIntakeGearRatio = 3.0/1.0;
     
     //TODO: Tune me!
-    public static final double kPPivotController = 0.0003;
-    public static final double kIPivotController = .00000;
-    public static final double kDPivotController = 0.0;
-    public static final double kFPivotController = 0.0;
+    public static final double kPPivotController = 2.5;
+    public static final double kIPivotController = 0;
+    public static final double kDPivotController = 0;
+    public static final double kFPivotController = 0;
     public static final double kIZonePivotController = 0.5/360.0; // .5 degrees in rotations
 
-    public static final double kPIntakeController = 0.0001;
-    public static final double kIIntakeController = .0000001;
-    public static final double kDIntakeController = 0.0;
-    public static final double kFIntakeController = 0.0;
-    public static final double kIZoneIntakeController = 0.0;
+    public static final double kPIntakeVelocityController = 0.0001;
+    public static final double kIIntakeVelocityController = .0000001;
+    public static final double kDIntakeVelocityController = 0.0;
+    public static final double kFIntakeVelocityController = 0.0;
+    public static final double kIZoneIntakeVelocityController = 0.0;
+
+    
+    public static final double kPIntakePositionController = 1;
+    public static final double kIIntakePositionController = 0;
+    public static final double kDIntakePositionController = 0.0;
+    public static final double kFIntakePositionController = 0.0;
+    public static final double kIZoneIntakePositionController = .5/360;
 
     // Rotation constants
-    public static final double kGroundPickupPivotRotationDegrees = 0.0;
-    public static final double kGroundPickupIntakeRPM = 0.0;
+    public static final double kGroundPickupPivotRotationDegrees = 170;
+    public static final double kGroundPickupIntakeRPM = 1500;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
     public static final double kHumanPlayerPickupIntakeRPM = 0.0;
@@ -266,8 +275,8 @@ public final class Constants {
     public static final double kShootInAmpPivotRotationDegrees = 0.0;
     public static final double kShootInAmpIntakeRPM = 0.0;
 
-    public static final double kPassIntoShooterPivotRotationDegrees = 0.0;
-    public static final double kPassIntoShooterIntakeRPM = 0.0;
+    public static final double kPassIntoShooterPivotRotationDegrees = 10;
+    public static final double kPassIntoShooterIntakeRPM = -1500;
 
   }
 }

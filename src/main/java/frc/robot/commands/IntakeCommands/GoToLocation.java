@@ -19,7 +19,7 @@ public class GoToLocation extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        this.pivotSubsystem.setTargetPositionDegrees(10);
+        this.pivotSubsystem.setTargetPositionDegrees(170);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -31,7 +31,7 @@ public class GoToLocation extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        this.pivotSubsystem.setTargetPositionDegrees(120);
+        this.pivotSubsystem.setTargetPositionDegrees(10);
     }
 
     // Returns true when the command should end.
