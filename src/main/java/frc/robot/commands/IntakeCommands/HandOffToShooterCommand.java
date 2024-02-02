@@ -43,7 +43,7 @@ public class HandOffToShooterCommand extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        this.intakeSubsystem.runAtRPM(0);
+        this.intakeSubsystem.runAtRPM(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
     }
 
     /**

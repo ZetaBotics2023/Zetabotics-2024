@@ -108,12 +108,12 @@ public class RobotContainer {
     this.goToLocation = new GoToLocation(m_pivotSubsystem);
     
     configureBindings();
-    AutoConstants.namedEventMap.put("PrintCommand", new TestCommand());
-    NamedCommands.registerCommands(AutoConstants.namedEventMap);
+    //AutoConstants.namedEventMap.put("PrintCommand", new TestCommand());
+//NamedCommands.registerCommands(AutoConstants.namedEventMap);
 
-    this.autonSelector = AutoBuilder.buildAutoChooser();
+   // this.autonSelector = AutoBuilder.buildAutoChooser();
     // Autos go here
-    SmartDashboard.putData("Auton Selector", autonSelector);
+   // SmartDashboard.putData("Auton Selector", autonSelector);
   }
 
   private void configureBindings() {
