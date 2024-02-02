@@ -10,6 +10,7 @@ import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
@@ -25,6 +26,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private final SparkPIDController intakePID;
     private double targetRPM = 0;
     private double targetPositionRotations;
+    
 
     public IntakeSubsystem(boolean intakeMotorRev){
         this.m_intake = new CANSparkMax(Constants.IntakeConstants.kIntakeMotorControllerID, CANSparkMax.MotorType.kBrushless);
@@ -54,12 +56,11 @@ public class IntakeSubsystem extends SubsystemBase {
         this.m_intake.burnFlash();
     }
 
- 
-    @Override
+    @Override 
     public void periodic() {
-        if(this.targetRPM == 0 && this.targetPositionRotations != 0 && Math.abs(this.m_intakeEncoder.getVelocity()) - 1 <= 1) {
-            setTargetPoseitionRotations(this.m_intakeEncoder.getPosition() /  IntakeConstants.kPivotGearRatio);
-        }
+        SmartDashboard.putNumber("Desired Intake Speed", targetRPM);
+        SmartDashboard.putNumber("Actully Intake speed", this.m_intakeEncoder.getVelocity() / IntakeConstants.kIntakeGearRatio);
+        SmartDashboard.putNumber("Desired Intake Pos", targetPositionRotations);
     }
 
     /**
@@ -67,12 +68,22 @@ public class IntakeSubsystem extends SubsystemBase {
      * @param rpm The target RPM of the rollers.
      * @apiNote USE FOR TELEOP
      */
-    public void runAtRPM(double rpm) {
-        if(this.targetPositionRotations != 0) {
-            this.targetPositionRotations = 0;
-        }
+    public void runAtRPM(double rpm) {             
         this.targetRPM = rpm;
-        this.intakePID.setReference(rpm * IntakeConstants.kIntakeGearRatio, ControlType.kVelocity, 0);
+        if(rpm == 0) {
+            setTargetPoseitionRotations(this.m_intakeEncoder.getPosition() /  IntakeConstants.kIntakeGearRatio);
+        } else {
+            this.intakePID.setReference(rpm * IntakeConstants.kIntakeGearRatio, ControlType.kVelocity, 0);
+        } 
+    }
+
+    public void runAtPower(double percent) {
+       if(percent == 0) {
+            this.m_intake.set(percent);
+            setTargetPoseitionRotations(this.m_intakeEncoder.getPosition());
+        } else {
+            this.m_intake.set(percent);
+        }
     }
 
     /**
@@ -81,8 +92,8 @@ public class IntakeSubsystem extends SubsystemBase {
      * @apiNote USE FOR TELEOP
      */
     private void setTargetPoseitionRotations(double rotations) {
-        targetPositionRotations = rotations;
-        this.intakePID.setReference(rotations * IntakeConstants.kIntakeGearRatio, ControlType.kPosition, 1);
+        rotations = this.targetPositionRotations;
+        this.intakePID.setReference(targetPositionRotations, ControlType.kPosition, 1);
     }
 
     public double getTargetRPM() {
