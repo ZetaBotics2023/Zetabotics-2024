@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 0.5,
-      "y": 7.0
+      "y": 4.0
     },
     "rotation": 0
   },
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left;ShootPreloaded"
+            "pathName": "Center;ShootPreloaded"
           }
         },
         {
@@ -38,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftNoteLeave"
+            "pathName": "RightNoteLeave"
           }
         }
       ]

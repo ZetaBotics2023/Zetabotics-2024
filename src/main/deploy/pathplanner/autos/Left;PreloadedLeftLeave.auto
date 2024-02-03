@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ExamplePath"
+            "pathName": "Left;ShootPreloaded"
           }
         },
         {
@@ -42,6 +42,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "PickUpFromGround"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Left;DriveToCenterNote"
@@ -57,6 +63,12 @@
           "type": "path",
           "data": {
             "pathName": "CenterNoteLeave"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooter"
           }
         }
       ]

@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 0.5,
-      "y": 4.0
+      "y": 7.0
     },
     "rotation": 0
   },
@@ -75,6 +75,30 @@
           "type": "path",
           "data": {
             "pathName": "LeftOrCenter;DriveRightNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HandOffNoteToShooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "IntakeRightNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickUpFromGround"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Any;DriveBackShootRightNote"
           }
         },
         {
