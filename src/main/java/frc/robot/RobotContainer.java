@@ -111,9 +111,9 @@ public class RobotContainer {
     AutoConstants.namedEventMap.put("PrintCommand", new TestCommand());
     NamedCommands.registerCommands(AutoConstants.namedEventMap);
 
-   this.autonSelector = AutoBuilder.buildAutoChooser();
+    this.autonSelector = AutoBuilder.buildAutoChooser();
     // Autos go here
-   SmartDashboard.putData("Auton Selector", autonSelector);
+    SmartDashboard.putData("Auton Selector", autonSelector);
   }
 
   private void configureBindings() {

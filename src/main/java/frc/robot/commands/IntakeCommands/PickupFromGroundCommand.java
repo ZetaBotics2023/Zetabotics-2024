@@ -16,7 +16,6 @@ public class PickupFromGroundCommand extends Command {
     private IntakeSensorSubsystem intakeSensorSubsystem;
 
     public PickupFromGroundCommand(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem) {
-        
         this.intakeSubsystem = intakeSusbsystem;
         this.pivotSubsystem = pivotSubsystem;
         this.intakeSensorSubsystem = intakeSensorSubsystem;
@@ -26,8 +25,8 @@ public class PickupFromGroundCommand extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kGroundPickupPivotRotationDegrees);
-        this.intakeSubsystem.runAtRPM(IntakeConstants.kGroundPickupIntakeRPM);
+        //this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kGroundPickupPivotRotationDegrees);
+        this.intakeSubsystem.runAtPower(.7);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -42,8 +41,8 @@ public class PickupFromGroundCommand extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
-        this.intakeSubsystem.runAtRPM(0);
+        //this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
+        this.intakeSubsystem.runAtPower(0);
     }
 
     /**

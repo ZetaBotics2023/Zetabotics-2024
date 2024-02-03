@@ -260,14 +260,14 @@ public final class Constants {
 
     
     public static final double kPIntakePositionController = 1;
-    public static final double kIIntakePositionController = 0;
+    public static final double kIIntakePositionController = 0.0;
     public static final double kDIntakePositionController = 0.0;
     public static final double kFIntakePositionController = 0.0;
     public static final double kIZoneIntakePositionController = .5/360;
 
     // Rotation constants
     public static final double kGroundPickupPivotRotationDegrees = 189;
-    public static final double kGroundPickupIntakeRPM = 500;
+    public static final double kGroundPickupIntakeRPM = 1500;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
     public static final double kHumanPlayerPickupIntakeRPM = 0.0;
@@ -277,6 +277,5 @@ public final class Constants {
 
     public static final double kPassIntoShooterPivotRotationDegrees = 10;
     public static final double kPassIntoShooterIntakeRPM = -500;
-
   }
 }
