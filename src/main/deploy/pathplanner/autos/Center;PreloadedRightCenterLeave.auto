@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left;DriveToLeftNote"
+            "pathName": "Center;ShootPreloaded"
           }
         },
         {
@@ -32,13 +32,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftNoteLeave"
+            "pathName": "RightNoteLeave"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeLeftNote"
+            "pathName": "IntakeRightNote"
           }
         },
         {
@@ -50,7 +50,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left;DriveToCenterNote"
+            "pathName": "Right;DriveToCenterNote"
           }
         },
         {
@@ -69,12 +69,6 @@
           "type": "named",
           "data": {
             "name": "PickUpFromGround"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "LeftOrCenter;DriveRightNote"
           }
         },
         {
