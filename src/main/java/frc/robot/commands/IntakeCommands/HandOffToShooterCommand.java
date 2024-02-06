@@ -2,6 +2,7 @@ package frc.robot.commands.IntakeCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
@@ -15,14 +16,13 @@ public class HandOffToShooterCommand extends Command {
     private IntakeSubsystem intakeSubsystem;
     private PivotSubsystem pivotSubsystem;
     private IntakeSensorSubsystem intakeSensorSubsystem;
-    private Timer timer;
+    private WaitCommand shootWaitTime = null;
 
     public HandOffToShooterCommand(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem) {
         this.intakeSubsystem = intakeSusbsystem;
         this.pivotSubsystem = pivotSubsystem;
         this.intakeSensorSubsystem = intakeSensorSubsystem;
         addRequirements(this.intakeSubsystem, this.pivotSubsystem, this.intakeSensorSubsystem);
-        this.timer = new Timer();
     }
 
     // Called when the command is initially scheduled.
@@ -30,12 +30,13 @@ public class HandOffToShooterCommand extends Command {
     public void initialize() { 
         this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
         this.intakeSubsystem.runAtRPM(IntakeConstants.kPassIntoShooterIntakeRPM);
+        this.shootWaitTime = new WaitCommand(ShooterConstants.kShootTime);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        
+       
     }
 
     /**
@@ -43,7 +44,7 @@ public class HandOffToShooterCommand extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        this.intakeSubsystem.runAtRPM(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
+        this.intakeSubsystem.runAtRPM(0);
     }
 
     /**
@@ -51,14 +52,9 @@ public class HandOffToShooterCommand extends Command {
      */
     @Override
     public boolean isFinished() {
-        // If the note is not in our intake AND the shoot time has elapsed, return true
-        // Otherwise, return false
-        if(!this.intakeSensorSubsystem.isNoteInIntake()) {
-            return this.timer.hasElapsed(ShooterConstants.kShootTime);
-        } else {
-            this.timer.reset();
-            this.timer.start();
+         if(!this.shootWaitTime.isScheduled() && !this.intakeSensorSubsystem.isNoteInIntake()) {
+            this.shootWaitTime.schedule();
         }
-        return false;
+        return this.shootWaitTime.isFinished();
     }
 }

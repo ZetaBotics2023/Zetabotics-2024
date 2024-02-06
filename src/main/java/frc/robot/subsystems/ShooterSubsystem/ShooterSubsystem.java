@@ -37,19 +37,19 @@ public class ShooterSubsystem extends SubsystemBase{
 
         this.m_leftShooter.restoreFactoryDefaults();
         this.m_rightShooter.restoreFactoryDefaults();
+        
+        this.leftShooterPID.setP(ShooterConstants.kPShooterController);
+        this.leftShooterPID.setI(ShooterConstants.kIShooterController);
+        this.leftShooterPID.setD(ShooterConstants.kDShooterController);
+        this.leftShooterPID.setIZone(ShooterConstants.kIZoneShooterController);
+
+        this.rightShooterPID.setP(ShooterConstants.kPShooterController);
+        this.rightShooterPID.setI(ShooterConstants.kIShooterController);
+        this.rightShooterPID.setD(ShooterConstants.kDShooterController);
+        this.rightShooterPID.setIZone(ShooterConstants.kIZoneShooterController);
+
         this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-        this.leftShooterPID.setP(ShooterConstants.kPLeftShooterController);
-        this.leftShooterPID.setI(ShooterConstants.kILeftShooterController);
-        this.leftShooterPID.setD(ShooterConstants.kDLeftShooterController);
-        this.leftShooterPID.setIZone(ShooterConstants.kIZoneLeftShooterController);
-        this.rightShooterPID.setP(ShooterConstants.kPRightShooterController);
-        this.rightShooterPID.setI(ShooterConstants.kIRightShooterController);
-        this.rightShooterPID.setD(ShooterConstants.kDRightShooterController);
-        this.rightShooterPID.setIZone(ShooterConstants.kIZoneRightShooterController);
-           
-        this.m_leftShooter.burnFlash();
-        this.m_rightShooter.burnFlash();
         this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
         this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
         this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
@@ -60,12 +60,11 @@ public class ShooterSubsystem extends SubsystemBase{
         this.m_leftShooter.setInverted(leftShooterRev);
         this.m_rightShooter.setInverted(rightShooterRev);
 
-        this.m_leftShooter.setSmartCurrentLimit(0);
-        this.m_rightShooter.setSmartCurrentLimit(0);
-
-        
-        
-
+        this.m_leftShooter.setSmartCurrentLimit(40);
+        this.m_rightShooter.setSmartCurrentLimit(40);
+           
+        this.m_leftShooter.burnFlash();
+        this.m_rightShooter.burnFlash();
         }
 
         public void setTargetVelocityRPM(double rpm) {
@@ -89,17 +88,22 @@ public class ShooterSubsystem extends SubsystemBase{
 
     //method that runs left at the passed rpm and right at that rpm*powerRatio
     public void runAtRPMAndRPMRatio(double rpm) {
+        this.targetVelocityRPM = rpm;
         this.leftShooterPID.setReference(rpm, ControlType.kVelocity);
         this.rightShooterPID.setReference(rpm*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
     }
 
     //Checks if both motors are at the desired RPM (i did separate methods because idk how to combine them without it being clunky)
     public boolean isLeftMotorAtTargetVelocity() {
-        return (this.m_leftEncoder.getVelocity() - this.targetVelocityRPM) <= this.leftShooterPID.getIZone();
+        return (this.m_leftEncoder.getVelocity() - this.targetVelocityRPM) <= 100;
     }
 
     public boolean isRightMotorAtTargetVelocity() {
-        return (this.m_rightEncoder.getVelocity() - this.targetVelocityRPM) <= this.rightShooterPID.getIZone();
+        return (this.m_rightEncoder.getVelocity() - this.targetVelocityRPM) <= 100;
+    }
+
+    public boolean isRightMotorAtTargetRatioVelocity() {
+        return (this.m_rightEncoder.getVelocity() - this.targetVelocityRPM * ShooterConstants.kShooterPowerRatio) <= 100;
     }
 
 }

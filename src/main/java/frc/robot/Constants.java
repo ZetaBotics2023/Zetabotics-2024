@@ -188,24 +188,18 @@ public final class Constants {
     public static final double kLeftShooterGearRatio = 1.0;
     public static final double kRightShooterGearRatio = 1.0;
 
-    public static final double kPLeftShooterController = 0.0;
-    public static final double kILeftShooterController = 0.0;
-    public static final double kDLeftShooterController = 0.0;
+    public static final double kPShooterController = 0.00009999999747378752;
+    public static final double kIShooterController = 9.999999974752427e-7;//0.0000001;;
+    public static final double kDShooterController = 0.0;
     public static final double kFLeftShooterController = 0.0;
-    public static final double kIZoneLeftShooterController = 0.0; 
+    public static final double kIZoneShooterController = 0.0; 
 
-    public static final double kPRightShooterController = 0.0;
-    public static final double kIRightShooterController = 0.0;
-    public static final double kDRightShooterController = 0.0;
-    public static final double kFRightController = 0.0;
-    public static final double kIZoneRightShooterController = 0.0; 
+    public static final double kMinShootingDistanceMeters = Units.inchesToMeters(80);
+    public static final double kMaxShootingDistanceMeters = Units.inchesToMeters(114);
 
-    public static final double kMinShootingDistanceMeters = 1.0;
-    public static final double kMaxShootingDistanceMeters = 5.0; // TODO: I forgot these values, please fix them!
-  
-    public static final double kShooterPowerRatio = 5.0; // TODO: Also wrong
-    public static final double kShooterRPM = 0;
-    public static final double kShootTime = 0;
+    public static final double kShooterPowerRatio = 1; // TODO: Also wrong
+    public static final double kShooterRPM = 5200;
+    public static final double kShootTime = 2;
   }
 
   public static final class ClimberConstants {
@@ -266,8 +260,8 @@ public final class Constants {
     public static final double kIZoneIntakePositionController = .5/360;
 
     // Rotation constants
-    public static final double kGroundPickupPivotRotationDegrees = 189;
-    public static final double kGroundPickupIntakeRPM = 1500;
+    public static final double kGroundPickupPivotRotationDegrees = 190;
+    public static final double kGroundPickupIntakeRPM = 1000;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
     public static final double kHumanPlayerPickupIntakeRPM = 0.0;
@@ -275,7 +269,7 @@ public final class Constants {
     public static final double kShootInAmpPivotRotationDegrees = 0.0;
     public static final double kShootInAmpIntakeRPM = 0.0;
 
-    public static final double kPassIntoShooterPivotRotationDegrees = 10;
+    public static final double kPassIntoShooterPivotRotationDegrees = 0;
     public static final double kPassIntoShooterIntakeRPM = -500;
   }
 }

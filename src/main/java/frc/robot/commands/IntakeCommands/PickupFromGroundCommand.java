@@ -25,8 +25,8 @@ public class PickupFromGroundCommand extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        //this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kGroundPickupPivotRotationDegrees);
-        this.intakeSubsystem.runAtPower(.7);
+        this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kGroundPickupPivotRotationDegrees);
+        this.intakeSubsystem.runAtRPM(IntakeConstants.kGroundPickupIntakeRPM);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -41,8 +41,8 @@ public class PickupFromGroundCommand extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        //this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
-        this.intakeSubsystem.runAtPower(0);
+        this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
+        this.intakeSubsystem.runAtRPM(0);
     }
 
     /**
