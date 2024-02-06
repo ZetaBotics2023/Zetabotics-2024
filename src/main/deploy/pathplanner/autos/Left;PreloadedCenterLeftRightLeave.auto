@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.1251281761822782,
-      "y": 3.8356826571203007
+      "x": 0.5,
+      "y": 7.0
     },
     "rotation": 0
   },
@@ -32,13 +32,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftNoteLeave"
+            "pathName": "Left;DriveToCenterNote"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeLeftNote"
+            "pathName": "IntakeCenterNote"
           }
         },
         {
@@ -50,7 +50,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left;DriveToCenterNote"
+            "pathName": "Center;DriveToLeftNote"
           }
         },
         {
@@ -62,7 +62,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeCenterNote"
+            "pathName": "IntakeLeftNote"
           }
         },
         {
