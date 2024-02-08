@@ -6,10 +6,15 @@ import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 
+/**
+ * Command to retrieve a note from the ground
+ */
 public class PickupFromGroundCommand extends Command {
+
     private IntakeSubsystem intakeSubsystem;
     private PivotSubsystem pivotSubsystem;
     private IntakeSensorSubsystem intakeSensorSubsystem;
+
     public PickupFromGroundCommand(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem) {
         
         this.intakeSubsystem = intakeSusbsystem;
@@ -31,14 +36,19 @@ public class PickupFromGroundCommand extends Command {
 
     }
 
-    // Called once the command ends or is interrupted.
+    /**
+     * When the command ends, set the pivot's target to the position needed
+     * to put the note in the shooter and set the intake to stop running.
+     */
     @Override
     public void end(boolean interrupted) {
         this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
         this.intakeSubsystem.runAtRPM(0);
     }
 
-    // Returns true when the command should end.
+    /**
+     * If our sensor detects a note in our intake, stop the command.
+     */
     @Override
     public boolean isFinished() {
         return this.intakeSensorSubsystem.isNoteInIntake();

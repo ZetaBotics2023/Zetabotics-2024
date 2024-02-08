@@ -80,8 +80,7 @@ public class RobotContainer {
      * Adding our commands before we instantiat our drive subsystem,
      * so they are added before the autobuilder is configured.
      */
-    AutoConstants.namedEventMap.put("PrintCommand", new TestCommand());
-    NamedCommands.registerCommands(AutoConstants.namedEventMap);
+   
     this.m_driveSubsystem = new DriveSubsystem();
     SmartDashboard.putBoolean("Ran Command", false);
 
@@ -93,7 +92,7 @@ public class RobotContainer {
 
     this.m_driveSubsystem.setDefaultCommand(fieldOrientedDriveCommand);
     this.m_intakeSubsystem = new IntakeSubsystem(false);
-    this.m_pivotSubsystem = new PivotSubsystem(false);
+    this.m_pivotSubsystem = new PivotSubsystem(true);
     this.m_intakeSensorSubsystem = new IntakeSensorSubsystem();
 
     this.lockSwerves = new LockSwerves(m_driveSubsystem);
@@ -109,10 +108,12 @@ public class RobotContainer {
     this.goToLocation = new GoToLocation(m_pivotSubsystem);
     
     configureBindings();
+    //AutoConstants.namedEventMap.put("PrintCommand", new TestCommand());
+//NamedCommands.registerCommands(AutoConstants.namedEventMap);
 
-    this.autonSelector = AutoBuilder.buildAutoChooser();
+   // this.autonSelector = AutoBuilder.buildAutoChooser();
     // Autos go here
-    SmartDashboard.putData("Auton Selector", autonSelector);
+   // SmartDashboard.putData("Auton Selector", autonSelector);
   }
 
   private void configureBindings() {

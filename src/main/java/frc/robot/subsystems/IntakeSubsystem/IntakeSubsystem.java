@@ -14,59 +14,78 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 
+/**
+ * This subsystem allows us control of our intake rollers.
+ * To control the pivot angle, use the pivot subsystem.
+ */
 public class IntakeSubsystem extends SubsystemBase {
 
     private final CANSparkMax m_intake;
     private final RelativeEncoder m_intakeEncoder;
     private final SparkPIDController intakePID;
-    private double finishedRunningTimestamp = 0;
+    private double targetRPM = 0;
+    private double targetPositionRotations;
 
-    public IntakeSubsystem(boolean intakeMotorRev) {
+    public IntakeSubsystem(boolean intakeMotorRev){
         this.m_intake = new CANSparkMax(Constants.IntakeConstants.kIntakeMotorControllerID, CANSparkMax.MotorType.kBrushless);
         this.m_intakeEncoder = this.m_intake.getEncoder();
         this.intakePID = this.m_intake.getPIDController();
 
         this.m_intake.restoreFactoryDefaults();
         this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-        this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-        this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+        this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
+        this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 20);
     
         this.m_intake.setIdleMode(IdleMode.kBrake);
         this.m_intake.setInverted(intakeMotorRev);
         // This may need to be changed
-        // Temp voltage for safty, increase onces tuned.
         this.m_intake.setSmartCurrentLimit(20);
         
-        this.intakePID.setP(IntakeConstants.kPIntakeController);
-        this.intakePID.setI(IntakeConstants.kIIntakeController);
-        this.intakePID.setD(IntakeConstants.kDIntakeController);
-        this.intakePID.setIZone(IntakeConstants.kIZoneIntakeController);
+        this.intakePID.setP(IntakeConstants.kPIntakeVelocityController, 0);
+        this.intakePID.setI(IntakeConstants.kIIntakeVelocityController, 0);
+        this.intakePID.setD(IntakeConstants.kDIntakeVelocityController, 0);
+        this.intakePID.setIZone(IntakeConstants.kIZoneIntakeVelocityController, 0);
+
+        this.intakePID.setP(IntakeConstants.kPIntakePositionController, 1);
+        this.intakePID.setI(IntakeConstants.kIIntakePositionController, 1);
+        this.intakePID.setD(IntakeConstants.kDIntakePositionController, 1);
+        this.intakePID.setIZone(IntakeConstants.kIZoneIntakePositionController, 1);
 
         this.m_intake.burnFlash();
     }
-    /**
-     * 
-     * @param rpm
-     * @param seconds
-     * @apiNote FOR AUTON USE ONLY
-     */
-    public void runAtRPMForTime(double rpm, double seconds) {
-        this.intakePID.setReference(rpm, ControlType.kVelocity);
-        this.finishedRunningTimestamp = Timer.getFPGATimestamp() + seconds;
+
+ 
+    @Override
+    public void periodic() {
+        if(this.targetRPM == 0 && this.targetPositionRotations != 0 && Math.abs(this.m_intakeEncoder.getVelocity()) - 1 <= 1) {
+            setTargetPoseitionRotations(this.m_intakeEncoder.getPosition() /  IntakeConstants.kPivotGearRatio);
+        }
     }
 
     /**
-     * 
-     * @param rpm
+     * Runs the motors at a specific RPM indefinitely.
+     * @param rpm The target RPM of the rollers.
      * @apiNote USE FOR TELEOP
      */
     public void runAtRPM(double rpm) {
-        this.intakePID.setReference(rpm, ControlType.kVelocity);
+        if(this.targetPositionRotations != 0) {
+            this.targetPositionRotations = 0;
+        }
+        this.targetRPM = rpm;
+        this.intakePID.setReference(rpm * IntakeConstants.kIntakeGearRatio, ControlType.kVelocity, 0);
     }
 
-    public boolean isRPMTimeReached() {
-        boolean isTimeReached = Timer.getFPGATimestamp() - this.finishedRunningTimestamp >= 0;
-        if (isTimeReached) this.intakePID.setReference(0, ControlType.kVelocity);
-        return isTimeReached;
+    /**
+     * Runs the motor to a specific position in rotations
+     * @param rpm The target RPM of the rollers.
+     * @apiNote USE FOR TELEOP
+     */
+    private void setTargetPoseitionRotations(double rotations) {
+        targetPositionRotations = rotations;
+        this.intakePID.setReference(rotations * IntakeConstants.kIntakeGearRatio, ControlType.kPosition, 1);
+    }
+
+    public double getTargetRPM() {
+        return this.targetRPM;
     }
 }
