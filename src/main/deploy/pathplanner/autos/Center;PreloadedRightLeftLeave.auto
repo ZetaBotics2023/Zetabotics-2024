@@ -1,0 +1,91 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.5,
+      "y": 4.0
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "StartShooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center;ShootPreloaded"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HandOffNoteToShooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightNoteLeave"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "IntakeRightNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickUpFromGround"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right;DriveToLeft"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HandOffNoteToShooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "IntakeLeftNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickUpFromGround"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HandOffNoteToShooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooter"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

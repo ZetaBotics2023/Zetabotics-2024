@@ -2,73 +2,6 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.1251281761822782,
-      "y": 3.8356826571203007
-    },
-    "rotation": 0
-  },
-  "command": {
-    "type": "sequential",
-    "data": {
-      "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "StartShooter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left;DriveToLeftNote"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOffNoteToShooter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "LeftNoteLeave"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "IntakeLeftNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left;DriveToCenterNote"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOffNoteToShooter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "LeftOrCenter;DriveRightNote"
-          }
-        }
-      ]
-    }
-  },
-  "folder": null,
-  "choreoAuto": false
-}
-{
-  "version": 1.0,
-  "startingPose": {
-    "position": {
       "x": 0.5,
       "y": 7.0
     },
@@ -99,13 +32,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftNoteLeave"
+            "pathName": "Left;DriveToCenterNote"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeLeftNote"
+            "pathName": "IntakeCenterNote"
           }
         },
         {
@@ -117,7 +50,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left;DriveToCenterNote"
+            "pathName": "Center;DriveToLeftNote"
           }
         },
         {
@@ -129,7 +62,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeCenterNote"
+            "pathName": "IntakeLeftNote"
           }
         },
         {
