@@ -10,7 +10,9 @@ import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 
@@ -26,6 +28,14 @@ public class IntakeSubsystem extends SubsystemBase {
     private double targetRPM = 0;
     private double targetPositionRotations;
 
+    private WaitCommand waitForSwichToPose;
+
+    private int numberOfPowerSets = 0;
+    private int numberOfVelocitySets = 0;
+    private int numberOfRotationSets = 0;
+
+    
+
     public IntakeSubsystem(boolean intakeMotorRev){
         this.m_intake = new CANSparkMax(Constants.IntakeConstants.kIntakeMotorControllerID, CANSparkMax.MotorType.kBrushless);
         this.m_intakeEncoder = this.m_intake.getEncoder();
@@ -39,7 +49,7 @@ public class IntakeSubsystem extends SubsystemBase {
         this.m_intake.setIdleMode(IdleMode.kBrake);
         this.m_intake.setInverted(intakeMotorRev);
         // This may need to be changed
-        this.m_intake.setSmartCurrentLimit(20);
+        this.m_intake.setSmartCurrentLimit(40);
         
         this.intakePID.setP(IntakeConstants.kPIntakeVelocityController, 0);
         this.intakePID.setI(IntakeConstants.kIIntakeVelocityController, 0);
@@ -54,12 +64,20 @@ public class IntakeSubsystem extends SubsystemBase {
         this.m_intake.burnFlash();
     }
 
- 
-    @Override
+    @Override 
     public void periodic() {
-        if(this.targetRPM == 0 && this.targetPositionRotations != 0 && Math.abs(this.m_intakeEncoder.getVelocity()) - 1 <= 1) {
-            setTargetPoseitionRotations(this.m_intakeEncoder.getPosition() /  IntakeConstants.kPivotGearRatio);
+        if(this.waitForSwichToPose != null &&this.waitForSwichToPose.isFinished()) {
+            this.waitForSwichToPose = null;
+            setTargetPoseitionRotations(this.m_intakeEncoder.getPosition() + 2000);
+            this.intakePID.setReference(this.targetRPM * IntakeConstants.kIntakeGearRatio, ControlType.kVelocity, 0);
         }
+        SmartDashboard.putNumber("Desired Intake Speed", targetRPM);
+        SmartDashboard.putNumber("Actully Intake speed", this.m_intakeEncoder.getVelocity() / IntakeConstants.kIntakeGearRatio);
+        SmartDashboard.putNumber("Desired Intake Pos", targetPositionRotations);
+
+        SmartDashboard.putNumber("Number of times intake power has bean set", numberOfPowerSets);
+        SmartDashboard.putNumber("Number of times intake rotation has bean set", numberOfRotationSets);
+        SmartDashboard.putNumber("Number of times intake velocity has bean set", numberOfVelocitySets);
     }
 
     /**
@@ -67,12 +85,26 @@ public class IntakeSubsystem extends SubsystemBase {
      * @param rpm The target RPM of the rollers.
      * @apiNote USE FOR TELEOP
      */
-    public void runAtRPM(double rpm) {
-        if(this.targetPositionRotations != 0) {
-            this.targetPositionRotations = 0;
-        }
+    public void runAtRPM(double rpm) {     
+        this.numberOfVelocitySets++;        
         this.targetRPM = rpm;
-        this.intakePID.setReference(rpm * IntakeConstants.kIntakeGearRatio, ControlType.kVelocity, 0);
+        if(rpm == 0) {
+            this.waitForSwichToPose = new WaitCommand(1);
+            this.waitForSwichToPose.schedule();
+        } else {
+            this.intakePID.setReference(rpm * IntakeConstants.kIntakeGearRatio, ControlType.kVelocity, 0);
+        } 
+    }
+
+    public void runAtPower(double percent) {
+        this.numberOfPowerSets++;
+       if(percent == 0) {
+            this.m_intake.set(percent);
+            setTargetPoseitionRotations(this.m_intakeEncoder.getPosition());
+        } else {   
+            this.m_intake.set(percent);
+        }
+        SmartDashboard.putNumber("Percent intake", percent);
     }
 
     /**
@@ -81,8 +113,9 @@ public class IntakeSubsystem extends SubsystemBase {
      * @apiNote USE FOR TELEOP
      */
     private void setTargetPoseitionRotations(double rotations) {
-        targetPositionRotations = rotations;
-        this.intakePID.setReference(rotations * IntakeConstants.kIntakeGearRatio, ControlType.kPosition, 1);
+        this.numberOfRotationSets++;
+        rotations = this.targetPositionRotations;
+        this.intakePID.setReference(targetPositionRotations, ControlType.kPosition, 1);
     }
 
     public double getTargetRPM() {

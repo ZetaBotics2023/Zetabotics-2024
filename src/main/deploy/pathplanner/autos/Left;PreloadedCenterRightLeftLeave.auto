@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5,
+      "x": 0.5,
       "y": 7.0
     },
     "rotation": 0
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left;DriveToLeftNote"
+            "pathName": "Left;ShootPreloaded"
           }
         },
         {
@@ -32,7 +32,55 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftNoteLeave"
+            "pathName": "Left;DriveToCenterNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "IntakeCenterNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickUpFromGround"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftOrCenter;DriveRightNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HandOffNoteToShooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "IntakeRightNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickUpFromGround"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right;DriveToLeft"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HandOffNoteToShooter"
           }
         },
         {
@@ -50,19 +98,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left;DriveToCenterNote"
+            "pathName": "Any;DriveBackShootRightNote"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "HandOffNoteToShooter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "CenterNoteLeave"
           }
         },
         {

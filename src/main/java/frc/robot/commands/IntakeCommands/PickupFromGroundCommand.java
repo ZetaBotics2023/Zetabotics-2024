@@ -16,7 +16,6 @@ public class PickupFromGroundCommand extends Command {
     private IntakeSensorSubsystem intakeSensorSubsystem;
 
     public PickupFromGroundCommand(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem) {
-        
         this.intakeSubsystem = intakeSusbsystem;
         this.pivotSubsystem = pivotSubsystem;
         this.intakeSensorSubsystem = intakeSensorSubsystem;

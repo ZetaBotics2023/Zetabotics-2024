@@ -39,6 +39,6 @@ public class RampShooterAtDifforentSpeedCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return this.shooterSubsystem.isLeftMotorAtTargetVelocity() && this.shooterSubsystem.isRightMotorAtTargetVelocity();
+        return this.shooterSubsystem.isLeftMotorAtTargetVelocity() && this.shooterSubsystem.isRightMotorAtTargetRatioVelocity();
     }
 }
