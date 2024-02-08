@@ -230,8 +230,8 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final int kPivotMotorControllerID = 14; //TODO: Change this to the real one
-    public static final int kIntakeMotorControllerID = 15; //TODO: This one too
+    public static final int kPivotMotorControllerID = 14; 
+    public static final int kIntakeMotorControllerID = 15; 
     public static final int distenceSensorID = 0;
 
     public static final double kPivotThroughBoreZeroOffset = 94;
@@ -241,7 +241,6 @@ public final class Constants {
     public static final double kPivotGearRatio = 125.0/1.0;
     public static final double kIntakeGearRatio = 3.0/1.0;
     
-    //TODO: Tune me!
     public static final double kPPivotController = 2.5;
     public static final double kIPivotController = 0;
     public static final double kDPivotController = 0;

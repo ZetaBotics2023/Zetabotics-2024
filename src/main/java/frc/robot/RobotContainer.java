@@ -134,20 +134,21 @@ public class RobotContainer {
     lockSwerves.onFalse(Commands.runOnce(this.lockSwerves::cancel));
     final JoystickButton resetHeading = new JoystickButton(m_driverController, XboxController.Button.kY.value);
     resetHeading.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotHeading));
-    final JoystickButton resetOdometry = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+    final JoystickButton resetOdometry = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
     resetOdometry.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotPose));
     final JoystickButton pickUpFromGround = new JoystickButton(m_driverController, XboxController.Button.kX.value);
     pickUpFromGround.onTrue(this.pickupFromGroundCommand);
     pickUpFromGround.onFalse(Commands.runOnce(this.pickupFromGroundCommand::cancel));
     final JoystickButton shootNote = new JoystickButton(m_driverController, XboxController.Button.kB.value);
-    shootNote.onTrue(this.autoShootPositionCommand);
+    shootNote.onTrue(this.autoShootCommand);
     shootNote.onFalse(Commands.runOnce(this.autoShootCommand::cancel));
-    final JoystickButton shootIntoAmpWithIntake = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+    final JoystickButton shootNoteAutoPose = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+    shootNoteAutoPose.onTrue(this.autoShootPositionCommand);
+    shootNoteAutoPose.onFalse(Commands.runOnce(this.autoShootPositionCommand::cancel));
+    //final JoystickButton shootIntoAmpWithIntake = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
     //shootIntoAmpWithIntake.onTrue(this.shootIntoAmpWithIntakeCommand);
     //handOffToShooter.onTrue(Commands.runOnce(this.goToLocation::schedule));
-    //handOffToShooter.onFalse(Commands.runOnce(this.goToLocation::cancel));
-
-    
+    //handOffToShooter.onFalse(Commands.runOnce(this.goToLocation::cancel));    
   }
   
   public Command getAutonomousCommand() {

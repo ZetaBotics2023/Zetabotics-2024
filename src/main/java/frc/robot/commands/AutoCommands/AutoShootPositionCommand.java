@@ -55,22 +55,30 @@ public class AutoShootPositionCommand extends Command{
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        rampShooterCommand.schedule();
+
+        this.rampShooterCommand = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
+        this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
+        this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
+
+
         Pose2d startingPose = this.m_driveSubsystem.getRobotPose();
         Pose2d shootingPosition = CalculateSpeakerShootingPosition.calculateTargetPosition(startingPose);
         goToShootPosition = GoToPose.goToPose(startingPose, shootingPosition);
-        goToShootPosition.schedule();   
+        goToShootPosition.schedule();
+        rampShooterCommand.schedule();
+ 
+
         SmartDashboard.putNumber("Auto Position Goal X", shootingPosition.getX()); 
         SmartDashboard.putNumber("Auto Position Goal Y", shootingPosition.getY()); 
         SmartDashboard.putNumber("Auto Position Goal Theta", shootingPosition.getRotation().getDegrees()); 
-
-
+        SmartDashboard.putString("Shooting Stage Pose", "Scheduled go to pose and ramp shooter");
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         if(!handOffToShooterCommand.isScheduled() && this.rampShooterCommand.isFinished() && this.goToShootPosition.isFinished()) {
+            SmartDashboard.putString("Shooting Stage Pose", "Hand Off To Shooter Scheduled");
             handOffToShooterCommand.schedule();
         }
     }
@@ -78,6 +86,10 @@ public class AutoShootPositionCommand extends Command{
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        SmartDashboard.putString("Shooting Stage Pose", "Done: Stopping Shooting");
+        this.rampShooterCommand.cancel();
+        this.handOffToShooterCommand.cancel();
+        this.goToShootPosition.cancel();
         this.stopShooterCommmand.schedule();
     }
 
