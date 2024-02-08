@@ -14,6 +14,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
@@ -58,7 +59,12 @@ public class AutoShootPositionCommand extends Command{
         Pose2d startingPose = this.m_driveSubsystem.getRobotPose();
         Pose2d shootingPosition = CalculateSpeakerShootingPosition.calculateTargetPosition(startingPose);
         goToShootPosition = GoToPose.goToPose(startingPose, shootingPosition);
-        goToShootPosition.schedule();    
+        goToShootPosition.schedule();   
+        SmartDashboard.putNumber("Auto Position Goal X", shootingPosition.getX()); 
+        SmartDashboard.putNumber("Auto Position Goal Y", shootingPosition.getY()); 
+        SmartDashboard.putNumber("Auto Position Goal Theta", shootingPosition.getRotation().getDegrees()); 
+
+
     }
 
     // Called every time the scheduler runs while the command is scheduled.

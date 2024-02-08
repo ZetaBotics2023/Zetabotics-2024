@@ -14,6 +14,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
+import frc.robot.commands.AutoCommands.AutoShootPositionCommand;
 import frc.robot.commands.AutoCommands.FollowAutonomousPath;
 import frc.robot.commands.AutoCommands.TestCommand;
 import frc.robot.commands.IntakeCommands.GoToLocation;
@@ -75,7 +76,7 @@ public class RobotContainer {
 
   private final AutoShootCommand autoShootCommand;
   private final ShootIntoAmpWithIntakeCommand shootIntoAmpWithIntakeCommand;
-
+  private final AutoShootPositionCommand autoShootPositionCommand;
   private final GoToLocation goToLocation;
 
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
@@ -111,6 +112,8 @@ public class RobotContainer {
     this.shootIntoAmpWithIntakeCommand = new ShootIntoAmpWithIntakeCommand(
       this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
     this.autoShootCommand = new AutoShootCommand(this.m_shooterSubsystem, this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
+    this.autoShootPositionCommand = new AutoShootPositionCommand(m_driveSubsystem,
+     m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
 
     this.goToLocation = new GoToLocation(m_pivotSubsystem);
     
@@ -118,11 +121,11 @@ public class RobotContainer {
     AutoConstants.namedEventMap.put("PrintCommand", new TestCommand());
     AutoConstants.namedEventMap.put("PickUpFromGround", this.pickupFromGroundCommand);
 
-    NamedCommands.registerCommands(AutoConstants.namedEventMap);
+   // NamedCommands.registerCommands(AutoConstants.namedEventMap);
 
-    this.autonSelector = AutoBuilder.buildAutoChooser();
+    //this.autonSelector = AutoBuilder.buildAutoChooser();
     // Autos go here
-    SmartDashboard.putData("Auton Selector", autonSelector);
+    //SmartDashboard.putData("Auton Selector", autonSelector);
   }
 
   private void configureBindings() {
@@ -135,8 +138,9 @@ public class RobotContainer {
     resetOdometry.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotPose));
     final JoystickButton pickUpFromGround = new JoystickButton(m_driverController, XboxController.Button.kX.value);
     pickUpFromGround.onTrue(this.pickupFromGroundCommand);
+    pickUpFromGround.onFalse(Commands.runOnce(this.pickupFromGroundCommand::cancel));
     final JoystickButton shootNote = new JoystickButton(m_driverController, XboxController.Button.kB.value);
-    shootNote.onTrue(this.autoShootCommand);
+    shootNote.onTrue(this.autoShootPositionCommand);
     shootNote.onFalse(Commands.runOnce(this.autoShootCommand::cancel));
     final JoystickButton shootIntoAmpWithIntake = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
     //shootIntoAmpWithIntake.onTrue(this.shootIntoAmpWithIntakeCommand);

@@ -9,6 +9,7 @@ import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
@@ -55,29 +56,41 @@ public class ShooterSubsystem extends SubsystemBase{
         this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
         this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
 
-        this.m_leftShooter.setIdleMode(IdleMode.kBrake);
-        this.m_rightShooter.setIdleMode(IdleMode.kBrake);
+        this.m_leftShooter.setIdleMode(IdleMode.kCoast);
+        this.m_rightShooter.setIdleMode(IdleMode.kCoast);
         this.m_leftShooter.setInverted(leftShooterRev);
         this.m_rightShooter.setInverted(rightShooterRev);
 
         this.m_leftShooter.setSmartCurrentLimit(40);
         this.m_rightShooter.setSmartCurrentLimit(40);
+
+        //TODO: Check if this helps consistency
+        //this.m_leftShooter.enableVoltageCompensation(12);
+        //this.m_rightShooter.enableVoltageCompensation(12);
            
         this.m_leftShooter.burnFlash();
         this.m_rightShooter.burnFlash();
-        }
+        }  
 
         public void setTargetVelocityRPM(double rpm) {
-        this.targetVelocityRPM = rpm;
-        this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
-        this.rightShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
+            SmartDashboard.putNumber("Desired Shooter RPM", rpm);
+            this.targetVelocityRPM = rpm;
+            if(rpm == 0) {
+                this.m_leftShooter.set(0);
+                this.m_rightShooter.set(0);
+            } else {
+                this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
+                this.rightShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
+            }
+        
     }
 
-    // We want a method to check if the pivot motor is at the correct position of degrees
-    public boolean isMotorAtTargetVelocity() {
-        return Math.abs(this.m_leftEncoder.getVelocity() - this.targetVelocityRPM) <= this.leftShooterPID.getIZone();
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Actully Shooter RPM Right", this.m_rightEncoder.getVelocity());
+        SmartDashboard.putNumber("Actully Shooter RPM Left", this.m_leftEncoder.getVelocity());
     }
-    
+
     //runs both motors at the same speed for x amount of time (i think)
     public void runAtRPMForTime(double rpm, double seconds) {
         this.leftShooterPID.setReference(rpm, ControlType.kVelocity);
@@ -89,21 +102,28 @@ public class ShooterSubsystem extends SubsystemBase{
     //method that runs left at the passed rpm and right at that rpm*powerRatio
     public void runAtRPMAndRPMRatio(double rpm) {
         this.targetVelocityRPM = rpm;
-        this.leftShooterPID.setReference(rpm, ControlType.kVelocity);
-        this.rightShooterPID.setReference(rpm*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
+        SmartDashboard.putNumber("Desired Shooter RPM", rpm);
+        if(rpm == 0) {
+            this.m_leftShooter.set(0);
+            this.m_rightShooter.set(0);
+        } else {
+            this.leftShooterPID.setReference(rpm, ControlType.kVelocity);
+            this.rightShooterPID.setReference(rpm*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
+        }
+       
     }
 
     //Checks if both motors are at the desired RPM (i did separate methods because idk how to combine them without it being clunky)
     public boolean isLeftMotorAtTargetVelocity() {
-        return (this.m_leftEncoder.getVelocity() - this.targetVelocityRPM) <= 100;
+        return Math.abs(this.m_leftEncoder.getVelocity() - this.targetVelocityRPM) <= ShooterConstants.kShooterRPMTolorence;
     }
 
     public boolean isRightMotorAtTargetVelocity() {
-        return (this.m_rightEncoder.getVelocity() - this.targetVelocityRPM) <= 100;
+        return Math.abs(this.m_rightEncoder.getVelocity() - this.targetVelocityRPM) <= ShooterConstants.kShooterRPMTolorence;
     }
 
     public boolean isRightMotorAtTargetRatioVelocity() {
-        return (this.m_rightEncoder.getVelocity() - this.targetVelocityRPM * ShooterConstants.kShooterPowerRatio) <= 100;
+        return Math.abs(this.m_rightEncoder.getVelocity() - this.targetVelocityRPM * ShooterConstants.kShooterPowerRatio) <= ShooterConstants.kShooterRPMTolorence;
     }
 
 }

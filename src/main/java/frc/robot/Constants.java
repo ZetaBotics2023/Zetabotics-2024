@@ -188,7 +188,7 @@ public final class Constants {
     public static final double kLeftShooterGearRatio = 1.0;
     public static final double kRightShooterGearRatio = 1.0;
 
-    public static final double kPShooterController = 0.00009999999747378752;
+    public static final double kPShooterController = 0.00039999998989515007;
     public static final double kIShooterController = 9.999999974752427e-7;//0.0000001;;
     public static final double kDShooterController = 0.0;
     public static final double kFLeftShooterController = 0.0;
@@ -197,9 +197,11 @@ public final class Constants {
     public static final double kMinShootingDistanceMeters = Units.inchesToMeters(80);
     public static final double kMaxShootingDistanceMeters = Units.inchesToMeters(114);
 
-    public static final double kShooterPowerRatio = 1; // TODO: Also wrong
-    public static final double kShooterRPM = 5200;
+    public static final double kShooterPowerRatio = .9; // TODO: Also wrong
+    public static final double kShooterRPM = 4200;//4500;
     public static final double kShootTime = 2;
+
+    public static final double kShooterRPMTolorence = 200;
   }
 
   public static final class ClimberConstants {
@@ -270,6 +272,6 @@ public final class Constants {
     public static final double kShootInAmpIntakeRPM = 0.0;
 
     public static final double kPassIntoShooterPivotRotationDegrees = 0;
-    public static final double kPassIntoShooterIntakeRPM = -500;
+    public static final double kPassIntoShooterIntakeRPM = -3000;
   }
 }

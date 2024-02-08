@@ -1,6 +1,7 @@
 package frc.robot.commands.IntakeCommands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
@@ -28,9 +29,9 @@ public class HandOffToShooterCommand extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
+        this.shootWaitTime = null;
         this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
         this.intakeSubsystem.runAtRPM(IntakeConstants.kPassIntoShooterIntakeRPM);
-        this.shootWaitTime = new WaitCommand(ShooterConstants.kShootTime);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -52,9 +53,15 @@ public class HandOffToShooterCommand extends Command {
      */
     @Override
     public boolean isFinished() {
-         if(!this.shootWaitTime.isScheduled() && !this.intakeSensorSubsystem.isNoteInIntake()) {
+         if(this.shootWaitTime == null && !this.intakeSensorSubsystem.isNoteInIntake()) {
+            this.shootWaitTime = new WaitCommand(ShooterConstants.kShootTime);
+            SmartDashboard.putString("HandOffState", "Started Timer");
             this.shootWaitTime.schedule();
+        } 
+        if(this.shootWaitTime != null) {
+            SmartDashboard.putString("HandOffState", this.shootWaitTime.isFinished() ? "Ended Timer" : "Timer Still Going");
+            return this.shootWaitTime.isFinished();
         }
-        return this.shootWaitTime.isFinished();
+        return false;
     }
 }
