@@ -76,8 +76,9 @@ public class AutoShootCommand extends Command{
     public void end(boolean interrupted) {
         SmartDashboard.putString("Shooting Stage", "Scheduled Stop Shooter Command");
 
-        this.stopShooterCommmand.schedule();
+        this.rampShooterCommand.cancel();
         this.handOffToShooterCommand.cancel();
+        this.stopShooterCommmand.schedule();
     }
 
     // Returns true when the command should end.

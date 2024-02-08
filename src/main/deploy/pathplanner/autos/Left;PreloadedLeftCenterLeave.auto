@@ -62,31 +62,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeCenterNote"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "PickUpFromGround"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "LeftOrCenter;DriveRightNote"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOffNoteToShooter"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopShooter"
           }
         }
       ]

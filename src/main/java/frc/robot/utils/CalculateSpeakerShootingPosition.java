@@ -57,7 +57,6 @@ public class CalculateSpeakerShootingPosition {
         double targetPositionXMin = (distanceToAprilTagX * robotToTargetConversionFactorMin) + aprilTagPosition.getX();
         double targetPositionXMax = (distanceToAprilTagX * robotToTargetConversionFactorMax) + aprilTagPosition.getX();
 
-
         // The target position in the Y axis
         double targetPositionYMin = (distanceToAprilTagY * robotToTargetConversionFactorMin) + aprilTagPosition.getY();
         double targetPositionYMax = (distanceToAprilTagY * robotToTargetConversionFactorMax) + aprilTagPosition.getY();
@@ -70,8 +69,8 @@ public class CalculateSpeakerShootingPosition {
 
 
         // Calcuate the angle the robot will end with
-        double targetAngleRadians = Math.asin(distanceToAprilTagX/distanceToAprilTag);
-
+        double targetAngleRadians = Math.asin(distanceToAprilTagY/distanceToAprilTag) + 180;
+        
         // Construct the final position and return it
         return new Pose2d(targetTranslation, Rotation2d.fromRadians(targetAngleRadians));
     }
