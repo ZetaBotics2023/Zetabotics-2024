@@ -325,6 +325,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void resetRobotHeading() {
     this.m_gyro.reset();
+    this.poseEstimator.resetPosition(m_gyro.getRotation2d(), getModulePositions(), new Pose2d());
   }
 
 

@@ -163,7 +163,10 @@ public final class Constants {
 
 
   public static final class VisionConstants {
-
+    // Limelight pose
+    // 13in horizontal
+    // 16 1/4in vertical
+    // 21 Degrees Pitch
     public static final Pose2d kRedAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(16.579342, 5.547868), Rotation2d.fromDegrees(180));
     public static final Pose2d kBlueAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(-0.0381, 5.547868), Rotation2d.fromDegrees(0));
 
@@ -179,7 +182,7 @@ public final class Constants {
     public static final double kMaxAutonAngulerAccelerationInMetersPerSecondSqr = 4.1;
     //5.9
     public static final PIDConstants kTranslationAutoPID = new PIDConstants(1.95, 0, .0001);
-    public static final PIDConstants kRotationAutoPID = new PIDConstants(3.5, 0.0, 0.0);
+    public static final PIDConstants kRotationAutoPID = new PIDConstants(20, 0, 0);//new PIDConstants(3.5, 0.0, 0.0);
   }
   public static final class ShooterConstants {
     public static final int kLeftShooterMotorControllerID = 16;
@@ -188,7 +191,7 @@ public final class Constants {
     public static final double kLeftShooterGearRatio = 1.0;
     public static final double kRightShooterGearRatio = 1.0;
 
-    public static final double kPShooterController = 0.00009999999747378752;
+    public static final double kPShooterController = 0.00039999998989515007;
     public static final double kIShooterController = 9.999999974752427e-7;//0.0000001;;
     public static final double kDShooterController = 0.0;
     public static final double kFLeftShooterController = 0.0;
@@ -197,9 +200,11 @@ public final class Constants {
     public static final double kMinShootingDistanceMeters = Units.inchesToMeters(80);
     public static final double kMaxShootingDistanceMeters = Units.inchesToMeters(114);
 
-    public static final double kShooterPowerRatio = 1; // TODO: Also wrong
-    public static final double kShooterRPM = 5200;
+    public static final double kShooterPowerRatio = .9; // TODO: Also wrong
+    public static final double kShooterRPM = 4200;//4500;
     public static final double kShootTime = 2;
+
+    public static final double kShooterRPMTolorence = 200;
   }
 
   public static final class ClimberConstants {
@@ -228,8 +233,8 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final int kPivotMotorControllerID = 14; //TODO: Change this to the real one
-    public static final int kIntakeMotorControllerID = 15; //TODO: This one too
+    public static final int kPivotMotorControllerID = 14; 
+    public static final int kIntakeMotorControllerID = 15; 
     public static final int distenceSensorID = 0;
 
     public static final double kPivotThroughBoreZeroOffset = 94;
@@ -239,7 +244,6 @@ public final class Constants {
     public static final double kPivotGearRatio = 125.0/1.0;
     public static final double kIntakeGearRatio = 3.0/1.0;
     
-    //TODO: Tune me!
     public static final double kPPivotController = 2.5;
     public static final double kIPivotController = 0;
     public static final double kDPivotController = 0;
@@ -270,6 +274,6 @@ public final class Constants {
     public static final double kShootInAmpIntakeRPM = 0.0;
 
     public static final double kPassIntoShooterPivotRotationDegrees = 0;
-    public static final double kPassIntoShooterIntakeRPM = -500;
+    public static final double kPassIntoShooterIntakeRPM = -3000;
   }
 }

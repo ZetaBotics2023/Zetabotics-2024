@@ -20,7 +20,7 @@ public class VisionPose {
     }
 
     public Pose2d getPose() {
-        return new Pose2d(new Translation2d(this.pose.getX(), this.pose.getY()), Rotation2d.fromDegrees(this.pose.getRotation().getAngle()));
+        return new Pose2d(new Translation2d(this.pose.getX(), this.pose.getY()), Rotation2d.fromRadians(this.pose.getRotation().getAngle() + Math.PI));
     }
 
     public double getTimeStamp() {
