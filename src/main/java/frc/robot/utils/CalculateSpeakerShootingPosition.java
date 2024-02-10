@@ -105,7 +105,15 @@ public class CalculateSpeakerShootingPosition {
 
         // If our end position relative to the AprilTag is too close to the wall, set it to a position along the radius that's far enough
         if (Math.abs(finalPosition.getX() - aprilTagPosition.getX()) < ShooterConstants.kMinShootingDistanceFromWallMeters) {
+            double selectedRadius = finalPosition == positionOne ? ShooterConstants.kMinShootingDistanceMeters : ShooterConstants.kMaxShootingDistanceMeters;
+
+            double newPositionX = ShooterConstants.kMinShootingDistanceFromWallMeters;
+            // Use the circle equation to calculate the new position
+            double newPositionY = Math.sqrt(selectedRadius - Math.pow(ShooterConstants.kMinShootingDistanceFromWallMeters - aprilTagPosition.getY(), 2) + aprilTagPosition.getX());
             
+            finalPosition = new Translation2d(newPositionX, newPositionY);
         }
+
+        return finalPosition;
     }
 }

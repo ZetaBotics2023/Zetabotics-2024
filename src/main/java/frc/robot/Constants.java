@@ -167,7 +167,6 @@ public final class Constants {
     // 13in horizontal
     // 16 1/4in vertical
     // 21 Degrees Pitch
-    //0.49202
     public static final Pose2d kRedAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(16.579342, 5.547868), Rotation2d.fromDegrees(180));
     public static final Pose2d kBlueAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(-0.0381, 5.547868), Rotation2d.fromDegrees(0));
 
@@ -203,12 +202,6 @@ public final class Constants {
 
     public static final double kMinShootingDistanceFromWallMeters = Units.inchesToMeters(40);
 
-    public static final Translation2d kFromWallShootingPositionMinDistanceBlue = calculateMinimumWallDistanceRadiusPoint(ShooterConstants.kMinShootingDistanceMeters, VisionConstants.kBlueAllianceShooterAprilTagPosition);
-    public static final Translation2d kFromWallShootingPositionMaxDistanceBlue = calculateMinimumWallDistanceRadiusPoint(ShooterConstants.kMaxShootingDistanceMeters, VisionConstants.kBlueAllianceShooterAprilTagPosition);
-    public static final Translation2d kFromWallShootingPositionMinDistanceRed = calculateMinimumWallDistanceRadiusPoint(ShooterConstants.kMinShootingDistanceMeters, VisionConstants.kRedAllianceShooterAprilTagPosition);
-    public static final Translation2d kFromWallShootingPositionMaxDistanceRed = calculateMinimumWallDistanceRadiusPoint(ShooterConstants.kMaxShootingDistanceMeters, VisionConstants.kRedAllianceShooterAprilTagPosition);
-
-
     public static final double kShooterPowerRatio = .9; // TODO: Also wrong
     public static final double kShooterRPM = 4200;//4500;
     public static final double kShootTime = 2;
@@ -216,14 +209,6 @@ public final class Constants {
     public static final double kShooterRPMTolorence = 200;
   
   
-  }
-
-  public static Translation2d calculateMinimumWallDistanceRadiusPoint(double shootingDistance, Pose2d aprilTagPosition) {
-
-            double newPositionX = ShooterConstants.kMinShootingDistanceFromWallMeters;
-            // Use the circle equation to calculate the new position
-            double newPositionY = Math.sqrt(shootingDistance - Math.pow(ShooterConstants.kMinShootingDistanceFromWallMeters - aprilTagPosition.getY(), 2) + aprilTagPosition.getX());
-            return new Translation2d(newPositionX, newPositionY);
   }
 
   public static final class ClimberConstants {
