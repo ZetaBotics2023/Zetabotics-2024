@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.3437031102090723,
-      "y": 2.0961980166240624
+      "x": 0.46070020881134544,
+      "y": 7.0
     },
     "rotation": 0
   },
@@ -20,49 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center;ShootPreloaded"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOffNoteToShooter"
+            "pathName": "Left;ShootPreloaded"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeCenterNote"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "PickUpFromGround"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOffNoteToShooter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Center;DriveToLeftNote"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOffNoteToShooter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "IntakeLeftNote"
+            "pathName": "Left;CloseToFarOne"
           }
         },
         {
@@ -74,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftNoteLeave"
+            "pathName": "Left;FarOneToClose"
           }
         },
         {
@@ -86,19 +50,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftOrCenter;DriveRightNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "IntakeRightNote"
+            "pathName": "Left;CloseToFarTwo"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "PickUpFromGround"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left;FarTwoToClose"
           }
         },
         {

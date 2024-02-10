@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5,
-      "y": 7.0
+      "x": 0.3437031102090723,
+      "y": 2.0961980166240624
     },
     "rotation": 0
   },
@@ -20,25 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left;ShootPreloaded"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOffNoteToShooter"
+            "pathName": "Center;ShootPreloaded"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left;DriveToCenterNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "IntakeCenterNote"
+            "pathName": "Center;CloseToFarThree"
           }
         },
         {
@@ -50,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center;DriveToLeftNote"
+            "pathName": "Center;FarThreeToClose"
           }
         },
         {
@@ -62,7 +50,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeLeftNote"
+            "pathName": "Center;CloseToFarTwo"
           }
         },
         {
@@ -74,31 +62,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftOrCenter;DriveRightNote"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOffNoteToShooter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "IntakeRightNote"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "PickUpFromGround"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Any;DriveBackShootRightNote"
+            "pathName": "Center;FarTwoToClose"
           }
         },
         {

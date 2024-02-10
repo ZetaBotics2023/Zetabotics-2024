@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5,
+      "x": 0.46070020881134544,
       "y": 7.0
     },
     "rotation": 0
@@ -20,7 +20,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left;DriveToLeftNote"
             "pathName": "Left;ShootPreloaded"
           }
         },
