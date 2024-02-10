@@ -1,5 +1,6 @@
 package frc.robot.utils;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -66,7 +67,8 @@ public class CalculateSpeakerShootingPosition {
         Translation2d targetTranslation = getClosestTargetPosition(
             robotPositionMeters, 
             new Translation2d(targetPositionXMin, targetPositionYMin), 
-            new Translation2d(targetPositionXMax, targetPositionYMax));
+            new Translation2d(targetPositionXMax, targetPositionYMax),
+            aprilTagPosition);
 
 
         // Calcuate the angle the robot will end with
@@ -75,6 +77,7 @@ public class CalculateSpeakerShootingPosition {
         double endPositionDistenceFromTagX = targetTranslation.getX() - aprilTagPosition.getX();
         double endPositionDistenceFromTagY = targetTranslation.getY() - aprilTagPosition.getY();
         double endPositionDistenceFromTag = Math.sqrt(Math.pow(endPositionDistenceFromTagX, 2) + Math.pow(endPositionDistenceFromTagY, 2));
+
         
         double targetAngleRadians = Math.asin(endPositionDistenceFromTagY/endPositionDistenceFromTag);
         
@@ -92,12 +95,17 @@ public class CalculateSpeakerShootingPosition {
      * @param positionTwo The second translation to compare
      * @return The closest
      */
-    private static Translation2d getClosestTargetPosition(Pose2d robotPosition, Translation2d positionOne, Translation2d positionTwo) {
+    private static Translation2d getClosestTargetPosition(Pose2d robotPosition, Translation2d positionOne, Translation2d positionTwo, Pose2d aprilTagPosition) {
         // Calculate the difference between the robot and target positions
         double totalDifferenceOne = Math.abs(robotPosition.getX() - positionOne.getX()) + Math.abs(robotPosition.getY() - positionOne.getY());
         double totalDifferenceTwo = Math.abs(robotPosition.getX() - positionTwo.getX()) + Math.abs(robotPosition.getY() - positionTwo.getY());
 
         // Return the smallest one
-        return totalDifferenceOne < totalDifferenceTwo ? positionOne : positionTwo;
+        Translation2d finalPosition = totalDifferenceOne < totalDifferenceTwo ? positionOne : positionTwo;
+
+        // If our end position relative to the AprilTag is too close to the wall, set it to a position along the radius that's far enough
+        if (Math.abs(finalPosition.getX() - aprilTagPosition.getX()) < ShooterConstants.kMinShootingDistanceFromWallMeters) {
+            
+        }
     }
 }

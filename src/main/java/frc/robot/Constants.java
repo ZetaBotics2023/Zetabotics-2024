@@ -200,11 +200,29 @@ public final class Constants {
     public static final double kMinShootingDistanceMeters = Units.inchesToMeters(80);
     public static final double kMaxShootingDistanceMeters = Units.inchesToMeters(114);
 
+    public static final double kMinShootingDistanceFromWallMeters = Units.inchesToMeters(40);
+
+    public static final Translation2d kFromWallShootingPositionMinDistanceBlue = calculateMinimumWallDistanceRadiusPoint(ShooterConstants.kMinShootingDistanceMeters, VisionConstants.kBlueAllianceShooterAprilTagPosition);
+    public static final Translation2d kFromWallShootingPositionMaxDistanceBlue = calculateMinimumWallDistanceRadiusPoint(ShooterConstants.kMaxShootingDistanceMeters, VisionConstants.kBlueAllianceShooterAprilTagPosition);
+    public static final Translation2d kFromWallShootingPositionMinDistanceRed = calculateMinimumWallDistanceRadiusPoint(ShooterConstants.kMinShootingDistanceMeters, VisionConstants.kRedAllianceShooterAprilTagPosition);
+    public static final Translation2d kFromWallShootingPositionMaxDistanceRed = calculateMinimumWallDistanceRadiusPoint(ShooterConstants.kMaxShootingDistanceMeters, VisionConstants.kRedAllianceShooterAprilTagPosition);
+
+
     public static final double kShooterPowerRatio = .9; // TODO: Also wrong
     public static final double kShooterRPM = 4200;//4500;
     public static final double kShootTime = 2;
 
     public static final double kShooterRPMTolorence = 200;
+  
+  
+  }
+
+  public static Translation2d calculateMinimumWallDistanceRadiusPoint(double shootingDistance, Pose2d aprilTagPosition) {
+
+            double newPositionX = ShooterConstants.kMinShootingDistanceFromWallMeters;
+            // Use the circle equation to calculate the new position
+            double newPositionY = Math.sqrt(shootingDistance - Math.pow(ShooterConstants.kMinShootingDistanceFromWallMeters - aprilTagPosition.getY(), 2) + aprilTagPosition.getX());
+            return new Translation2d(newPositionX, newPositionY);
   }
 
   public static final class ClimberConstants {
