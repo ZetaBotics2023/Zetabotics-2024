@@ -182,7 +182,7 @@ public final class Constants {
     public static final double kMaxAutonAngulerAccelerationInMetersPerSecondSqr = 4.1;
     //5.9
     public static final PIDConstants kTranslationAutoPID = new PIDConstants(1.95, 0, .0001);
-    public static final PIDConstants kRotationAutoPID = new PIDConstants(3.5, 0.0, 0.0);
+    public static final PIDConstants kRotationAutoPID = new PIDConstants(20, 0, 0);//new PIDConstants(3.5, 0.0, 0.0);
   }
   public static final class ShooterConstants {
     public static final int kLeftShooterMotorControllerID = 16;

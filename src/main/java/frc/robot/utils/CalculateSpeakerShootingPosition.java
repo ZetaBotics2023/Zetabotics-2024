@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 
@@ -69,8 +70,17 @@ public class CalculateSpeakerShootingPosition {
 
 
         // Calcuate the angle the robot will end with
-        double targetAngleRadians = Math.asin(distanceToAprilTagY/distanceToAprilTag) + 180;
+        SmartDashboard.putNumber("Distence to April tag Y", distanceToAprilTagY);
+        SmartDashboard.putNumber("Distence to April tag", distanceToAprilTag);
+        double endPositionDistenceFromTagX = targetTranslation.getX() - aprilTagPosition.getX();
+        double endPositionDistenceFromTagY = targetTranslation.getY() - aprilTagPosition.getY();
+        double endPositionDistenceFromTag = Math.sqrt(Math.pow(endPositionDistenceFromTagX, 2) + Math.pow(endPositionDistenceFromTagY, 2));
         
+        double targetAngleRadians = Math.asin(endPositionDistenceFromTagY/endPositionDistenceFromTag);
+        
+        if(robotPositionMeters.getY() > aprilTagPosition.getY()) {
+            return new Pose2d(targetTranslation, Rotation2d.fromRadians(Math.abs(targetAngleRadians)));
+        }
         // Construct the final position and return it
         return new Pose2d(targetTranslation, Rotation2d.fromRadians(targetAngleRadians));
     }
