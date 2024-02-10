@@ -167,6 +167,7 @@ public final class Constants {
     // 13in horizontal
     // 16 1/4in vertical
     // 21 Degrees Pitch
+    //0.49202
     public static final Pose2d kRedAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(16.579342, 5.547868), Rotation2d.fromDegrees(180));
     public static final Pose2d kBlueAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(-0.0381, 5.547868), Rotation2d.fromDegrees(0));
 
