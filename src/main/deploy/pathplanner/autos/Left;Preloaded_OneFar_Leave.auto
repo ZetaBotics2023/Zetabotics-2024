@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5,
-      "y": 4.0
+      "x": 0.46070020881134544,
+      "y": 7.0
     },
     "rotation": 0
   },
@@ -32,13 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftNoteLeave"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "IntakeLeftNote"
+            "pathName": "Left;CloseToFarOne"
           }
         },
         {
@@ -50,31 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftOrCenter;DriveRightNote"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "HandOffNoteToShooter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "IntakeRightNote"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "PickUpFromGround"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "LeftOrCenter;DriveRightNote"
+            "pathName": "Left;FarOneToClose"
           }
         },
         {

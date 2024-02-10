@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5,
-      "y": 4.0
+      "x": 0.3437031102090723,
+      "y": 2.0961980166240624
     },
     "rotation": 0
   },
@@ -32,13 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightNoteLeave"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "IntakeRightNote"
+            "pathName": "Center;CloseToFarThree"
           }
         },
         {
@@ -50,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right;DriveToLeft"
+            "pathName": "Center;FarThreeToClose"
           }
         },
         {
@@ -62,13 +56,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeLeftNote"
+            "pathName": "Center;CloseToFarTwo"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "PickUpFromGround"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center;FarTwoToClose"
           }
         },
         {
