@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 import com.pathplanner.lib.util.PIDConstants;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -15,6 +17,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -171,6 +175,23 @@ public final class Constants {
     public static final Pose2d kBlueAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(-0.0381, 5.547868), Rotation2d.fromDegrees(0));
 
   };
+
+  public static final class OnTheFlyGenerationConstants {
+    public static final double kMaxSpeedMetersPerSecond = 4.1;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 4;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 4.1;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI * 4;
+
+    public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+                kMaxSpeedMetersPerSecond,
+                kMaxAccelerationMetersPerSecondSquared)
+                      .setKinematics(SwerveDriveConstants.kDriveKinematics);
+
+    public static final PIDController kXController = new PIDController(1.5, 0, 0);
+    public static final PIDController kYController = new PIDController(1.5, 0, 0);
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+    public static final ProfiledPIDController kThetaController = new ProfiledPIDController(3, 0, 0, kThetaControllerConstraints);
+  }
 
   public static final class AutoConstants {
     public static HashMap<String, Command> namedEventMap = new HashMap<>();

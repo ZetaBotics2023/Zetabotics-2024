@@ -1,5 +1,6 @@
 package frc.robot.subsystems.SwerveDrive;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -8,14 +9,19 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -26,9 +32,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.OnTheFlyGenerationConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.utils.LimelightUtil;
 import frc.robot.utils.VisionPose;
@@ -328,5 +338,31 @@ public class DriveSubsystem extends SubsystemBase {
     this.poseEstimator.resetPosition(m_gyro.getRotation2d(), getModulePositions(), new Pose2d());
   }
 
+  public SequentialCommandGroup generateOnTheFlyPath(Pose2d endPose) {
+        // Generate trajectory
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+                getRobotPose(),
+                List.of(),
+                endPose,
+                OnTheFlyGenerationConstants.trajectoryConfig);
 
+      
+        // Should not need this our odometry is -64 bit to +64bit
+        //thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+        // Construct command to follow trajectory
+        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+                trajectory,
+                this::getRobotPose,
+                SwerveDriveConstants.kDriveKinematics,
+                OnTheFlyGenerationConstants.kXController,
+                OnTheFlyGenerationConstants.kYController,
+                OnTheFlyGenerationConstants.kThetaController,
+                this::setModuleStates,
+                this);
+
+      return new SequentialCommandGroup(
+                swerveControllerCommand,
+                new InstantCommand(() -> stop()));
+  }
 }

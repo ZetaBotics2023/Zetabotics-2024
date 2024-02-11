@@ -63,7 +63,7 @@ public class AutoShootPositionCommand extends Command{
 
         Pose2d startingPose = this.m_driveSubsystem.getRobotPose();
         Pose2d shootingPosition = CalculateSpeakerShootingPosition.calculateTargetPosition(startingPose);
-        goToShootPosition = GoToPose.goToPose(startingPose, shootingPosition);
+        goToShootPosition = this.m_driveSubsystem.generateOnTheFlyPath(shootingPosition);
         goToShootPosition.schedule();
         rampShooterCommand.schedule();
  
