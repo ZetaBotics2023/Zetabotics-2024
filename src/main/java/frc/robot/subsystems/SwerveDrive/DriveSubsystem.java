@@ -63,6 +63,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     private final Field2d field2d = new Field2d();
 
+    private final ProfiledPIDController headingPIDController;
+
     public DriveSubsystem() {
         this.frontLeftSwerveModule =  new SwerveModule(
             SwerveDriveConstants.kFrontLeftDriveMotorId, SwerveDriveConstants.kFrontLeftTurnMotorId, SwerveDriveConstants.kFrontLeftTurnEncoderId,
@@ -119,6 +121,13 @@ public class DriveSubsystem extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
         );
+
+        this.headingPIDController = new ProfiledPIDController(SwerveDriveConstants.kHeadingPIDControllerP, SwerveDriveConstants.kHeadingPIDControllerI,
+                                    SwerveDriveConstants.kHeadingPIDControllerD, SwerveDriveConstants.kThetaControllerConstraints);
+        this.headingPIDController.setTolerance(SwerveDriveConstants.kHeadingPIDControllerTolerance);
+        this.headingPIDController.setIntegratorRange(-0.3, 0.3);
+
+        this.headingPIDController.reset(this.poseEstimator.getEstimatedPosition().getRotation().getDegrees());
  
         SmartDashboard.updateValues(); 
     }
@@ -364,5 +373,22 @@ public class DriveSubsystem extends SubsystemBase {
       return new SequentialCommandGroup(
                 swerveControllerCommand,
                 new InstantCommand(() -> stop()));
+  }
+
+  public void turnToHeading(double desiredHeading) {
+    drive(
+      ChassisSpeeds.fromFieldRelativeSpeeds(
+        0,
+        0,
+        headingPIDController.calculate(poseEstimator.getEstimatedPosition().getRotation().getDegrees(), desiredHeading),
+        getRobotPose().getRotation()));
+  }
+
+  public void resetHeadingPid(){
+    headingPIDController.reset(poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+  }
+
+  public boolean isHeadingPidAtGoal() {
+    return this.headingPIDController.atGoal();
   }
 }
