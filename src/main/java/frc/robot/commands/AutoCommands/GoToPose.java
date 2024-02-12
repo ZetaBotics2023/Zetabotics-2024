@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-// booba
+
 
 package frc.robot.commands.AutoCommands;
 
@@ -19,7 +19,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 
 public class GoToPose {
     public static Command goToPose(Pose2d startLocation, Pose2d endLocation) {
@@ -31,8 +30,8 @@ public class GoToPose {
       PathPlannerPath path = new PathPlannerPath(
           bezierPoints,
           new PathConstraints(AutoConstants.kMaxAutonSpeedInMetersPerSecond, AutoConstants.kMaxAutonAccelerationInMetersPerSecondSqr,
-          AutoConstants.kMaxAutonAngulerSpeedInMetersPerSecond, AutoConstants.kMaxAutonAngulerAccelerationInMetersPerSecondSqr), 
-          new GoalEndState(0.0, endLocation.getRotation())
+          AutoConstants.kMaxAngularSpeedRadiansPerSecond, AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared), 
+          new GoalEndState(0.0, endLocaiton.getRotation())
       );
 
     //SmartDashboard.putNumber("Goal X Pose Auto", path.getPoint(path.numPoints()-1).position.getX());

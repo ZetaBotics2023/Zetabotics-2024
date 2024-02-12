@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 import com.pathplanner.lib.util.PIDConstants;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -15,6 +17,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -104,6 +108,15 @@ public final class Constants {
 
     public static final double kTranslationRateLimiter = 6;//9;
     public static final double kRotationRateLimiter = 20;
+
+    public static final double kHeadingPIDControllerP = 0;
+    public static final double kHeadingPIDControllerI = 0;
+    public static final double kHeadingPIDControllerD = 0;
+    public static final double kHeadingPIDControllerTolerance = 0;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 360;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 720;
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+
   }
 
   public static class SwerveModuleConstants {
@@ -172,14 +185,30 @@ public final class Constants {
 
   };
 
+  public static final class OnTheFlyGenerationConstants {
+    public static final double kMaxSpeedMetersPerSecond = 4.1;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 4;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 4.1;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 4 * Math.PI;
+    public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+                kMaxSpeedMetersPerSecond,
+                kMaxAccelerationMetersPerSecondSquared)
+                      .setKinematics(SwerveDriveConstants.kDriveKinematics);
+
+    public static final PIDController kXController = new PIDController(1.5, 0, 0);
+    public static final PIDController kYController = new PIDController(1.5, 0, 0);
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+    public static final ProfiledPIDController kThetaController = new ProfiledPIDController(3, 0, 0, kThetaControllerConstraints);
+  }
+
   public static final class AutoConstants {
     public static HashMap<String, Command> namedEventMap = new HashMap<>();
     public static Alliance alliance;
-    public static final double kMaxAutonSpeedInMetersPerSecond = 4.1;
-    public static final double kMaxAutonAccelerationInMetersPerSecondSqr = 4.1;
+    public static final double kMaxAutonSpeedInMetersPerSecond = 3;
+    public static final double kMaxAutonAccelerationInMetersPerSecondSqr = 3;
 
-    public static final double kMaxAutonAngulerSpeedInMetersPerSecond = 1 * Math.PI;
-    public static final double kMaxAutonAngulerAccelerationInMetersPerSecondSqr = 1 * Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 4 * Math.PI;
     //5.9
     public static final PIDConstants kTranslationAutoPID = new PIDConstants(1, 0, 0);//new PIDConstants(1.95, 0, .0001);
     public static final PIDConstants kRotationAutoPID = new PIDConstants(2.1, 0, 0);//new PIDConstants(3.5, 0.0, 0.0);
