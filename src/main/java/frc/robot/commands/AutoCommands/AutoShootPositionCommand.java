@@ -26,6 +26,7 @@ import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.CalculateSpeakerShootingPosition;
+import frc.robot.utils.InTeleop;
 
 public class AutoShootPositionCommand extends Command{
     private DriveSubsystem m_driveSubsystem;
@@ -55,17 +56,16 @@ public class AutoShootPositionCommand extends Command{
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-
         this.rampShooterCommand = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
-
 
         Pose2d startingPose = this.m_driveSubsystem.getRobotPose();
         Pose2d shootingPosition = CalculateSpeakerShootingPosition.calculateTargetPosition(startingPose);
         goToShootPosition = GoToPose.goToPose(startingPose, shootingPosition);
         goToShootPosition.schedule();
         rampShooterCommand.schedule();
+        InTeleop.inTeleop = false;
  
 
         SmartDashboard.putNumber("Auto Position Goal X", shootingPosition.getX()); 
@@ -91,6 +91,7 @@ public class AutoShootPositionCommand extends Command{
         this.handOffToShooterCommand.cancel();
         this.goToShootPosition.cancel();
         this.stopShooterCommmand.schedule();
+        InTeleop.inTeleop = true;
     }
 
     // Returns true when the command should end.

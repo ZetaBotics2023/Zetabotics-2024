@@ -78,7 +78,6 @@ public class CalculateSpeakerShootingPosition {
         double endPositionDistenceFromTagY = targetTranslation.getY() - aprilTagPosition.getY();
         double endPositionDistenceFromTag = Math.sqrt(Math.pow(endPositionDistenceFromTagX, 2) + Math.pow(endPositionDistenceFromTagY, 2));
 
-        
         double targetAngleRadians = Math.asin(endPositionDistenceFromTagY/endPositionDistenceFromTag);
         
         if(robotPositionMeters.getY() > aprilTagPosition.getY()) {

@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveDriveConstants;
+import frc.robot.utils.InTeleop;
 import frc.robot.utils.LimelightUtil;
 import frc.robot.utils.VisionPose;
 
@@ -147,7 +148,7 @@ public class DriveSubsystem extends SubsystemBase {
     boolean withInOneMeterY = Math.abs(currentEstimatedPose.getY() - estimatedPose.getPose().getY()) <= 1;
 
     boolean withInOneMeter = withInOneMeterX && withInOneMeterY;
-    if(estimatedPose.isValidTarget()) { //&& withInOneMeter) {
+    if(estimatedPose.isValidTarget() && InTeleop.inTeleop) { //&& withInOneMeter) {
       this.poseEstimator.addVisionMeasurement(estimatedPose.getPose(), estimatedPose.getTimeStamp());
     }
     this.field2d.setRobotPose(this.poseEstimator.getEstimatedPosition());
@@ -273,6 +274,20 @@ public class DriveSubsystem extends SubsystemBase {
 
   public Rotation2d getHeadingInRotation2d() {
     return this.m_gyro.getRotation2d();
+  }
+
+  public double getCurrentChassisSpeeds()
+  {
+    ChassisSpeeds currentSpeeds = SwerveDriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+    double linearVeloicity = Math.sqrt((currentSpeeds.vxMetersPerSecond * currentSpeeds.vxMetersPerSecond) * (currentSpeeds.vyMetersPerSecond * currentSpeeds.vyMetersPerSecond));
+    return linearVeloicity;
+  }
+
+  public Rotation2d getCurrentChassisHeading()
+  {
+    ChassisSpeeds currentSpeeds = SwerveDriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+    Rotation2d robotHeading = new Rotation2d(Math.atan2(currentSpeeds.vyMetersPerSecond, currentSpeeds.vxMetersPerSecond));
+    return robotHeading;
   }
 
   /* 

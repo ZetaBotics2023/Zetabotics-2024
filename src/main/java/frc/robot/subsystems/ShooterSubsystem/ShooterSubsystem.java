@@ -65,8 +65,8 @@ public class ShooterSubsystem extends SubsystemBase{
         this.m_rightShooter.setSmartCurrentLimit(40);
 
         //TODO: Check if this helps consistency
-        //this.m_leftShooter.enableVoltageCompensation(12);
-        //this.m_rightShooter.enableVoltageCompensation(12);
+        this.m_leftShooter.enableVoltageCompensation(12);
+        this.m_rightShooter.enableVoltageCompensation(12);
            
         this.m_leftShooter.burnFlash();
         this.m_rightShooter.burnFlash();

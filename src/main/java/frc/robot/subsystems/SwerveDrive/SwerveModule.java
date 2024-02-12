@@ -93,6 +93,8 @@ public class SwerveModule{
     this.turningPIDController.setFF(SwerveModuleConstants.kFModuleTurningController);
     this.turningPIDController.setIZone(SwerveModuleConstants.kIZoneModuleTurningController);
     this.turningPIDController.setOutputRange(-.2, .2);
+
+    this.m_driveMotor.enableVoltageCompensation(12);
     this.m_driveMotor.burnFlash();
     this.m_turningMotor.burnFlash();
 
@@ -103,6 +105,7 @@ public class SwerveModule{
     magnetConfigs.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
     turningAbsoluteEncoderConfig.MagnetSensor = magnetConfigs;
     this.turningAbsoluteEncoder.getConfigurator().apply(turningAbsoluteEncoderConfig);
+
     Timer.delay(1);
 
     this.absoluteEncoderOffset = turningEncoderOffset;

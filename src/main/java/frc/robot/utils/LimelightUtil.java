@@ -7,8 +7,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.Optional;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
@@ -43,10 +46,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
         double timeStamp = Timer.getFPGATimestamp() - (piplineLatency/1000.0) - (capturePiplineLatency/1000.0);
 
         // Create an estimated position object
-        Pose3d position = new Pose3d(
-            new Translation3d(botpose[0], botpose[1], botpose[2]),
-            new Rotation3d(Units.degreesToRadians(botpose[3]), Units.degreesToRadians(botpose[4]),
-                    Units.degreesToRadians(botpose[5])));
+        Pose2d position = new Pose2d(
+            new Translation2d(botpose[0], botpose[1]),
+            Rotation2d.fromDegrees(botpose[5]));
+        SmartDashboard.putNumber("Lime Light angle,", Units.degreesToRadians(botpose[5]));
 
         // Return a new Vision Pose
         return new VisionPose(position, timeStamp, validTarget);

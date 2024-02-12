@@ -9,18 +9,18 @@ import edu.wpi.first.math.geometry.Translation2d;
  * A helper class that represents an estimated position as returned from the Limelight
  */
 public class VisionPose {
-    private Pose3d pose;
+    private Pose2d pose;
     private double timeStamp;
     private boolean validTarget;
 
-    public VisionPose(Pose3d pose, double timeStamp, boolean validTarget) {
+    public VisionPose(Pose2d pose, double timeStamp, boolean validTarget) {
         this.pose = pose;
         this.timeStamp = timeStamp;
         this.validTarget = validTarget;
     }
 
     public Pose2d getPose() {
-        return new Pose2d(new Translation2d(this.pose.getX(), this.pose.getY()), Rotation2d.fromRadians(this.pose.getRotation().getAngle()));
+        return pose;
     }
 
     public double getTimeStamp() {

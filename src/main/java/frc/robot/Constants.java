@@ -50,7 +50,7 @@ public final class Constants {
 
     public static final double kFrontLeftTurnEncoderOffset = 0.144531;//0.146240;
     public static final double kFrontRightTurnEncoderOffset = 0.965820;//0.964111;
-    public static final double kBackLeftTurnEncoderOffset = 0.688965;//0.685547;
+    public static final double kBackLeftTurnEncoderOffset = 0.934326;//0.685547;
     public static final double kBackRightTurnEncoderOffset = 0.837646;//0.837891;
 
     public static final double kFrontLeftTurnMagnetOffset = 0.629395;
@@ -178,12 +178,12 @@ public final class Constants {
     public static final double kMaxAutonSpeedInMetersPerSecond = 4.1;
     public static final double kMaxAutonAccelerationInMetersPerSecondSqr = 4.1;
 
-    public static final double kMaxAutonAngulerSpeedInMetersPerSecond = 4.1;
-    public static final double kMaxAutonAngulerAccelerationInMetersPerSecondSqr = 4.1;
+    public static final double kMaxAutonAngulerSpeedInMetersPerSecond = 1 * Math.PI;
+    public static final double kMaxAutonAngulerAccelerationInMetersPerSecondSqr = 1 * Math.PI;
     //5.9
-    public static final PIDConstants kTranslationAutoPID = new PIDConstants(1.95, 0, .0001);
-    public static final PIDConstants kRotationAutoPID = new PIDConstants(20, 0, 0);//new PIDConstants(3.5, 0.0, 0.0);
-  }
+    public static final PIDConstants kTranslationAutoPID = new PIDConstants(1, 0, 0);//new PIDConstants(1.95, 0, .0001);
+    public static final PIDConstants kRotationAutoPID = new PIDConstants(2.1, 0, 0);//new PIDConstants(3.5, 0.0, 0.0);
+  }//17.51
   public static final class ShooterConstants {
     public static final int kLeftShooterMotorControllerID = 16;
     public static final int kRightShooterMotorControllerID = 17;
