@@ -21,6 +21,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public final class Constants {
@@ -109,13 +110,14 @@ public final class Constants {
     public static final double kTranslationRateLimiter = 6;//9;
     public static final double kRotationRateLimiter = 20;
 
-    public static final double kHeadingPIDControllerP = 0;
-    public static final double kHeadingPIDControllerI = 0;
+    public static final double kHeadingPIDControllerP = .01;
+    public static final double kHeadingPIDControllerI = .0000001;
     public static final double kHeadingPIDControllerD = 0;
     public static final double kHeadingPIDControllerTolerance = 0;
     public static final double kMaxAngularSpeedRadiansPerSecond = 360;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 720;
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+    public static final double kAutoPositonTolorence = 2;
 
   }
 
@@ -187,16 +189,16 @@ public final class Constants {
 
   public static final class OnTheFlyGenerationConstants {
     public static final double kMaxSpeedMetersPerSecond = 4.1;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 4;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 2;
     public static final double kMaxAccelerationMetersPerSecondSquared = 4.1;
-    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 4 * Math.PI;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 1 * Math.PI;
     public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
                 kMaxSpeedMetersPerSecond,
                 kMaxAccelerationMetersPerSecondSquared)
                       .setKinematics(SwerveDriveConstants.kDriveKinematics);
 
-    public static final PIDController kXController = new PIDController(1.5, 0, 0);
-    public static final PIDController kYController = new PIDController(1.5, 0, 0);
+    public static final PIDController kXController = new PIDController(5, 0, 0);
+    public static final PIDController kYController = new PIDController(5, 0, 0);
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
     public static final ProfiledPIDController kThetaController = new ProfiledPIDController(3, 0, 0, kThetaControllerConstraints);
   }
@@ -220,22 +222,22 @@ public final class Constants {
     public static final double kLeftShooterGearRatio = 1.0;
     public static final double kRightShooterGearRatio = 1.0;
 
-    public static final double kPShooterController = 0.00039999998989515007;
+    public static final double kPShooterController = 0.00025;
     public static final double kIShooterController = 9.999999974752427e-7;//0.0000001;;
     public static final double kDShooterController = 0.0;
     public static final double kFLeftShooterController = 0.0;
     public static final double kIZoneShooterController = 0.0; 
 
     public static final double kMinShootingDistanceMeters = Units.inchesToMeters(80);
-    public static final double kMaxShootingDistanceMeters = Units.inchesToMeters(114);
+    public static final double kMaxShootingDistanceMeters = Units.inchesToMeters(100);
 
     public static final double kMinShootingDistanceFromWallMeters = Units.inchesToMeters(40);
 
-    public static final double kShooterPowerRatio = .9; // TODO: Also wrong
-    public static final double kShooterRPM = 4200;//4500;
-    public static final double kShootTime = 2;
+    public static final double kShooterPowerRatio = .75; // TODO: Also wrong
+    public static double kShooterRPM = SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
+    public static final double kShootTime = 10;
 
-    public static final double kShooterRPMTolorence = 200;
+    public static final double kShooterRPMTolorence = 75;
   
   
   }

@@ -31,14 +31,13 @@ public class GoToPose {
           bezierPoints,
           new PathConstraints(AutoConstants.kMaxAutonSpeedInMetersPerSecond, AutoConstants.kMaxAutonAccelerationInMetersPerSecondSqr,
           AutoConstants.kMaxAngularSpeedRadiansPerSecond, AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared), 
-          new GoalEndState(0.0, endLocaiton.getRotation())
+          new GoalEndState(0.0, endLocation.getRotation())
       );
 
     //SmartDashboard.putNumber("Goal X Pose Auto", path.getPoint(path.numPoints()-1).position.getX());
     SmartDashboard.putNumber("Gaol Rotation", path.getPoint(path.numPoints()-1).rotationTarget.getTarget().getDegrees());
-    
 
-      return AutoBuilder.followPath(path);
+    return AutoBuilder.followPath(path);
       
 }
 }

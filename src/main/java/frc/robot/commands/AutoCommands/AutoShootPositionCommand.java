@@ -12,6 +12,8 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,6 +41,8 @@ public class AutoShootPositionCommand extends Command{
     private StopShooterCommand stopShooterCommmand;
     private HandOffToShooterCommand handOffToShooterCommand;
 
+    private GoToPosition goToPosition;
+
     public AutoShootPositionCommand(DriveSubsystem m_driveSubsystem, ShooterSubsystem m_shooterSubsystem, 
     IntakeSubsystem m_intakeSubsystem, PivotSubsystem m_pivotSubsystem, IntakeSensorSubsystem m_intakeSensorSubsystem) {
         this.m_driveSubsystem = m_driveSubsystem;
@@ -50,6 +54,7 @@ public class AutoShootPositionCommand extends Command{
         this.rampShooterCommand = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
+        this.goToPosition = new GoToPosition(m_driveSubsystem, new Pose2d(1000.0, 1000.0, new Rotation2d()));
     }
 
     // Called when the command is initially scheduled.
@@ -61,11 +66,11 @@ public class AutoShootPositionCommand extends Command{
 
         Pose2d startingPose = this.m_driveSubsystem.getRobotPose();
         Pose2d shootingPosition = CalculateSpeakerShootingPosition.calculateTargetPosition(startingPose);
-        goToShootPosition = this.m_driveSubsystem.generateOnTheFlyPath(shootingPosition);
-        goToShootPosition.schedule();
+        this.goToPosition = new GoToPosition(m_driveSubsystem, shootingPosition);
+
+        goToPosition.schedule();
         rampShooterCommand.schedule();
         InTeleop.inTeleop = false;
- 
 
         SmartDashboard.putNumber("Auto Position Goal X", shootingPosition.getX()); 
         SmartDashboard.putNumber("Auto Position Goal Y", shootingPosition.getY()); 
@@ -76,7 +81,7 @@ public class AutoShootPositionCommand extends Command{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if(!handOffToShooterCommand.isScheduled() && this.rampShooterCommand.isFinished() && this.goToShootPosition.isFinished()) {
+        if(!handOffToShooterCommand.isScheduled() && this.rampShooterCommand.isFinished() && this.goToPosition.isFinished()) {
             SmartDashboard.putString("Shooting Stage Pose", "Hand Off To Shooter Scheduled");
             handOffToShooterCommand.schedule();
         }
@@ -88,7 +93,7 @@ public class AutoShootPositionCommand extends Command{
         SmartDashboard.putString("Shooting Stage Pose", "Done: Stopping Shooting");
         this.rampShooterCommand.cancel();
         this.handOffToShooterCommand.cancel();
-        this.goToShootPosition.cancel();
+        this.goToPosition.cancel();
         this.stopShooterCommmand.schedule();
         InTeleop.inTeleop = true;
     }
