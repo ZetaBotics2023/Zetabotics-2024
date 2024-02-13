@@ -8,6 +8,7 @@
 package frc.robot;
 
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.AutonPosititions;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.VisionConstants;
@@ -16,17 +17,22 @@ import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
 import frc.robot.commands.AutoCommands.AutoShootPositionCommand;
 import frc.robot.commands.AutoCommands.FollowAutonomousPath;
+import frc.robot.commands.AutoCommands.GoToPosition;
 import frc.robot.commands.AutoCommands.TestCommand;
 import frc.robot.commands.IntakeCommands.GoToLocation;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.IntakeCommands.PickupFromGroundCommand;
 import frc.robot.commands.IntakeCommands.ShootIntoAmpWithIntakeCommand;
+import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
+import frc.robot.commands.ShooterCommands.StopShooterCommand;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.utils.GenerateAuto;
 
+import java.security.GeneralSecurityException;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -74,6 +80,9 @@ public class RobotContainer {
   private final PickupFromGroundCommand pickupFromGroundCommand;
   private final HandOffToShooterCommand handOffToShooterCommand;
 
+  private final RampShooterAtDifforentSpeedCommand rampShooterAtDifforentSpeedCommand;
+  private final StopShooterCommand stopShooterCommand;
+
   private final AutoShootCommand autoShootCommand;
   private final ShootIntoAmpWithIntakeCommand shootIntoAmpWithIntakeCommand;
   private final AutoShootPositionCommand autoShootPositionCommand;
@@ -114,6 +123,9 @@ public class RobotContainer {
     this.autoShootCommand = new AutoShootCommand(this.m_shooterSubsystem, this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
     this.autoShootPositionCommand = new AutoShootPositionCommand(m_driveSubsystem,
      m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
+    this.rampShooterAtDifforentSpeedCommand = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
+    this.stopShooterCommand = new StopShooterCommand(this.m_shooterSubsystem);
+    
 
     this.goToLocation = new GoToLocation(m_pivotSubsystem);
     
@@ -152,6 +164,9 @@ public class RobotContainer {
   }
   
   public Command getAutonomousCommand() {
+    this.autonSelector = new SendableChooser<>();
+    this.autonSelector.addOption("Left:ShootPreloaded", GenerateAuto.generateAuto(AutonPosititions.kLeft_ShootPreloaded));
+    SmartDashboard.putData(this.autonSelector);
     return autonSelector.getSelected();
   }
 
@@ -166,6 +181,14 @@ public class RobotContainer {
   }
 
   public void onAllianceChanged(Alliance currentAlliance) {
+
+  }
+
+  public void configureAutons() {
+    AutonPosititions.kLeft_ShootPreloaded.add(this.rampShooterAtDifforentSpeedCommand);
+    AutonPosititions.kLeft_ShootPreloaded.add(new GoToPosition(m_driveSubsystem, AutonPosititions.robotPositions.get("Left:ShootPreloaded")));
+    AutonPosititions.kLeft_ShootPreloaded.add(handOffToShooterCommand);
+    AutonPosititions.kLeft_ShootPreloaded.add(this.stopShooterCommand);
 
   }
 

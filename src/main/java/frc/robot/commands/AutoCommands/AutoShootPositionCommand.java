@@ -36,7 +36,6 @@ public class AutoShootPositionCommand extends Command{
     private PivotSubsystem m_pivotSubsystem;
     private IntakeSensorSubsystem m_intakeSensorSubsystem;
 
-    private Command goToShootPosition;
     private RampShooterAtDifforentSpeedCommand rampShooterCommand;
     private StopShooterCommand stopShooterCommmand;
     private HandOffToShooterCommand handOffToShooterCommand;

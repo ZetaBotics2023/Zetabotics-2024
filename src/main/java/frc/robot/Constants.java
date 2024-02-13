@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.pathplanner.lib.util.PIDConstants;
@@ -20,9 +21,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.AutoCommands.GoToPosition;
+import frc.robot.utils.MirrablePose2d;
 
 public final class Constants {
   public static class OperatorConstants {
@@ -215,6 +219,19 @@ public final class Constants {
     public static final PIDConstants kTranslationAutoPID = new PIDConstants(1, 0, 0);//new PIDConstants(1.95, 0, .0001);
     public static final PIDConstants kRotationAutoPID = new PIDConstants(2.1, 0, 0);//new PIDConstants(3.5, 0.0, 0.0);
   }//17.51
+
+  public static final class AutonPosititions {
+    public static final HashMap<String, MirrablePose2d> robotPositions = new HashMap<String, MirrablePose2d>();
+    public static boolean isBlueAlience = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue; 
+           
+    static {
+      robotPositions.put("Left:ShootPreloaded", new MirrablePose2d(new Pose2d(2.00, 7.00, new Rotation2d(45)), !isBlueAlience));
+    }
+
+    public static final ArrayList<Command> kLeft_ShootPreloaded = new ArrayList<Command>();
+    
+  }
+
   public static final class ShooterConstants {
     public static final int kLeftShooterMotorControllerID = 16;
     public static final int kRightShooterMotorControllerID = 17;
