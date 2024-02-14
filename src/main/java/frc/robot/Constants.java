@@ -221,6 +221,7 @@ public final class Constants {
     public static final PIDConstants kRotationAutoPID = new PIDConstants(2.1, 0, 0);//new PIDConstants(3.5, 0.0, 0.0);
     public static final double kAutoSlowDownSpeedSecond = .3;
 	public static final double kAutoSlowDownSpeed = .75;
+    public static final double kAutoSlowRate = 2;
   }//17.51
 
   public static final class AutonConfigurationConstants {

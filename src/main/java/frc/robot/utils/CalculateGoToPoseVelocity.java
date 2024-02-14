@@ -22,12 +22,10 @@ public class CalculateGoToPoseVelocity {
 
         double robotVelocityX = 0;
         double robotVelocityY = 0;
-        if(robotDistenceToGoalX < .5 && robotDistenceToGoalY < .5) {
-            robotVelocityX = AutoConstants.kMaxAutonSpeedInMetersPerSecond * robotDistenceToGoalX * AutoConstants.kAutoSlowDownSpeedSecond;
-            robotVelocityY = AutoConstants.kMaxAutonSpeedInMetersPerSecond * robotDistenceToGoalY * AutoConstants.kAutoSlowDownSpeedSecond;
-        } else if(robotDistenceToGoalX < 1 && robotDistenceToGoalY < 1) { 
-            robotVelocityX = AutoConstants.kMaxAutonSpeedInMetersPerSecond * robotDistenceToGoalX * AutoConstants.kAutoSlowDownSpeed;
-            robotVelocityY = AutoConstants.kMaxAutonSpeedInMetersPerSecond * robotDistenceToGoalY * AutoConstants.kAutoSlowDownSpeed;
+
+        if(robotDistenceToGoalX < 1 && robotDistenceToGoalY < 1) { 
+            robotVelocityX = AutoConstants.kMaxAutonSpeedInMetersPerSecond * Math.pow(robotDistenceToGoalX, AutoConstants.kAutoSlowRate) * AutoConstants.kAutoSlowDownSpeed;
+            robotVelocityY = AutoConstants.kMaxAutonSpeedInMetersPerSecond * Math.pow(robotDistenceToGoalY, AutoConstants.kAutoSlowRate)* AutoConstants.kAutoSlowDownSpeed;
         } else if(robotDistenceToGoalX < 1 && robotDistenceToGoalY > 1) {
             robotVelocityX = (robotDistenceToGoalX * AutoConstants.kMaxAutonSpeedInMetersPerSecond) / robotDistenceToGoalY;
             robotVelocityY = AutoConstants.kMaxAutonSpeedInMetersPerSecond;

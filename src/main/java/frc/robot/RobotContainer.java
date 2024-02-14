@@ -73,7 +73,7 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem;
   private final LockSwerves lockSwerves;
   private final FieldOrientedDriveCommand fieldOrientedDriveCommand;
-  private SendableChooser<Command> autonSelector;
+  private SendableChooser<String> autonSelector;
 
   private final IntakeSubsystem m_intakeSubsystem;
   private final IntakeSensorSubsystem m_intakeSensorSubsystem;
@@ -146,9 +146,8 @@ public class RobotContainer {
     //SmartDashboard.putData("Auton Selector", autonSelector);
     configureBindings();
     configureAutonPoints();
-    configureAutons();
-    this.autonSelector.addOption("Left:ShootPreloaded", GenerateAuto.generateAuto(AutonConfigurationConstants.kLeft_ShootPreloaded));
-    this.autonSelector.addOption("Left:ShootPreloadeds", new Command() {});// GenerateAuto.generateAuto(AutonConfigurationConstants.kLeft_ShootPreloaded));
+    this.autonSelector.addOption("Left:ShootPreloaded", "Left:ShootPreloaded");
+    this.autonSelector.addOption("Left:ShootPreloadeds", "Left:ShootPreloadedLeft");
 
     SmartDashboard.putData("Auto Selector", this.autonSelector);
   }
@@ -178,7 +177,7 @@ public class RobotContainer {
   }
   
   public Command getAutonomousCommand() {
-    return autonSelector.getSelected();
+    return configureAutons(autonSelector.getSelected());
   }
 
   private static double modifyAxis(double value) {
@@ -203,25 +202,33 @@ public class RobotContainer {
     //AutonConfigurationConstatns.robotPositions.put("RightNoteLeavePose", new MirrablePose2d(new Pose2d(2.20, 4.15, new Rotation2d(0)), !AutonConfigurationConstatns.kIsBlueAlience));
   }
 
-  public void configureAutons() {
-    AutonConfigurationConstants.kLeft_ShootPreloaded.add(this.rampShooterAtDifforentSpeedCommand);
-    AutonConfigurationConstants.kLeft_ShootPreloaded.add(new GoToPosition(m_driveSubsystem,
-        AutonConfigurationConstants.robotPositions.get("LeftNoteShootPose")));
-    AutonConfigurationConstants.kLeft_ShootPreloaded.add(handOffToShooterCommand);
-    AutonConfigurationConstants.kLeft_ShootPreloaded.add(this.stopShooterCommand);
+  public Command configureAutons(String autonName) {
+    switch(autonName) {
+      case "Left:ShootPreloaded":
+      AutonConfigurationConstants.kLeft_ShootPreloaded.add(this.rampShooterAtDifforentSpeedCommand);
+      AutonConfigurationConstants.kLeft_ShootPreloaded.add(new GoToPosition(m_driveSubsystem,
+          AutonConfigurationConstants.robotPositions.get("LeftNoteShootPose")));
+      AutonConfigurationConstants.kLeft_ShootPreloaded.add(handOffToShooterCommand);
+      AutonConfigurationConstants.kLeft_ShootPreloaded.add(this.stopShooterCommand);
 
-    AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(this.rampShooterAtDifforentSpeedCommand);
-    AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new GoToPosition(m_driveSubsystem,
-    AutonConfigurationConstants.robotPositions.get("LeftNoteShootPose")));
-        AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(handOffToShooterCommand);
-    AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new ParallelCommandGroup(
-        new GoToPosition(m_driveSubsystem, 
-        AutonConfigurationConstants.robotPositions.get("LeftNoteIntakePose")),
-        this.pickupFromGroundCommand));
-    AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new GoToPosition(m_driveSubsystem,
-        AutonConfigurationConstants.robotPositions.get("LeftNoteShootPose")));
-    AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(this.stopShooterCommand);
- 
+      return GenerateAuto.generateAuto(AutonConfigurationConstants.kLeft_ShootPreloaded);
+      case "Left:ShootPreloadedLeft":
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(this.rampShooterAtDifforentSpeedCommand);
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new GoToPosition(m_driveSubsystem,
+      AutonConfigurationConstants.robotPositions.get("LeftNoteShootPose")));
+          AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(handOffToShooterCommand);
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new ParallelCommandGroup(
+          new GoToPosition(m_driveSubsystem, 
+          AutonConfigurationConstants.robotPositions.get("LeftNoteIntakePose")),
+          new PickupFromGroundCommand(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem)));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new GoToPosition(m_driveSubsystem,
+          AutonConfigurationConstants.robotPositions.get("LeftNoteShootPose")));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(this.stopShooterCommand);
+      
+      return GenerateAuto.generateAuto(AutonConfigurationConstants.kLeft_ShootPreloadedLeft);
+      }
+
+      return null;
   }
 
 }
