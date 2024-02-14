@@ -34,7 +34,6 @@ public class PivotSubsystem extends SubsystemBase {
         this.m_pivotAbsEncoder = this.m_pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
         this.pivotPID = this.m_pivot.getPIDController();
      
-
         this.m_pivot.restoreFactoryDefaults();        
         this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
         this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
