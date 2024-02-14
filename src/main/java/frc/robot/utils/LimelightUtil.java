@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.LimelightHelpers;
 import frc.robot.Constants.VisionConstants;
 
 import java.util.Optional;
@@ -41,7 +42,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
         double capturePiplineLatency = table.getEntry("cl").getDouble(0);
 
         // Retrieve whether the Limelight sees a valid target
-        boolean validTarget = (1 == table.getEntry("tv").getDouble(0));
+        boolean validTarget = (getNumberOfApriltags() > 1);
 
         // Calculate the system time so we know when we read our current value
         double timeStamp = Timer.getFPGATimestamp() - (piplineLatency/1000.0) - (capturePiplineLatency/1000.0);
@@ -54,5 +55,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
         // Return a new Vision Pose
         return new VisionPose(position, timeStamp, validTarget);
+    }
+
+    public static int getNumberOfApriltags() {
+        LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("zeta");
+        return llresults.targetingResults.targets_Fiducials.length;
     }
 }
