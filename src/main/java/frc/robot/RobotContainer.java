@@ -8,7 +8,7 @@
 package frc.robot;
 
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.AutonPosititions;
+import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.VisionConstants;
@@ -31,6 +31,7 @@ import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.GenerateAuto;
+import frc.robot.utils.MirrablePose2d;
 
 import java.security.GeneralSecurityException;
 import java.util.function.Consumer;
@@ -53,6 +54,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -86,7 +89,6 @@ public class RobotContainer {
   private final AutoShootCommand autoShootCommand;
   private final ShootIntoAmpWithIntakeCommand shootIntoAmpWithIntakeCommand;
   private final AutoShootPositionCommand autoShootPositionCommand;
-  private final GoToLocation goToLocation;
 
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
 
@@ -95,9 +97,8 @@ public class RobotContainer {
      * Adding our commands before we instantiat our drive subsystem,
      * so they are added before the autobuilder is configured.
      */
-   
+    this.autonSelector = new SendableChooser<>();
     this.m_driveSubsystem = new DriveSubsystem();
-    SmartDashboard.putBoolean("Ran Command", false);
 
     this.fieldOrientedDriveCommand = new FieldOrientedDriveCommand(
         m_driveSubsystem,
@@ -111,85 +112,114 @@ public class RobotContainer {
     this.m_intakeSensorSubsystem = new IntakeSensorSubsystem();
     this.m_shooterSubsystem = new ShooterSubsystem(false, true);
 
-    this.lockSwerves = new LockSwerves(m_driveSubsystem);
 
     // Config Commands
     this.pickupFromGroundCommand = new PickupFromGroundCommand(
         this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
+
     this.handOffToShooterCommand = new HandOffToShooterCommand(
         this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
+
     this.shootIntoAmpWithIntakeCommand = new ShootIntoAmpWithIntakeCommand(
       this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
-    this.autoShootCommand = new AutoShootCommand(this.m_shooterSubsystem, this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
+
+    this.autoShootCommand = new AutoShootCommand(this.m_shooterSubsystem, 
+      this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
+
     this.autoShootPositionCommand = new AutoShootPositionCommand(m_driveSubsystem,
      m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
-    this.rampShooterAtDifforentSpeedCommand = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
+     
+    this.rampShooterAtDifforentSpeedCommand = new RampShooterAtDifforentSpeedCommand(
+      this.m_shooterSubsystem);
+
     this.stopShooterCommand = new StopShooterCommand(this.m_shooterSubsystem);
+
+    this.lockSwerves = new LockSwerves(m_driveSubsystem);
+
+    // End Command Config
     
+    //AutoConstants.namedEventMap.put("PickUpFromGround", this.pickupFromGroundCommand);
+    //NamedCommands.registerCommands(AutoConstants.namedEventMap);
 
-    this.goToLocation = new GoToLocation(m_pivotSubsystem);
-    
-    configureBindings();
-    AutoConstants.namedEventMap.put("PrintCommand", new TestCommand());
-    AutoConstants.namedEventMap.put("PickUpFromGround", this.pickupFromGroundCommand);
-
-   // NamedCommands.registerCommands(AutoConstants.namedEventMap);
-
-    //this.autonSelector = AutoBuilder.buildAutoChooser();
+    //this.autonSelector = AutoBuilder.buildAutoChooser();s
     // Autos go here
     //SmartDashboard.putData("Auton Selector", autonSelector);
+    configureBindings();
+    configureAutonPoints();
+    configureAutons();
+    this.autonSelector.addOption("Left:ShootPreloaded", GenerateAuto.generateAuto(AutonConfigurationConstants.kLeft_ShootPreloaded));
+    SmartDashboard.putData("Auto Selector", this.autonSelector);
   }
 
   private void configureBindings() {
     final JoystickButton lockSwerves = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
     lockSwerves.onTrue(Commands.runOnce(this.lockSwerves::schedule));
     lockSwerves.onFalse(Commands.runOnce(this.lockSwerves::cancel));
+
     final JoystickButton resetHeading = new JoystickButton(m_driverController, XboxController.Button.kY.value);
     resetHeading.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotHeading));
+
     final JoystickButton resetOdometry = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
     resetOdometry.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotPose));
+
     final JoystickButton pickUpFromGround = new JoystickButton(m_driverController, XboxController.Button.kX.value);
     pickUpFromGround.onTrue(this.pickupFromGroundCommand);
     pickUpFromGround.onFalse(Commands.runOnce(this.pickupFromGroundCommand::cancel));
+
     final JoystickButton shootNote = new JoystickButton(m_driverController, XboxController.Button.kB.value);
     shootNote.onTrue(this.autoShootCommand);
     shootNote.onFalse(Commands.runOnce(this.autoShootCommand::cancel));
+
     final JoystickButton shootNoteAutoPose = new JoystickButton(m_driverController, XboxController.Button.kA.value);
     shootNoteAutoPose.onTrue(this.autoShootPositionCommand);
-    shootNoteAutoPose.onFalse(Commands.runOnce(this.autoShootPositionCommand::cancel));
-    //final JoystickButton shootIntoAmpWithIntake = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
-    //shootIntoAmpWithIntake.onTrue(this.shootIntoAmpWithIntakeCommand);
-    //handOffToShooter.onTrue(Commands.runOnce(this.goToLocation::schedule));
-    //handOffToShooter.onFalse(Commands.runOnce(this.goToLocation::cancel));    
+    shootNoteAutoPose.onFalse(Commands.runOnce(this.autoShootPositionCommand::cancel));   
   }
   
   public Command getAutonomousCommand() {
-    this.autonSelector = new SendableChooser<>();
-    this.autonSelector.addOption("Left:ShootPreloaded", GenerateAuto.generateAuto(AutonPosititions.kLeft_ShootPreloaded));
-    SmartDashboard.putData(this.autonSelector);
     return autonSelector.getSelected();
   }
 
   private static double modifyAxis(double value) {
     // Deadband
     value = MathUtil.applyDeadband(value, OperatorConstants.kDeadband);
-
     // Square the axis
     value = Math.copySign(value * value, value);
-
     return value;
   }
 
-  public void onAllianceChanged(Alliance currentAlliance) {
+  public void configureAutonPoints() {
+    AutonConfigurationConstants.robotPositions.put("LeftNoteShootPose", new MirrablePose2d(new Pose2d(2.00, 7.00, new Rotation2d(45)), !AutonConfigurationConstants.kIsBlueAlience));
+    AutonConfigurationConstants.robotPositions.put("CenterNoteShootPose", new MirrablePose2d(new Pose2d(2.00, 5.55, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlience));
+    AutonConfigurationConstants.robotPositions.put("RightNoteShootPose", new MirrablePose2d(new Pose2d(2.00, 4.15, new Rotation2d(-45)), !AutonConfigurationConstants.kIsBlueAlience));
 
+    AutonConfigurationConstants.robotPositions.put("LeftNoteIntakePose", new MirrablePose2d(new Pose2d(2.3, 7.00, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlience));
+    AutonConfigurationConstants.robotPositions.put("CenterNoteIntakePose", new MirrablePose2d(new Pose2d(2.3, 5.55, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlience));
+    AutonConfigurationConstants.robotPositions.put("RightNoteIntakePose", new MirrablePose2d(new Pose2d(2.3, 4.15, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlience));
+    
+    //AutonConfigurationConstatns.robotPositions.put("LeftNoteLeavePose", new MirrablePose2d(new Pose2d(2.20, 7.00, new Rotation2d(0)), !AutonConfigurationConstatns.kIsBlueAlience));
+    //AutonConfigurationConstatns.robotPositions.put("CenterNoteLeavePose", new MirrablePose2d(new Pose2d(2.20, 5.55, new Rotation2d(0)), !AutonConfigurationConstatns.kIsBlueAlience));
+    //AutonConfigurationConstatns.robotPositions.put("RightNoteLeavePose", new MirrablePose2d(new Pose2d(2.20, 4.15, new Rotation2d(0)), !AutonConfigurationConstatns.kIsBlueAlience));
   }
 
   public void configureAutons() {
-    AutonPosititions.kLeft_ShootPreloaded.add(this.rampShooterAtDifforentSpeedCommand);
-    AutonPosititions.kLeft_ShootPreloaded.add(new GoToPosition(m_driveSubsystem, AutonPosititions.robotPositions.get("Left:ShootPreloaded")));
-    AutonPosititions.kLeft_ShootPreloaded.add(handOffToShooterCommand);
-    AutonPosititions.kLeft_ShootPreloaded.add(this.stopShooterCommand);
-
+    AutonConfigurationConstants.kLeft_ShootPreloaded.add(this.rampShooterAtDifforentSpeedCommand);
+    AutonConfigurationConstants.kLeft_ShootPreloaded.add(new GoToPosition(m_driveSubsystem,
+        AutonConfigurationConstants.robotPositions.get("LeftNoteShootPose")));
+    AutonConfigurationConstants.kLeft_ShootPreloaded.add(handOffToShooterCommand);
+    AutonConfigurationConstants.kLeft_ShootPreloaded.add(this.stopShooterCommand);
+/*
+    AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(this.rampShooterAtDifforentSpeedCommand);
+    AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new GoToPosition(m_driveSubsystem,
+    AutonConfigurationConstants.robotPositions.get("LeftNoteShootPose")));
+        AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(handOffToShooterCommand);
+    AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new ParallelCommandGroup(
+        new GoToPosition(m_driveSubsystem, 
+        AutonConfigurationConstants.robotPositions.get("LeftNoteIntakePose")),
+        this.pickupFromGroundCommand));
+    AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new GoToPosition(m_driveSubsystem,
+        AutonConfigurationConstants.robotPositions.get("LeftNoteShootPose")));
+    AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(this.stopShooterCommand);
+ */
   }
 
 }

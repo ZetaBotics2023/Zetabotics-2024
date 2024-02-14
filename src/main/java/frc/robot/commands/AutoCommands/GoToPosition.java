@@ -14,6 +14,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -33,6 +34,10 @@ public class GoToPosition extends Command{
     TurnToAngle m_turnToAngle;
     Pose2d goalEndPose;
     private ProfiledPIDController headingPIDController;
+    private final SlewRateLimiter translationXLimiter;
+    private final SlewRateLimiter translationYLimiter;
+
+    
     
     public GoToPosition(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose) {
         this.m_driveSubsystem = m_driveSubsystem;
@@ -42,9 +47,15 @@ public class GoToPosition extends Command{
         this.headingPIDController.setTolerance(SwerveDriveConstants.kHeadingPIDControllerTolerance);
         this.headingPIDController.setIntegratorRange(-0.3, 0.3);
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
+        this.translationXLimiter = new SlewRateLimiter(20);
+        this.translationYLimiter = new SlewRateLimiter(20);
+        addRequirements(m_driveSubsystem);
     }
 
     public void initialize() {
+        SmartDashboard.putBoolean("GO TO POSE TRIGGURED", true);
+        this.translationXLimiter.reset(0);
+        this.translationYLimiter.reset(0);
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
     }
 
@@ -54,8 +65,8 @@ public class GoToPosition extends Command{
         SmartDashboard.putNumber("Goal Y Vel", robotTransformVelocity.getY());
         this.m_driveSubsystem.drive(
         ChassisSpeeds.fromFieldRelativeSpeeds(
-        robotTransformVelocity.getX(),
-        robotTransformVelocity.getY(),
+        this.translationXLimiter.calculate(robotTransformVelocity.getX()),
+        this.translationYLimiter.calculate(robotTransformVelocity.getY()),
         headingPIDController.calculate(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees(), this.goalEndPose.getRotation().getDegrees()),
         this.m_driveSubsystem.getRobotPose().getRotation()));
     }
@@ -68,6 +79,6 @@ public class GoToPosition extends Command{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return  Math.abs(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees() - this.goalEndPose.getRotation().getDegrees()) <= 2 && Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <= SwerveDriveConstants.kAutoPositonTolorence && Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <= SwerveDriveConstants.kAutoPositonTolorence;
+        return Math.abs(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees() - this.goalEndPose.getRotation().getDegrees()) <= 2 && Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <= SwerveDriveConstants.kAutoPositonTolorence && Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <= SwerveDriveConstants.kAutoPositonTolorence;
     }
 }

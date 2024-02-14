@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.VisionConstants;
 
 import java.util.Optional;
 
@@ -48,7 +49,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
         // Create an estimated position object
         Pose2d position = new Pose2d(
             new Translation2d(botpose[0], botpose[1]),
-            Rotation2d.fromDegrees(botpose[5]));
+            Rotation2d.fromDegrees(botpose[5] - VisionConstants.kDegreeOffset));
         SmartDashboard.putNumber("Lime Light angle,", Units.degreesToRadians(botpose[5]));
 
         // Return a new Vision Pose

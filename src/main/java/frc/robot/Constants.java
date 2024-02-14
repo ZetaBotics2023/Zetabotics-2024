@@ -114,14 +114,14 @@ public final class Constants {
     public static final double kTranslationRateLimiter = 6;//9;
     public static final double kRotationRateLimiter = 20;
 
-    public static final double kHeadingPIDControllerP = .01;
+    public static final double kHeadingPIDControllerP = .025;
     public static final double kHeadingPIDControllerI = .0000001;
     public static final double kHeadingPIDControllerD = 0;
-    public static final double kHeadingPIDControllerTolerance = 0;
-    public static final double kMaxAngularSpeedRadiansPerSecond = 360;
-    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 720;
+    public static final double kHeadingPIDControllerTolerance = 1;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 260;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 360;
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-    public static final double kAutoPositonTolorence = 2;
+    public static final double kAutoPositonTolorence = .1;
 
   }
 
@@ -188,6 +188,7 @@ public final class Constants {
     // 21 Degrees Pitch
     public static final Pose2d kRedAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(16.579342, 5.547868), Rotation2d.fromDegrees(180));
     public static final Pose2d kBlueAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(-0.0381, 5.547868), Rotation2d.fromDegrees(0));
+    public static final double kDegreeOffset = 3.58;
 
   };
 
@@ -210,7 +211,7 @@ public final class Constants {
   public static final class AutoConstants {
     public static HashMap<String, Command> namedEventMap = new HashMap<>();
     public static Alliance alliance;
-    public static final double kMaxAutonSpeedInMetersPerSecond = 3;
+    public static final double kMaxAutonSpeedInMetersPerSecond = 2;
     public static final double kMaxAutonAccelerationInMetersPerSecondSqr = 3;
 
     public static final double kMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
@@ -218,17 +219,18 @@ public final class Constants {
     //5.9
     public static final PIDConstants kTranslationAutoPID = new PIDConstants(1, 0, 0);//new PIDConstants(1.95, 0, .0001);
     public static final PIDConstants kRotationAutoPID = new PIDConstants(2.1, 0, 0);//new PIDConstants(3.5, 0.0, 0.0);
+    public static final double kAutoSlowDownSpeedSecond = .3;
+	public static final double kAutoSlowDownSpeed = .75;
   }//17.51
 
-  public static final class AutonPosititions {
+  public static final class AutonConfigurationConstants {
     public static final HashMap<String, MirrablePose2d> robotPositions = new HashMap<String, MirrablePose2d>();
-    public static boolean isBlueAlience = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue; 
-           
-    static {
-      robotPositions.put("Left:ShootPreloaded", new MirrablePose2d(new Pose2d(2.00, 7.00, new Rotation2d(45)), !isBlueAlience));
-    }
+
+    public static boolean kIsBlueAlience = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;     
 
     public static final ArrayList<Command> kLeft_ShootPreloaded = new ArrayList<Command>();
+    public static final ArrayList<Command> kLeft_ShootPreloadedLeft = new ArrayList<Command>();
+
     
   }
 
@@ -245,13 +247,13 @@ public final class Constants {
     public static final double kFLeftShooterController = 0.0;
     public static final double kIZoneShooterController = 0.0; 
 
-    public static final double kMinShootingDistanceMeters = Units.inchesToMeters(80);
-    public static final double kMaxShootingDistanceMeters = Units.inchesToMeters(100);
+    public static final double kMinShootingDistanceMeters = Units.inchesToMeters(85);
+    public static final double kMaxShootingDistanceMeters = Units.inchesToMeters(90);
 
     public static final double kMinShootingDistanceFromWallMeters = Units.inchesToMeters(40);
 
     public static final double kShooterPowerRatio = .75; // TODO: Also wrong
-    public static double kShooterRPM = SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
+    public static final double kShooterRPM = 2800;//SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
     public static final double kShootTime = 10;
 
     public static final double kShooterRPMTolorence = 75;

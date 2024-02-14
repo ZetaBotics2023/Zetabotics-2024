@@ -80,7 +80,9 @@ public class CalculateSpeakerShootingPosition {
 
         double targetAngleRadians = Math.asin(endPositionDistenceFromTagY/endPositionDistenceFromTag);
         
-        if(robotPositionMeters.getY() > aprilTagPosition.getY()) {
+        if(Math.abs(robotPositionMeters.getY() - aprilTagPosition.getY()) <= .25) {
+            return new Pose2d(targetTranslation, Rotation2d.fromRadians(0));
+        } else if(robotPositionMeters.getY() > aprilTagPosition.getY()) {
             return new Pose2d(targetTranslation, Rotation2d.fromRadians(Math.abs(targetAngleRadians)));
         }
         // Construct the final position and return it

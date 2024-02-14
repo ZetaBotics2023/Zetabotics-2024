@@ -27,7 +27,7 @@ public class RampShooterAtDifforentSpeedCommand extends Command {
     @Override
     public void initialize(){
         SmartDashboard.putNumber("Shooter RPM", SmartDashboard.getNumber("Shooter RPM", 4200));
-        ShooterConstants.kShooterRPM = SmartDashboard.getNumber("Shooter RPM", 4200);
+        //ShooterConstants.kShooterRPM = SmartDashboard.getNumber("Shooter RPM", 4200);
         this.shooterSubsystem.runAtRPMAndRPMRatio(ShooterConstants.kShooterRPM);
     }
 
@@ -42,6 +42,6 @@ public class RampShooterAtDifforentSpeedCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return this.shooterSubsystem.isLeftMotorAtTargetVelocity() && this.shooterSubsystem.isRightMotorAtTargetRatioVelocity();
+        return true;//this.shooterSubsystem.isLeftMotorAtTargetVelocity() && this.shooterSubsystem.isRightMotorAtTargetRatioVelocity();
     }
 }

@@ -69,7 +69,6 @@ public class AutoShootPositionCommand extends Command{
 
         goToPosition.schedule();
         rampShooterCommand.schedule();
-        InTeleop.inTeleop = false;
 
         SmartDashboard.putNumber("Auto Position Goal X", shootingPosition.getX()); 
         SmartDashboard.putNumber("Auto Position Goal Y", shootingPosition.getY()); 
@@ -94,13 +93,12 @@ public class AutoShootPositionCommand extends Command{
         this.handOffToShooterCommand.cancel();
         this.goToPosition.cancel();
         this.stopShooterCommmand.schedule();
-        InTeleop.inTeleop = true;
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return this.handOffToShooterCommand.isFinished();
+        return false;//this.handOffToShooterCommand.isFinished();
     }
 
 }

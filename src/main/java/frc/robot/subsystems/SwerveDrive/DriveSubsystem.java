@@ -167,7 +167,7 @@ public class DriveSubsystem extends SubsystemBase {
     boolean withInOneMeterY = Math.abs(currentEstimatedPose.getY() - estimatedPose.getPose().getY()) <= 1;
 
     boolean withInOneMeter = withInOneMeterX && withInOneMeterY;
-    if(estimatedPose.isValidTarget() && InTeleop.inTeleop) { //&& withInOneMeter) {
+    if(estimatedPose.isValidTarget()) { //&& withInOneMeter) {
       this.poseEstimator.addVisionMeasurement(estimatedPose.getPose(), estimatedPose.getTimeStamp());
     }
     this.field2d.setRobotPose(this.poseEstimator.getEstimatedPosition());
