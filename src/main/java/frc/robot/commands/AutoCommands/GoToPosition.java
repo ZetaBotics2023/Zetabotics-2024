@@ -60,6 +60,7 @@ public class GoToPosition extends Command{
     }
 
     public void execute() {
+        SmartDashboard.putNumber("Auton Goal Thata", this.goalEndPose.getRotation().getDegrees());
         Translation2d robotTransformVelocity = CalculateGoToPoseVelocity.calculateGoToPoseVelocity(m_driveSubsystem.getRobotPose(), this.goalEndPose);
         SmartDashboard.putNumber("Goal X Vel", robotTransformVelocity.getX());
         SmartDashboard.putNumber("Goal Y Vel", robotTransformVelocity.getY());

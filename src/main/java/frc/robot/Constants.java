@@ -115,7 +115,7 @@ public final class Constants {
     public static final double kRotationRateLimiter = 20;
 
     public static final double kHeadingPIDControllerP = .025;
-    public static final double kHeadingPIDControllerI = .0000001;
+    public static final double kHeadingPIDControllerI = 0;//.0000001;
     public static final double kHeadingPIDControllerD = 0;
     public static final double kHeadingPIDControllerTolerance = 1;
     public static final double kMaxAngularSpeedRadiansPerSecond = 260;
