@@ -47,7 +47,7 @@ public class GoToPoseAutonWhileShooting extends Command{
     private double persentToPose;
 
 
-    public GoToPoseAutonWhileShooting(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose, HandOffToShooterAuton handOffToShooterAuton, double shootDistence) {
+    public GoToPoseAutonWhileShooting(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose, HandOffToShooterAuton handOffToShooterAuton, double percentToPose) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;
         this.handOfftoShooterAuton = handOffToShooterAuton;
@@ -58,7 +58,7 @@ public class GoToPoseAutonWhileShooting extends Command{
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
         this.translationXLimiter = new SlewRateLimiter(20);
         this.translationYLimiter = new SlewRateLimiter(20);
-        this.persentToPose = shootDistence;
+        this.persentToPose = percentToPose;
         addRequirements(m_driveSubsystem);
     }
 
@@ -69,7 +69,6 @@ public class GoToPoseAutonWhileShooting extends Command{
         this.translationXLimiter.reset(0);
         this.translationYLimiter.reset(0);
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
-        this.handOfftoShooterAuton.schedule();
     }
 
     public void execute() {
