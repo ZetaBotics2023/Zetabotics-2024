@@ -15,8 +15,6 @@ public class GoToPositionAfterTime extends Command{
     }
 
     public void initialize() {
-        this.waitCommand = new WaitCommand(waitTime);
-        this.waitCommand.schedule();
     }
 
     public void execute() {
@@ -27,6 +25,7 @@ public class GoToPositionAfterTime extends Command{
         if(this.waitCommand != null) {
             if(this.waitCommand.isFinished() && !this.goToPosition.isScheduled()) {
                 this.goToPosition.schedule();
+                this.waitCommand = null;
             }
         }
     }
