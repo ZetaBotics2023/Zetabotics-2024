@@ -31,7 +31,6 @@ import frc.robot.utils.InTeleop;
 
 public class GoToPosition extends Command{
     DriveSubsystem m_driveSubsystem;
-    TurnToAngle m_turnToAngle;
     Pose2d goalEndPose;
     private ProfiledPIDController headingPIDController;
     private final SlewRateLimiter translationXLimiter;

@@ -40,6 +40,7 @@ public class AutoShootPositionCommand extends Command{
     private StopShooterCommand stopShooterCommmand;
     private HandOffToShooterCommand handOffToShooterCommand;
 
+
     private GoToPosition goToPosition;
 
     public AutoShootPositionCommand(DriveSubsystem m_driveSubsystem, ShooterSubsystem m_shooterSubsystem, 

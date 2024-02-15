@@ -25,6 +25,7 @@ import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.IntakeCommands.PickupFromGroundCommand;
 import frc.robot.commands.IntakeCommands.ShootIntoAmpWithIntakeCommand;
+import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedAutonCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
 import frc.robot.commands.ShooterCommands.StopShooterCommand;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
@@ -207,15 +208,15 @@ public class RobotContainer {
   public Command configureAutons(String autonName) {
     switch(autonName) {
       case "Left:ShootPreloaded":
-      AutonConfigurationConstants.kLeft_ShootPreloaded.add(this.rampShooterAtDifforentSpeedCommand);
+      AutonConfigurationConstants.kLeft_ShootPreloaded.add(new RampShooterAtDifforentSpeedAutonCommand(m_shooterSubsystem));
       AutonConfigurationConstants.kLeft_ShootPreloaded.add(new GoToPositionAuton(m_driveSubsystem,
           AutonConfigurationConstants.robotPositions.get("LeftNoteShootPose")));
-      AutonConfigurationConstants.kLeft_ShootPreloaded.add(handOffToShooterCommand);
-      AutonConfigurationConstants.kLeft_ShootPreloaded.add(this.stopShooterCommand);
+      AutonConfigurationConstants.kLeft_ShootPreloaded.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
+      AutonConfigurationConstants.kLeft_ShootPreloaded.add(new StopShooterCommand(m_shooterSubsystem));
 
       return GenerateAuto.generateAuto(AutonConfigurationConstants.kLeft_ShootPreloaded);
       case "Left:ShootPreloadedLeft":
-      AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new RampShooterAtDifforentSpeedCommand(m_shooterSubsystem));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new RampShooterAtDifforentSpeedAutonCommand(m_shooterSubsystem));
       AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new GoToPositionAuton(m_driveSubsystem,
       AutonConfigurationConstants.robotPositions.get("LeftNoteShootPose")));
           AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
@@ -226,7 +227,7 @@ public class RobotContainer {
       AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new GoToPositionAuton(m_driveSubsystem,
           AutonConfigurationConstants.robotPositions.get("CenterNoteShootPose")));
       AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
-      AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(this.stopShooterCommand);
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new StopShooterCommand(m_shooterSubsystem));
       
       return GenerateAuto.generateAuto(AutonConfigurationConstants.kLeft_ShootPreloadedLeft);
       }
