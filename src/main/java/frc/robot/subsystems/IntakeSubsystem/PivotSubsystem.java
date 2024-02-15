@@ -100,7 +100,7 @@ public class PivotSubsystem extends SubsystemBase {
      * @return If the pivot's rotation is within the IZone of the desired rotation
      */
     public boolean isMotorAtTargetRotation() {
-        return Math.abs(rotationsToDegrees(this.m_pivotAbsEncoder.getPosition()) - this.targetPositionDegrees) <= this.pivotPID.getIZone();
+        return Math.abs(rotationsToDegrees(this.m_pivotAbsEncoder.getPosition()) - this.targetPositionDegrees) <= IntakeConstants.kPivotRotationToleranceDegrees;
     }
 
     
