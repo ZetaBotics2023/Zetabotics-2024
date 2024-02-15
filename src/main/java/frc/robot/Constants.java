@@ -114,14 +114,23 @@ public final class Constants {
     public static final double kTranslationRateLimiter = 6;//9;
     public static final double kRotationRateLimiter = 20;
 
-    public static final double kHeadingPIDControllerP = .025;
-    public static final double kHeadingPIDControllerI = 0;//.0000001;
+    public static final double kHeadingPIDControllerP = .035;
+    public static final double kHeadingPIDControllerI = .00005;
     public static final double kHeadingPIDControllerD = 0;
     public static final double kHeadingPIDControllerTolerance = 1;
-    public static final double kMaxAngularSpeedRadiansPerSecond = 260;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 280;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 360;
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-    public static final double kAutoPositonTolorence = .1;
+    public static final double kAutoPositonTolorence = .2;
+
+    public static final double kHeadingPIDControllerAutoP = .035;
+    public static final double kHeadingPIDControllerAutoI = .00005;
+    public static final double kHeadingPIDControllerAutoD = 0;
+    public static final double kHeadingPIDControllerToleranceAuto = 2;
+    public static final double kMaxAngularSpeedRadiansPerSecondAuto = 280;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquaredAuto = 360;
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraintsAuto = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+    public static final double kAutoPositonTolorenceAuto = .1;
 
   }
 
@@ -146,7 +155,7 @@ public final class Constants {
     public static final double kAbsoluteTurningEncoderCPR = 4096.0;
     public static final double kNeoEncoderCPR = 4096.0;
     public static final double kMaxRPM = 5676.0;
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.685);//0.1016;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.72);//0.1016;
     public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);//6.75/1.0;
     public static final double kTurningGearRatio = 150.0/7.0; 
 
@@ -211,7 +220,7 @@ public final class Constants {
   public static final class AutoConstants {
     public static HashMap<String, Command> namedEventMap = new HashMap<>();
     public static Alliance alliance;
-    public static final double kMaxAutonSpeedInMetersPerSecond = 2;
+    public static final double kMaxAutonSpeedInMetersPerSecond = 2.1;
     public static final double kMaxAutonAccelerationInMetersPerSecondSqr = 3;
 
     public static final double kMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
@@ -220,8 +229,10 @@ public final class Constants {
     public static final PIDConstants kTranslationAutoPID = new PIDConstants(1, 0, 0);//new PIDConstants(1.95, 0, .0001);
     public static final PIDConstants kRotationAutoPID = new PIDConstants(2.1, 0, 0);//new PIDConstants(3.5, 0.0, 0.0);
     public static final double kAutoSlowDownSpeedSecond = .3;
-	public static final double kAutoSlowDownSpeed = .75;
-    public static final double kAutoSlowRate = 2;
+	  public static final double kAutoSlowDownSpeed = .75;
+    public static final double kAutoSlowRate = 1.6;
+    public static final double kAutoSlowRateAuto = 1.9;
+
   }//17.51
 
   public static final class AutonConfigurationConstants {
@@ -256,6 +267,8 @@ public final class Constants {
     public static final double kShooterPowerRatio = .75; // TODO: Also wrong
     public static final double kShooterRPM = 2800;//SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
     public static final double kShootTime = 10;
+    public static final double kShootTimeAuto = 2;
+
 
     public static final double kShooterRPMTolorence = 75;
   
@@ -319,7 +332,7 @@ public final class Constants {
     public static final double kIZoneIntakePositionController = .5/360;
 
     // Rotation constants
-    public static final double kGroundPickupPivotRotationDegrees = 190;
+    public static final double kGroundPickupPivotRotationDegrees = 188;
     public static final double kGroundPickupIntakeRPM = 1000;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;

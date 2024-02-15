@@ -43,7 +43,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
         // Retrieve whether the Limelight sees a valid target
         boolean validTarget = (getNumberOfApriltags() > 1);
-
+        SmartDashboard.putNumber("Number of tags", getNumberOfApriltags());
         // Calculate the system time so we know when we read our current value
         double timeStamp = Timer.getFPGATimestamp() - (piplineLatency/1000.0) - (capturePiplineLatency/1000.0);
 
@@ -58,7 +58,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
     }
 
     public static int getNumberOfApriltags() {
-        LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("zeta");
+        LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-zeta");
         return llresults.targetingResults.targets_Fiducials.length;
     }
 }
