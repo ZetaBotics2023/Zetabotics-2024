@@ -15,6 +15,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
+import frc.robot.commands.RunCommandUponConditionCommand;
 import frc.robot.commands.AutoCommands.AutoShootPositionCommand;
 import frc.robot.commands.AutoCommands.FollowAutonomousPath;
 import frc.robot.commands.AutoCommands.GoToPosition;
@@ -220,10 +221,14 @@ public class RobotContainer {
       AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new GoToPositionAuton(m_driveSubsystem,
       AutonConfigurationConstants.robotPositions.get("LeftNoteShootPose")));
           AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
-      AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new ParallelCommandGroup(
-          new GoToPositionAuton(m_driveSubsystem, 
-          AutonConfigurationConstants.robotPositions.get("LeftNoteIntakePose")),
-          new PickupFromGroundCommand(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem)));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(
+        new RunCommandUponConditionCommand(
+          new ParallelCommandGroup(
+            new GoToPositionAuton(m_driveSubsystem, 
+              AutonConfigurationConstants.robotPositions.get("LeftNoteIntakePose")),
+            new PickupFromGroundCommand(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem)),
+          this.m_pivotSubsystem::isPivotAboveAutonPickupThreshold
+          ));
       AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new GoToPositionAuton(m_driveSubsystem,
           AutonConfigurationConstants.robotPositions.get("CenterNoteShootPose")));
       AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));

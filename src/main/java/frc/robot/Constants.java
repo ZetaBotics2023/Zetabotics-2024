@@ -343,5 +343,8 @@ public final class Constants {
 
     public static final double kPassIntoShooterPivotRotationDegrees = 0;
     public static final double kPassIntoShooterIntakeRPM = -3000;
+
+    public static final double kPivotRotationToleranceDegrees = 1;
+    public static final double kGroundPickupMinimumPosition = 100;
   }
 }

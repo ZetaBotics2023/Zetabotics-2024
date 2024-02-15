@@ -68,7 +68,8 @@ public class GoToPositionAuton extends Command{
         this.translationXLimiter.calculate(robotTransformVelocity.getX()),
         this.translationYLimiter.calculate(robotTransformVelocity.getY()),
         headingPIDController.calculate(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees(), this.goalEndPose.getRotation().getDegrees()),
-        this.m_driveSubsystem.getRobotPose().getRotation()));
+        this.m_driveSubsystem.getRobotPose().getRotation()
+        ));
     }
 
     @Override
