@@ -3,9 +3,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
+/*
+A simple command to replace the WPILib ParallelRaceCommandGroup that doesn't work.
+It only works with two commands as of right now. 
+*/
 public class ParallelRaceGroupCommand extends Command {
     Command commandOne;
     Command commandTwo;
+
     public ParallelRaceGroupCommand(Command commandOne, Command commandTwo) {
         this.commandOne = commandOne;
         this.commandTwo = commandTwo;
@@ -22,6 +27,7 @@ public class ParallelRaceGroupCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         SmartDashboard.putBoolean("Race Command", true);
+        // If one is finished, end the other
         if (this.commandOne.isFinished()) this.commandTwo.cancel();
         if (this.commandTwo.isFinished()) this.commandOne.cancel();
 
