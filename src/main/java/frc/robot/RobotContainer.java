@@ -207,7 +207,7 @@ public class RobotContainer {
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new StopShooterCommand(m_shooterSubsystem));
 
-        return GenerateAuo.generateAuto(autonName, AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter);
+        return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter);
       }
 
       return null;
