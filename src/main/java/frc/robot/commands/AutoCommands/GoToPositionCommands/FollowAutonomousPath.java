@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 // booba
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.AutoCommands.GoToPositionCommands;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

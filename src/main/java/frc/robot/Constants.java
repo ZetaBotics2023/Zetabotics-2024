@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.AutoCommands.GoToPosition;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.GoToPosition;
 import frc.robot.utils.MirrablePose2d;
 
 public final class Constants {
@@ -113,25 +113,6 @@ public final class Constants {
 
     public static final double kTranslationRateLimiter = 6;//9;
     public static final double kRotationRateLimiter = 20;
-
-    public static final double kHeadingPIDControllerP = .035;
-    public static final double kHeadingPIDControllerI = .00005;
-    public static final double kHeadingPIDControllerD = 0;
-    public static final double kHeadingPIDControllerTolerance = 1;
-    public static final double kMaxAngularSpeedRadiansPerSecond = 280;
-    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 360;
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-    public static final double kAutoPositonTolorence = .2;
-
-    public static final double kHeadingPIDControllerAutoP = .035;
-    public static final double kHeadingPIDControllerAutoI = .00005;
-    public static final double kHeadingPIDControllerAutoD = 0;
-    public static final double kHeadingPIDControllerToleranceAuto = 2;
-    public static final double kMaxAngularSpeedRadiansPerSecondAuto = 280;
-    public static final double kMaxAngularAccelerationRadiansPerSecondSquaredAuto = 360;
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraintsAuto = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-    public static final double kAutoPositonTolorenceAuto = .1;
-
   }
 
   public static class SwerveModuleConstants {
@@ -189,7 +170,6 @@ public final class Constants {
     public static final double kWidth = Units.feetToMeters(27);
   }
 
-
   public static final class VisionConstants {
     // Limelight pose
     // 13in horizontal
@@ -201,39 +181,54 @@ public final class Constants {
 
   };
 
-  public static final class OnTheFlyGenerationConstants {
-    public static final double kMaxSpeedMetersPerSecond = 4.1;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 2;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 4.1;
-    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 1 * Math.PI;
-    public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-                kMaxSpeedMetersPerSecond,
-                kMaxAccelerationMetersPerSecondSquared)
-                      .setKinematics(SwerveDriveConstants.kDriveKinematics);
-
-    public static final PIDController kXController = new PIDController(5, 0, 0);
-    public static final PIDController kYController = new PIDController(5, 0, 0);
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-    public static final ProfiledPIDController kThetaController = new ProfiledPIDController(3, 0, 0, kThetaControllerConstraints);
-  }
-
   public static final class AutoConstants {
-    public static HashMap<String, Command> namedEventMap = new HashMap<>();
-    public static Alliance alliance;
     public static final double kMaxAutonSpeedInMetersPerSecond = 2.1;
     public static final double kMaxAutonAccelerationInMetersPerSecondSqr = 3;
-
-    public static final double kMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
-    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 4 * Math.PI;
-    //5.9
-    public static final PIDConstants kTranslationAutoPID = new PIDConstants(1, 0, 0);//new PIDConstants(1.95, 0, .0001);
-    public static final PIDConstants kRotationAutoPID = new PIDConstants(2.1, 0, 0);//new PIDConstants(3.5, 0.0, 0.0);
-    public static final double kAutoSlowDownSpeedSecond = .3;
-	  public static final double kAutoSlowDownSpeed = .75;
+  
+    public static final double kAutoSlowDownSpeed = .75;
     public static final double kAutoSlowRate = 1.6;
     public static final double kAutoSlowRateAuto = 1.9;
 
-  }//17.51
+
+    // Translation Contraints
+    public static final double kMaxTranslationSpeedMPS = 4.1;
+    public static final double kMaxTranslationAcceloration = 2;
+    public static final TrapezoidProfile.Constraints kTranslationControllerConstraints =
+     new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPS, kMaxTranslationAcceloration);
+
+    public static final double kTranslationPIDControllerVelocityTolerance = .1;
+    public static final double kTranslationPIDControllerPositionalTolerance = .1;
+
+    public static final double kTranslationAutoPIDControllerVelocityTolerance = .1;
+    public static final double kTranslationAutoPIDControllerPositionalTolerance = .1;
+
+    public static final double kTranslationPIDControllerP = 2.5;
+    public static final double kTranslationPIDControllerI = 0;
+    public static final double kTranslationPIDControllerD = 0;
+
+    public static final double kTranslationAutoPIDControllerP = 2.5;
+    public static final double kTranslationAutoPIDControllerI = 0;
+    public static final double kTranslationAutoPIDControllerD = 0;
+
+    // Heading
+    public static final double kHeadingPIDControllerP = .035;
+    public static final double kHeadingPIDControllerI = .00005;
+    public static final double kHeadingPIDControllerD = 0;
+    public static final double kHeadingPIDControllerTolerance = 1;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 280;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 360;
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+    public static final double kAutoPositonTolorence = .2;
+
+    public static final double kHeadingPIDControllerAutoP = .035;
+    public static final double kHeadingPIDControllerAutoI = .00005;
+    public static final double kHeadingPIDControllerAutoD = 0;
+    public static final double kHeadingPIDControllerToleranceAuto = 2;
+    public static final double kMaxAngularSpeedRadiansPerSecondAuto = 280;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquaredAuto = 360;
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraintsAuto = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+    public static final double kAutoPositonTolorenceAuto = .1;
+  }
 
   public static final class AutonConfigurationConstants {
     public static final HashMap<String, MirrablePose2d> robotPositions = new HashMap<String, MirrablePose2d>();
@@ -241,9 +236,7 @@ public final class Constants {
     public static boolean kIsBlueAlience = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;     
 
     public static final ArrayList<Command> kLeft_ShootPreloaded = new ArrayList<Command>();
-    public static final ArrayList<Command> kLeft_ShootPreloadedLeft = new ArrayList<Command>();
-
-    
+    public static final ArrayList<Command> kLeft_ShootPreloadedLeft = new ArrayList<Command>(); 
   }
 
   public static final class ShooterConstants {
@@ -268,11 +261,7 @@ public final class Constants {
     public static final double kShooterRPM = 2800;//SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
     public static final double kShootTime = 10;
     public static final double kShootTimeAuto = 2;
-
-
     public static final double kShooterRPMTolorence = 75;
-  
-  
   }
 
   public static final class ClimberConstants {

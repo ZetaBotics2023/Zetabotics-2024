@@ -16,11 +16,11 @@ import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
 import frc.robot.commands.RunCommandUponConditionCommand;
-import frc.robot.commands.AutoCommands.AutoShootPositionCommand;
-import frc.robot.commands.AutoCommands.FollowAutonomousPath;
-import frc.robot.commands.AutoCommands.GoToPosition;
-import frc.robot.commands.AutoCommands.GoToPositionAuton;
 import frc.robot.commands.AutoCommands.TestCommand;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.AutoShootPositionCommand;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.FollowAutonomousPath;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.GoToPosition;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.GoToPositionAuton;
 import frc.robot.commands.IntakeCommands.GoToLocation;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
@@ -142,12 +142,6 @@ public class RobotContainer {
 
     // End Command Config
     
-    //AutoConstants.namedEventMap.put("PickUpFromGround", this.pickupFromGroundCommand);
-    //NamedCommands.registerCommands(AutoConstants.namedEventMap);
-
-    //this.autonSelector = AutoBuilder.buildAutoChooser();s
-    // Autos go here
-    //SmartDashboard.putData("Auton Selector", autonSelector);
     configureBindings();
     configureAutonPoints();
     this.autonSelector.addOption("Left:ShootPreloaded", "Left:ShootPreloaded");

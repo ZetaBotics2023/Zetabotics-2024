@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.AutoCommands.GoToPositionCommands;
 
 import java.nio.file.DirectoryStream;
 import java.util.List;
@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.SwerveDriveConstants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
@@ -51,9 +51,9 @@ public class GoToPoseAutonWhileShooting extends Command{
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;
         this.handOfftoShooterAuton = handOffToShooterAuton;
-        this.headingPIDController = new ProfiledPIDController(SwerveDriveConstants.kHeadingPIDControllerAutoP, SwerveDriveConstants.kHeadingPIDControllerAutoI,
-        SwerveDriveConstants.kHeadingPIDControllerAutoD, SwerveDriveConstants.kThetaControllerConstraintsAuto);
-        this.headingPIDController.setTolerance(SwerveDriveConstants.kHeadingPIDControllerToleranceAuto);
+        this.headingPIDController = new ProfiledPIDController(AutoConstants.kHeadingPIDControllerAutoP, AutoConstants.kHeadingPIDControllerAutoI,
+        AutoConstants.kHeadingPIDControllerAutoD, AutoConstants.kThetaControllerConstraintsAuto);
+        this.headingPIDController.setTolerance(AutoConstants.kHeadingPIDControllerToleranceAuto);
         this.headingPIDController.setIntegratorRange(-0.3, 0.3);
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
         this.translationXLimiter = new SlewRateLimiter(20);
@@ -117,8 +117,8 @@ public class GoToPoseAutonWhileShooting extends Command{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        boolean isInPosition = Math.abs(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees() - this.goalEndPose.getRotation().getDegrees()) <= SwerveDriveConstants.kHeadingPIDControllerTolerance && Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <= SwerveDriveConstants.kAutoPositonTolorenceAuto &&
-         Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <= SwerveDriveConstants.kAutoPositonTolorenceAuto;
+        boolean isInPosition = Math.abs(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees() - this.goalEndPose.getRotation().getDegrees()) <= AutoConstants.kHeadingPIDControllerTolerance && Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <= AutoConstants.kAutoPositonTolorenceAuto &&
+         Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <= AutoConstants.kAutoPositonTolorenceAuto;
          return isInPosition && this.handOfftoShooterAuton.isFinished();
     }
 }

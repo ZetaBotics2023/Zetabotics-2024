@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.AutoCommands.GoToPositionCommands;
 
 import java.nio.file.DirectoryStream;
 import java.util.List;
@@ -31,7 +31,6 @@ import frc.robot.utils.InTeleop;
 
 public class GoToPositionAuton extends Command{
     DriveSubsystem m_driveSubsystem;
-    TurnToAngle m_turnToAngle;
     Pose2d goalEndPose;
     private ProfiledPIDController headingPIDController;
     private final SlewRateLimiter translationXLimiter;
@@ -42,9 +41,9 @@ public class GoToPositionAuton extends Command{
     public GoToPositionAuton(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;
-        this.headingPIDController = new ProfiledPIDController(SwerveDriveConstants.kHeadingPIDControllerAutoP, SwerveDriveConstants.kHeadingPIDControllerAutoI,
-        SwerveDriveConstants.kHeadingPIDControllerAutoD, SwerveDriveConstants.kThetaControllerConstraintsAuto);
-        this.headingPIDController.setTolerance(SwerveDriveConstants.kHeadingPIDControllerToleranceAuto);
+        this.headingPIDController = new ProfiledPIDController(AutoConstants.kHeadingPIDControllerAutoP, AutoConstants.kHeadingPIDControllerAutoI,
+        AutoConstants.kHeadingPIDControllerAutoD, AutoConstants.kThetaControllerConstraintsAuto);
+        this.headingPIDController.setTolerance(AutoConstants.kHeadingPIDControllerToleranceAuto);
         this.headingPIDController.setIntegratorRange(-0.3, 0.3);
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
         this.translationXLimiter = new SlewRateLimiter(20);
@@ -80,7 +79,8 @@ public class GoToPositionAuton extends Command{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.abs(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees() - this.goalEndPose.getRotation().getDegrees()) <= SwerveDriveConstants.kHeadingPIDControllerTolerance && Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <= SwerveDriveConstants.kAutoPositonTolorenceAuto &&
-         Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <= SwerveDriveConstants.kAutoPositonTolorenceAuto;
+        return Math.abs(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees() - this.goalEndPose.getRotation().getDegrees()) 
+        <= AutoConstants.kHeadingPIDControllerTolerance && Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <= AutoConstants.kAutoPositonTolorenceAuto &&
+         Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <= AutoConstants.kAutoPositonTolorenceAuto;
     }
 }

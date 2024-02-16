@@ -38,7 +38,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.OnTheFlyGenerationConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.utils.InTeleop;
 import frc.robot.utils.LimelightUtil;
@@ -63,8 +62,6 @@ public class DriveSubsystem extends SubsystemBase {
     private final Pose2d startingPose = new Pose2d(0, 0, new Rotation2d(0));
 
     private final Field2d field2d = new Field2d();
-
-    private final ProfiledPIDController headingPIDController;
 
     public DriveSubsystem() {
         this.frontLeftSwerveModule =  new SwerveModule(
@@ -96,39 +93,6 @@ public class DriveSubsystem extends SubsystemBase {
         ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
         visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
         visionTab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
-
-         AutoBuilder.configureHolonomic(
-                this.poseEstimator::getEstimatedPosition, // Robot pose supplier
-                this::setRobotPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        AutoConstants.kTranslationAutoPID, // Translation PID constants
-                        AutoConstants.kRotationAutoPID, // Rotation PID constants
-                        AutoConstants.kMaxAutonSpeedInMetersPerSecond , // Max module speed, in m/s
-                        SwerveDriveConstants.kRadiusFromCenterToFarthestSwerveModule, // Drive base radius in meters. Distance from robot center to furthest module.
-                        new ReplanningConfig(true, false) // Default path replanning config. See the API for the options here
-                ),
-                () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-                    Optional<Alliance> alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-                },
-                this // Reference to this subsystem to set requirements
-        );
-
-        this.headingPIDController = new ProfiledPIDController(SwerveDriveConstants.kHeadingPIDControllerP, SwerveDriveConstants.kHeadingPIDControllerI,
-                                    SwerveDriveConstants.kHeadingPIDControllerD, SwerveDriveConstants.kThetaControllerConstraints);
-        this.headingPIDController.setTolerance(SwerveDriveConstants.kHeadingPIDControllerTolerance);
-        this.headingPIDController.setIntegratorRange(-0.3, 0.3);
-
-        this.headingPIDController.reset(this.poseEstimator.getEstimatedPosition().getRotation().getDegrees());
  
         SmartDashboard.updateValues(); 
     }
@@ -360,50 +324,5 @@ public class DriveSubsystem extends SubsystemBase {
   public void resetRobotHeading() {
     this.m_gyro.reset();
     this.poseEstimator.resetPosition(m_gyro.getRotation2d(), getModulePositions(), new Pose2d());
-  }
-
-  public SequentialCommandGroup generateOnTheFlyPath(Pose2d endPose) {
-        // Generate trajectory
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                getRobotPose(),
-                List.of(),
-                endPose,
-                OnTheFlyGenerationConstants.trajectoryConfig);
-
-      
-        // Should not need this our odometry is -64 bit to +64bit
-        //thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-        // Construct command to follow trajectory
-        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-                trajectory,
-                this::getRobotPose,
-                SwerveDriveConstants.kDriveKinematics,
-                OnTheFlyGenerationConstants.kXController,
-                OnTheFlyGenerationConstants.kYController,
-                OnTheFlyGenerationConstants.kThetaController,
-                this::setModuleStates,
-                this);
-
-      return new SequentialCommandGroup(
-                swerveControllerCommand,
-                new InstantCommand(() -> stop()));
-  }
-
-  public void turnToHeading(double desiredHeading) {
-    drive(
-      ChassisSpeeds.fromFieldRelativeSpeeds(
-        0,
-        0,
-        headingPIDController.calculate(poseEstimator.getEstimatedPosition().getRotation().getDegrees(), desiredHeading),
-        getRobotPose().getRotation()));
-  }
-
-  public void resetHeadingPid(){
-    headingPIDController.reset(poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-  }
-
-  public boolean isHeadingPidAtGoal() {
-    return this.headingPIDController.atGoal();
   }
 }
