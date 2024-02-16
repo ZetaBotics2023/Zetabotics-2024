@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
@@ -78,21 +79,40 @@ public class GoToPoseAutonWhileShooting extends Command{
             DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? 
             VisionConstants.kBlueAllianceShooterAprilTagPosition : VisionConstants.kRedAllianceShooterAprilTagPosition);
 
+        double robotPoseXBefore = this.m_driveSubsystem.getRobotPose().getX();
+        double robotPoseYBefore = this.m_driveSubsystem.getRobotPose().getY();
+
         // Calculate the distance between the robot and AprilTag in X and Y
-        double distanceToAprilTagX = this.m_driveSubsystem.getRobotPose().getX() - aprilTagPosition.getX();
-        double distanceToAprilTagY = this.m_driveSubsystem.getRobotPose().getY() - aprilTagPosition.getY();
-        double distanceToAprilTag = Math.sqrt(Math.pow(distanceToAprilTagX, 2) + Math.pow(distanceToAprilTagY, 2));
-        
-        double targetAngle = 0;
-        if(Math.abs(this.m_driveSubsystem.getRobotPose().getY() - aprilTagPosition.getY()) >= .25) {
-            targetAngle = Units.radiansToDegrees(Math.asin(distanceToAprilTagY/distanceToAprilTag));
-        }
+        // These have been kept here as a comment in case we need them later, but they aren't used.
+        // This is because they were for calculating our target angle, which is now done by a simple prediction below.
+        //double distanceToAprilTagX = robotPoseXBefore - aprilTagPosition.getX();
+        //double distanceToAprilTagY = robotPoseYBefore - aprilTagPosition.getY();
+        //double distanceToAprilTag = Math.sqrt(Math.pow(distanceToAprilTagX, 2) + Math.pow(distanceToAprilTagY, 2));
 
         Translation2d robotTransformVelocity = CalculateGoToPoseVelocityAuton.calculateGoToPoseVelocity(m_driveSubsystem.getRobotPose(), this.goalEndPose);
 
-        SmartDashboard.putNumber("Auton Goal Thata S", targetAngle);
         SmartDashboard.putNumber("Goal X Vel S", robotTransformVelocity.getX());
         SmartDashboard.putNumber("Goal Y Vel S", robotTransformVelocity.getY());
+
+        // We need to predict what our position relative to the AprilTag will be in the time it takes to shoot
+        // To get a halfway-decent estimate, we can use the distance formula d=v/t
+        // Our velocity will be the robot's current velocity, while the time will be our shooter time
+        // Using this, we calculate the distance we will have gone in the shooter time, and add it to the current position
+        double robotPoseAfterShootTimeX = robotPoseXBefore + (robotTransformVelocity.getX() / ShooterConstants.kShootTimeAuto);
+        double robotPoseAfterShootTimeY = robotPoseYBefore + (robotTransformVelocity.getY() / ShooterConstants.kShootTimeAuto);
+
+        // Now find the distance to the AprilTag using the predicted values
+        double distanceToAprilTagAfterShootTimeX = robotPoseAfterShootTimeX - aprilTagPosition.getX();
+        double distanceToAprilTagAfterShootTimeY = robotPoseAfterShootTimeY - aprilTagPosition.getY();
+        double distanceToAprilTagAfterShootTime = Math.sqrt(Math.pow(distanceToAprilTagAfterShootTimeX, 2) + Math.pow(distanceToAprilTagAfterShootTimeY, 2));
+
+        double targetAngle = 0;
+        if(Math.abs(robotPoseAfterShootTimeX - aprilTagPosition.getY()) >= .25) {
+            targetAngle = Units.radiansToDegrees(Math.asin(distanceToAprilTagAfterShootTimeY/distanceToAprilTagAfterShootTime));
+        }
+
+        SmartDashboard.putNumber("Auton Goal Theta S", targetAngle);
+
 
         this.m_driveSubsystem.drive(
             ChassisSpeeds.fromFieldRelativeSpeeds(

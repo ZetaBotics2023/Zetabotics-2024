@@ -26,7 +26,7 @@ public class RunCommandUponConditionCommand extends Command {
     @Override
     public void execute() {
         if (this.conditionalSupplier.get()) {
-            this.command.schedule()
+            this.command.schedule();
             commandHasRan = true;
         }
     }
