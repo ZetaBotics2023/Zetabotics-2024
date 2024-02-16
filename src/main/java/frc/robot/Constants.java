@@ -242,13 +242,9 @@ public final class Constants {
     public static boolean kIsBlueAlience = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;     
     public static String startingPose = "Left";
 
-    
-
-
     public static final ArrayList<Command> kLeft_ShootPreloaded = new ArrayList<Command>();
     public static final ArrayList<Command> kLeft_ShootPreloadedLeft = new ArrayList<Command>();
-
-    
+    public static final ArrayList<Command> kLeft_ShootPreloadedLeftCenter = new ArrayList<Command>();    
   }
 
   public static final class ShooterConstants {

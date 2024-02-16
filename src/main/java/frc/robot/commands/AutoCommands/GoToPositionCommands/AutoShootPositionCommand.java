@@ -4,20 +4,10 @@
 
 package frc.robot.commands.AutoCommands.GoToPositionCommands;
 
-import java.util.List;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
 import frc.robot.commands.ShooterCommands.StopShooterCommand;
@@ -27,7 +17,6 @@ import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.CalculateSpeakerShootingPosition;
-import frc.robot.utils.InTeleop;
 
 public class AutoShootPositionCommand extends Command{
     private DriveSubsystem m_driveSubsystem;
@@ -41,7 +30,7 @@ public class AutoShootPositionCommand extends Command{
     private HandOffToShooterCommand handOffToShooterCommand;
 
 
-    private GoToPosition goToPosition;
+    private GoToPoseitionWithPIDS goToPosition;
 
     public AutoShootPositionCommand(DriveSubsystem m_driveSubsystem, ShooterSubsystem m_shooterSubsystem, 
     IntakeSubsystem m_intakeSubsystem, PivotSubsystem m_pivotSubsystem, IntakeSensorSubsystem m_intakeSensorSubsystem) {
@@ -54,7 +43,7 @@ public class AutoShootPositionCommand extends Command{
         this.rampShooterCommand = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
-        this.goToPosition = new GoToPosition(m_driveSubsystem, new Pose2d(1000.0, 1000.0, new Rotation2d()));
+        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, new Pose2d(1000.0, 1000.0, new Rotation2d()));
     }
 
     // Called when the command is initially scheduled.
@@ -66,7 +55,7 @@ public class AutoShootPositionCommand extends Command{
 
         Pose2d startingPose = this.m_driveSubsystem.getRobotPose();
         Pose2d shootingPosition = CalculateSpeakerShootingPosition.calculateTargetPosition(startingPose);
-        this.goToPosition = new GoToPosition(m_driveSubsystem, shootingPosition);
+        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPosition);
 
         goToPosition.schedule();
         rampShooterCommand.schedule();

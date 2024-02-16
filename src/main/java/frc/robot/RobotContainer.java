@@ -12,13 +12,11 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
-import frc.robot.commands.RunCommandUponConditionCommand;
-import frc.robot.commands.AutoCommands.TestCommand;
+import frc.robot.commands.ParallelRaceGroupCommand;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.AutoShootPositionCommand;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.FollowAutonomousPath;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.GoToPosition;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.GoToPoseAutonWhileShooting;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.GoToPositionAfterTime;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.GoToPositionAuton;
-import frc.robot.commands.IntakeCommands.GoToLocation;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
 import frc.robot.commands.IntakeCommands.PickupFromGroundCommand;
 import frc.robot.commands.IntakeCommands.ShootIntoAmpWithIntakeCommand;
@@ -41,7 +39,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**

@@ -5,19 +5,9 @@
 
 package frc.robot.commands.AutoCommands.GoToPositionCommands;
 
-import java.nio.file.DirectoryStream;
-import java.util.List;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
@@ -26,13 +16,12 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.CalculateGoToPoseVelocityAuton;
-import frc.robot.utils.CalculateSpeakerShootingPosition;
-import frc.robot.utils.InTeleop;
+import frc.robot.utils.MirrablePose2d;
 
 
 public class GoToPoseAutonWhileShooting extends Command{
@@ -40,14 +29,14 @@ public class GoToPoseAutonWhileShooting extends Command{
     private Pose2d goalEndPose;
     private HandOffToShooterAuton handOfftoShooterAuton;
     private ProfiledPIDController headingPIDController;
-    private final SlewRateLimiter translationXLimiter;
-    private final SlewRateLimiter translationYLimiter;  
+    private SlewRateLimiter translationXLimiter;
+    private SlewRateLimiter translationYLimiter;  
 
     private double startingRobotDistenceFromPose = 1000000;
-    private double persentToPose;
+    private double percentToPose;
 
-
-    public GoToPoseAutonWhileShooting(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose, HandOffToShooterAuton handOffToShooterAuton, double shootDistence) {
+    public GoToPoseAutonWhileShooting(DriveSubsystem m_driveSubsystem, HandOffToShooterAuton handOffToShooterAuton,
+     MirrablePose2d goalEndPose, double percentToPose) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;
         this.handOfftoShooterAuton = handOffToShooterAuton;
@@ -56,20 +45,19 @@ public class GoToPoseAutonWhileShooting extends Command{
         this.headingPIDController.setTolerance(AutoConstants.kHeadingPIDControllerToleranceAuto);
         this.headingPIDController.setIntegratorRange(-0.3, 0.3);
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
-        this.translationXLimiter = new SlewRateLimiter(20);
-        this.translationYLimiter = new SlewRateLimiter(20);
-        this.persentToPose = shootDistence;
+        this.percentToPose = percentToPose;
         addRequirements(m_driveSubsystem);
+
     }
 
     public void initialize() {
-        this.startingRobotDistenceFromPose = Math.sqrt(Math.pow(this.m_driveSubsystem.getRobotPose().getX() + this.m_driveSubsystem.getRobotPose().getY(), 2))
-         - Math.sqrt(Math.pow(this.goalEndPose.getX() + this.goalEndPose.getY(), 2));
+        double robotPoseX = this.m_driveSubsystem.getRobotPose().getX();
+        double robotPoseY = this.m_driveSubsystem.getRobotPose().getY();
+        double distenceFromPoseX = robotPoseX - this.goalEndPose.getX();
+        double distanceFronPoseY = robotPoseY - this.goalEndPose.getY();
+        this.startingRobotDistenceFromPose = Math.sqrt(Math.pow(distenceFromPoseX + distanceFronPoseY, 2));
 
-        this.translationXLimiter.reset(0);
-        this.translationYLimiter.reset(0);
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
-        this.handOfftoShooterAuton.schedule();
     }
 
     public void execute() {
@@ -78,33 +66,56 @@ public class GoToPoseAutonWhileShooting extends Command{
             DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? 
             VisionConstants.kBlueAllianceShooterAprilTagPosition : VisionConstants.kRedAllianceShooterAprilTagPosition);
 
-        // Calculate the distance between the robot and AprilTag in X and Y
-        double distanceToAprilTagX = this.m_driveSubsystem.getRobotPose().getX() - aprilTagPosition.getX();
-        double distanceToAprilTagY = this.m_driveSubsystem.getRobotPose().getY() - aprilTagPosition.getY();
-        double distanceToAprilTag = Math.sqrt(Math.pow(distanceToAprilTagX, 2) + Math.pow(distanceToAprilTagY, 2));
+        double robotPoseXBefore = this.m_driveSubsystem.getRobotPose().getX();
+        double robotPoseYBefore = this.m_driveSubsystem.getRobotPose().getY();
 
-        
+        // Calculate the distance between the robot and AprilTag in X and Y
+        // These have been kept here as a comment in case we need them later, but they aren't used.
+        // This is because they were for calculating our target angle, which is now done by a simple prediction below.
+        //double distanceToAprilTagX = robotPoseXBefore - aprilTagPosition.getX();
+        //double distanceToAprilTagY = robotPoseYBefore - aprilTagPosition.getY();
+        //double distanceToAprilTag = Math.sqrt(Math.pow(distanceToAprilTagX, 2) + Math.pow(distanceToAprilTagY, 2));
+
+        Translation2d robotTransformVelocity = CalculateGoToPoseVelocityAuton.calculateGoToPoseVelocity(m_driveSubsystem.getRobotPose(), this.goalEndPose);
+
+        SmartDashboard.putNumber("Goal X Vel S", robotTransformVelocity.getX());
+        SmartDashboard.putNumber("Goal Y Vel S", robotTransformVelocity.getY());
+
+        // We need to predict what our position relative to the AprilTag will be in the time it takes to shoot
+        // To get a halfway-decent estimate, we can use the distance formula d=v/t
+        // Our velocity will be the robot's current velocity, while the time will be our shooter time
+        // Using this, we calculate the distance we will have gone in the shooter time, and add it to the current position
+        double robotPoseAfterShootTimeX = robotPoseXBefore + (robotTransformVelocity.getX() / ShooterConstants.kShootTimeAuto);
+        double robotPoseAfterShootTimeY = robotPoseYBefore + (robotTransformVelocity.getY() / ShooterConstants.kShootTimeAuto);
+
+        // Now find the distance to the AprilTag using the predicted values
+        double distanceToAprilTagAfterShootTimeX = robotPoseAfterShootTimeX - aprilTagPosition.getX();
+        double distanceToAprilTagAfterShootTimeY = robotPoseAfterShootTimeY - aprilTagPosition.getY();
+        double distanceToAprilTagAfterShootTime = Math.sqrt(Math.pow(distanceToAprilTagAfterShootTimeX, 2) + Math.pow(distanceToAprilTagAfterShootTimeY, 2));
+
         double targetAngle = 0;
-        if(Math.abs(this.m_driveSubsystem.getRobotPose().getY() - aprilTagPosition.getY()) >= .25) {
-            targetAngle = Units.radiansToDegrees(Math.asin(distanceToAprilTagY/distanceToAprilTag));
+        if(Math.abs(robotPoseAfterShootTimeX - aprilTagPosition.getY()) >= .25) {
+            targetAngle = Units.radiansToDegrees(Math.asin(distanceToAprilTagAfterShootTimeY/distanceToAprilTagAfterShootTime));
         }
 
-        SmartDashboard.putNumber("Auton Goal Thata", this.goalEndPose.getRotation().getDegrees());
-        Translation2d robotTransformVelocity = CalculateGoToPoseVelocityAuton.calculateGoToPoseVelocity(m_driveSubsystem.getRobotPose(), this.goalEndPose);
-        SmartDashboard.putNumber("Goal X Vel", robotTransformVelocity.getX());
-        SmartDashboard.putNumber("Goal Y Vel", robotTransformVelocity.getY());
+        SmartDashboard.putNumber("Auton Goal Theta S", targetAngle);
+
+
         this.m_driveSubsystem.drive(
-        ChassisSpeeds.fromFieldRelativeSpeeds(
-        this.translationXLimiter.calculate(robotTransformVelocity.getX()),
-        this.translationYLimiter.calculate(robotTransformVelocity.getY()),
-        headingPIDController.calculate(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees(), targetAngle),
-        this.m_driveSubsystem.getRobotPose().getRotation()));
+            ChassisSpeeds.fromFieldRelativeSpeeds(
+                robotTransformVelocity.getX(),
+                robotTransformVelocity.getY(),
+                headingPIDController.calculate(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees(), targetAngle),
+                this.m_driveSubsystem.getRobotPose().getRotation()));
 
-        double currentDistenceToEndPose = Math.sqrt(Math.pow(this.m_driveSubsystem.getRobotPose().getX() + this.m_driveSubsystem.getRobotPose().getY(), 2))
-         - Math.sqrt(Math.pow(this.goalEndPose.getX() + this.goalEndPose.getY(), 2));
-
-         if(this.persentToPose * startingRobotDistenceFromPose < currentDistenceToEndPose && !this.handOfftoShooterAuton.isScheduled()) {
-            this.handOfftoShooterAuton.schedule();
+        double robotPoseX = this.m_driveSubsystem.getRobotPose().getX();
+        double robotPoseY = this.m_driveSubsystem.getRobotPose().getY();
+        double distenceFromPoseX = robotPoseX - this.goalEndPose.getX();
+        double distanceFronPoseY = robotPoseY - this.goalEndPose.getY();
+        double currentDistenceToEndPose = Math.sqrt(Math.pow(distenceFromPoseX + distanceFronPoseY, 2));
+        
+        if(startingRobotDistenceFromPose * (1-this.percentToPose) > currentDistenceToEndPose && !this.handOfftoShooterAuton.isScheduled()) {
+          this.handOfftoShooterAuton.schedule();
          }
         
     }
@@ -117,8 +128,15 @@ public class GoToPoseAutonWhileShooting extends Command{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        boolean isInPosition = Math.abs(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees() - this.goalEndPose.getRotation().getDegrees()) <= AutoConstants.kHeadingPIDControllerTolerance && Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <= AutoConstants.kAutoPositonTolorenceAuto &&
-         Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <= AutoConstants.kAutoPositonTolorenceAuto;
-         return isInPosition && this.handOfftoShooterAuton.isFinished();
+        boolean isInPosition = 
+        Math.abs(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees() - 
+        this.goalEndPose.getRotation().getDegrees()) <= 
+        AutoConstants.kHeadingPIDControllerTolerance &&
+        Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <=
+        AutoConstants.kAutoPositonTolorenceAuto &&
+        Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <=
+        AutoConstants.kAutoPositonTolorenceAuto;
+
+        return isInPosition && this.handOfftoShooterAuton.isFinished();
     }
 }
