@@ -1,6 +1,7 @@
 package frc.robot.commands.IntakeCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
@@ -10,6 +11,7 @@ public class ShootIntoAmpWithIntakeCommand extends Command {
     private IntakeSubsystem intakeSubsystem;
     private PivotSubsystem pivotSubsystem;
     private IntakeSensorSubsystem intakeSensorSubsystem;
+    private WaitCommand waitCommand;
     public ShootIntoAmpWithIntakeCommand(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem) {
         
         this.intakeSubsystem = intakeSusbsystem;
@@ -29,7 +31,6 @@ public class ShootIntoAmpWithIntakeCommand extends Command {
     public void execute() {
         if(this.pivotSubsystem.isMotorAtTargetRotation() && intakeSubsystem.getTargetRPM() == 0) {
             this.intakeSubsystem.runAtRPM(IntakeConstants.kShootInAmpIntakeRPM);
-            
         }
     }
 
@@ -43,6 +44,16 @@ public class ShootIntoAmpWithIntakeCommand extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return !this.intakeSensorSubsystem.isNoteInIntake();
+        if(!this.intakeSensorSubsystem.isNoteInIntake() && this.waitCommand == null) {
+            this.waitCommand = new WaitCommand(IntakeConstants.kShootInAmpIntakeTime);
+            this.waitCommand.schedule();
+        } 
+        if(this.waitCommand != null) {
+            if(this.waitCommand.isFinished()) {
+                this.waitCommand = null;
+                return true;
+            }
+        }
+        return false;
     }
 }
