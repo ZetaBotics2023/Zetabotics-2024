@@ -16,7 +16,7 @@ public class SequentialGroupCommand extends Command {
 
     @Override
     public void execute() {
-        SmartDashboard.putNumber("Auton Step: ", currentRunningIndex);
+        SmartDashboard.putNumber("Auton Step:", currentRunningIndex);
 
         if (currentRunningIndex >= this.commands.length) {
                 return;
