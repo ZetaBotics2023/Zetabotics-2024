@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.SequentialGroupCommand;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.GoToPosition;
 import frc.robot.utils.MirrablePose2d;
 
@@ -32,6 +34,7 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final double kDeadband = .1;
+    public static String kLastAuto;
   }
 
   public static class SwerveDriveConstants {
@@ -231,12 +234,21 @@ public final class Constants {
   }
 
   public static final class AutonConfigurationConstants {
+    public static final ArrayList<String> kConfiguredAutonNames = new ArrayList<String>();
+    public static final HashMap<String, SequentialGroupCommand> kConfiguredAutons = new HashMap<String, SequentialGroupCommand>();
+
     public static final HashMap<String, MirrablePose2d> robotPositions = new HashMap<String, MirrablePose2d>();
 
     public static boolean kIsBlueAlience = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;     
+    public static String startingPose = "Left";
+
+    
+
 
     public static final ArrayList<Command> kLeft_ShootPreloaded = new ArrayList<Command>();
-    public static final ArrayList<Command> kLeft_ShootPreloadedLeft = new ArrayList<Command>(); 
+    public static final ArrayList<Command> kLeft_ShootPreloadedLeft = new ArrayList<Command>();
+
+    
   }
 
   public static final class ShooterConstants {
@@ -327,13 +339,14 @@ public final class Constants {
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
     public static final double kHumanPlayerPickupIntakeRPM = 0.0;
 
-    public static final double kShootInAmpPivotRotationDegrees = 0.0;
-    public static final double kShootInAmpIntakeRPM = 0.0;
+    public static final double kShootInAmpPivotRotationDegrees = 120;
+    public static final double kShootInAmpIntakeRPM = -1000;
 
     public static final double kPassIntoShooterPivotRotationDegrees = 0;
     public static final double kPassIntoShooterIntakeRPM = -3000;
 
     public static final double kPivotRotationToleranceDegrees = 1;
     public static final double kGroundPickupMinimumPosition = 100;
+    public static final double kShootInAmpIntakeTime = 2;
   }
 }

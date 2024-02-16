@@ -9,6 +9,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -19,6 +21,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -38,6 +41,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.utils.InTeleop;
 import frc.robot.utils.LimelightUtil;
@@ -54,9 +58,18 @@ public class DriveSubsystem extends SubsystemBase {
 
     private int _updateCount;
 
+    //private static final Matrix<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, 0.1);//gray matter has lower
+
+  /**
+   * Standard deviations of the vision measurements. Increase these numbers to
+   * trust global measurements from vision
+   * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
+   * radians.
+   */
+  //private static final Matrix<N3> visionMeasurementStdDevs = VecBuilder.fill(0.5, 0.5, 0.9); // gray mater has higher
+
 
     private Pigeon2 m_gyro;
-    //private Pose2d startingPosition = new Pose2d(0, 0, new Rotation2d(0));
 
     private final SwerveDrivePoseEstimator poseEstimator;
     private final Pose2d startingPose = new Pose2d(0, 0, new Rotation2d(0));

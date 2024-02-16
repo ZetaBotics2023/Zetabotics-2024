@@ -4,9 +4,13 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
+/*
+A simple command that will run another command when a supplier returns true.
+*/
 public class RunCommandUponConditionCommand extends Command {
 
     private Command command;
+    private boolean commandHasRan = false;
     private Supplier<Boolean> conditionalSupplier;
 
     public RunCommandUponConditionCommand(Command command, Supplier<Boolean> conditionalSupplier) {
@@ -21,16 +25,18 @@ public class RunCommandUponConditionCommand extends Command {
 
     @Override
     public void execute() {
-        
+        if (this.conditionalSupplier.get()) {
+            this.command.schedule();
+            commandHasRan = true;
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        this.command.schedule();
     }
 
     @Override
     public boolean isFinished() {
-        return this.conditionalSupplier.get();
+        return commandHasRan && this.command.isFinished();
     }
 }

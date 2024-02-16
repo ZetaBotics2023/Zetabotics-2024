@@ -31,7 +31,7 @@ public class GoToPositionAfterTime extends Command{
     }
 
     public void end() {
-        
+        this.waitCommand = null;
     }
 
     public boolean isFinished() {
