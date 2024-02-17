@@ -279,21 +279,12 @@ public final class Constants {
     public static final double kLeftShooterGearRatio = 1.0;
     public static final double kRightShooterGearRatio = 1.0;
 
-    public static final double kPLeftClimberController = 0.0;
-    public static final double kILeftClimberController = 0.0;
-    public static final double kDLeftClimberController = 0.0;
-    public static final double kFLeftClimberController = 0.0;
-    public static final double kIZoneLeftClimberController = 0.0; 
-
-    public static final double kPRightClimberController = 0.0;
-    public static final double kIRightClimberController = 0.0;
-    public static final double kDRightClimberController = 0.0;
-    public static final double kFRightController = 0.0;
-    public static final double kIZoneRightClimberController = 0.0; 
-
     public static final double kClimberMaxHeight = 1.0;
     public static final double kClimberMinHeight = 0.0;
 
+    public static final double kClimbUpPercentOutput = 0.8;
+    public static final double kClimbDownPercentOutput = 0.8;
+      
     public static final double kPassIntoClimberPositionRotationDegrees = 0.0;
   }
 
