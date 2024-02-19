@@ -1,11 +1,6 @@
 package frc.robot.commands.IntakeCommands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
-import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 
 public class GoToLocation extends Command {

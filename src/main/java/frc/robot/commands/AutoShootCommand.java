@@ -5,18 +5,8 @@
 
 package frc.robot.commands;
 
-import java.util.List;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
 import frc.robot.commands.ShooterCommands.StopShooterCommand;
@@ -24,8 +14,6 @@ import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
-import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.CalculateSpeakerShootingPosition;
 
 public class AutoShootCommand extends Command{
     private ShooterSubsystem m_shooterSubsystem;

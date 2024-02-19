@@ -1,9 +1,7 @@
-package frc.robot.commands.AutoCommands.GoToPositionCommands;
+package frc.robot.commands.AutoCommands.GoToPositionCommands.CustomMathGoToPositionCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.ShooterConstants;
 
 public class GoToPositionAfterTime extends Command{
     private GoToPositionAuton goToPosition;

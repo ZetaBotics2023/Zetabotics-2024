@@ -13,10 +13,13 @@ import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
 import frc.robot.commands.ParallelRaceGroupCommand;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.AutoShootPositionCommand;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.GoToPoseAutonWhileShooting;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.GoToPositionAfterTime;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.GoToPositionAuton;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.CustomMathGoToPositionCommands.GoToPoseAutonWhileShooting;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.CustomMathGoToPositionCommands.GoToPositionAfterTime;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.CustomMathGoToPositionCommands.GoToPositionAuton;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.AutoShootPositionCommand;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseAutonWhileShootingWithPIDS;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseitionWithPIDSAuto;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionAfterTimeWithPIDS;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
 import frc.robot.commands.IntakeCommands.PickupFromGroundCommand;
 import frc.robot.commands.IntakeCommands.ShootIntoAmpWithIntakeCommand;
@@ -221,18 +224,18 @@ public class RobotContainer {
   public Command createIntakeCommand(String poseName, double waitTime) {
     return new ParallelRaceGroupCommand(new PickupFromGroundCommand(m_intakeSubsystem, m_pivotSubsystem,
      m_intakeSensorSubsystem),
-      new GoToPositionAfterTime(
-        new GoToPositionAuton(m_driveSubsystem, 
+      new GoToPositionAfterTimeWithPIDS(
+        new GoToPoseitionWithPIDSAuto(m_driveSubsystem, 
         AutonConfigurationConstants.robotPositions.get(poseName)), waitTime));
   }
 
-  public GoToPositionAuton createGoToPositionCommand(String poseName) {
-    return new GoToPositionAuton(this.m_driveSubsystem,
+  public GoToPoseitionWithPIDSAuto createGoToPositionCommand(String poseName) {
+    return new GoToPoseitionWithPIDSAuto(this.m_driveSubsystem,
           AutonConfigurationConstants.robotPositions.get(poseName));
   }
 
-   public GoToPoseAutonWhileShooting createGoToPoseAutonWhileShooting(String poseName, double percentToPose) {
-    return new GoToPoseAutonWhileShooting(
+   public GoToPoseAutonWhileShootingWithPIDS createGoToPoseAutonWhileShooting(String poseName, double percentToPose) {
+    return new GoToPoseAutonWhileShootingWithPIDS(
           this.m_driveSubsystem,
           new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem),
           AutonConfigurationConstants.robotPositions.get(poseName),

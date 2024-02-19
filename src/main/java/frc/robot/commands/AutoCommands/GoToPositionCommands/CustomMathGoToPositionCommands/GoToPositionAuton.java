@@ -3,30 +3,18 @@
 // the WPILib BSD license file in the root directory of this project.
 
 
-package frc.robot.commands.AutoCommands.GoToPositionCommands;
-
-import java.nio.file.DirectoryStream;
-import java.util.List;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
+package frc.robot.commands.AutoCommands.GoToPositionCommands.CustomMathGoToPositionCommands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.CalculateGoToPoseVelocityAuton;
-import frc.robot.utils.InTeleop;
 
 
 public class GoToPositionAuton extends Command{

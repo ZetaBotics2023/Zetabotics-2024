@@ -1,19 +1,11 @@
 package frc.robot.subsystems.ClimberSubsystem;
 
-import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkAbsoluteEncoder;
-import com.revrobotics.SparkPIDController;
-
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.ClimberConstants;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.ShooterConstants;
 
 public class ClimberSubsystem extends SubsystemBase{
     private final CANSparkMax m_leftClimber;

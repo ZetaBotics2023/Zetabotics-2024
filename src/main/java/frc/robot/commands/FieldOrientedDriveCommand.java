@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;

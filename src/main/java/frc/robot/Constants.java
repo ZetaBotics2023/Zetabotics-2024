@@ -7,27 +7,16 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.pathplanner.lib.util.PIDConstants;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.SequentialGroupCommand;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.GoToPosition;
 import frc.robot.utils.MirrablePose2d;
 
 public final class Constants {
@@ -198,6 +187,11 @@ public final class Constants {
     public static final double kMaxTranslationAcceloration = 2;
     public static final TrapezoidProfile.Constraints kTranslationControllerConstraints =
      new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPS, kMaxTranslationAcceloration);
+
+     public static final double kMaxTranslationSpeedMPSAuto = 4.1;
+    public static final double kMaxTranslationAccelorationAuto = 2;
+    public static final TrapezoidProfile.Constraints kTranslationAutoControllerConstraints =
+     new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPSAuto, kMaxTranslationAccelorationAuto);
 
     public static final double kTranslationPIDControllerVelocityTolerance = .1;
     public static final double kTranslationPIDControllerPositionalTolerance = .1;

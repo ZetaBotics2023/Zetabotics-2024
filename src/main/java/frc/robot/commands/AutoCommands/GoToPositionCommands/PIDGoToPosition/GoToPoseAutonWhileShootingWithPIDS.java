@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 
-package frc.robot.commands.AutoCommands.GoToPositionCommands;
+package frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -24,41 +24,59 @@ import frc.robot.utils.CalculateGoToPoseVelocityAuton;
 import frc.robot.utils.MirrablePose2d;
 
 
-public class GoToPoseAutonWhileShooting extends Command{
+public class GoToPoseAutonWhileShootingWithPIDS extends Command{
     private DriveSubsystem m_driveSubsystem;
     private Pose2d goalEndPose;
     private HandOffToShooterAuton handOfftoShooterAuton;
-    private ProfiledPIDController headingPIDController;
-    private SlewRateLimiter translationXLimiter;
-    private SlewRateLimiter translationYLimiter;  
 
     private double startingRobotDistenceFromPose = 1000000;
     private double percentToPose;
 
-    public GoToPoseAutonWhileShooting(DriveSubsystem m_driveSubsystem, HandOffToShooterAuton handOffToShooterAuton,
+    private ProfiledPIDController translationXController;
+    private ProfiledPIDController translationYController;
+    private ProfiledPIDController headingPIDController;
+
+
+    public GoToPoseAutonWhileShootingWithPIDS(DriveSubsystem m_driveSubsystem, HandOffToShooterAuton handOffToShooterAuton,
      MirrablePose2d goalEndPose, double percentToPose) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;
         this.handOfftoShooterAuton = handOffToShooterAuton;
+
+        this.translationXController = new ProfiledPIDController(
+            AutoConstants.kTranslationAutoPIDControllerP, AutoConstants.kTranslationAutoPIDControllerI, AutoConstants.kTranslationAutoPIDControllerD, AutoConstants.kTranslationAutoControllerConstraints);
+        this.translationXController.setTolerance(AutoConstants.kTranslationAutoPIDControllerPositionalTolerance, AutoConstants.kTranslationAutoPIDControllerVelocityTolerance);
+        this.translationXController.setIntegratorRange(-.3, .3);
+        this.translationXController.reset(this.m_driveSubsystem.getRobotPose().getX());
+
+        this.translationYController = new ProfiledPIDController(
+            AutoConstants.kTranslationAutoPIDControllerP, AutoConstants.kTranslationAutoPIDControllerI, AutoConstants.kTranslationAutoPIDControllerD, AutoConstants.kTranslationAutoControllerConstraints);
+        this.translationYController.setTolerance(AutoConstants.kTranslationAutoPIDControllerPositionalTolerance, AutoConstants.kTranslationAutoPIDControllerVelocityTolerance);
+        this.translationYController.setIntegratorRange(-.3, .3);
+        this.translationYController.reset(this.m_driveSubsystem.getRobotPose().getY());
+
         this.headingPIDController = new ProfiledPIDController(AutoConstants.kHeadingPIDControllerAutoP, AutoConstants.kHeadingPIDControllerAutoI,
         AutoConstants.kHeadingPIDControllerAutoD, AutoConstants.kThetaControllerConstraintsAuto);
         this.headingPIDController.setTolerance(AutoConstants.kHeadingPIDControllerToleranceAuto);
         this.headingPIDController.setIntegratorRange(-0.3, 0.3);
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
+
         this.percentToPose = percentToPose;
         addRequirements(m_driveSubsystem);
 
     }
 
     public void initialize() {
+        this.translationXController.reset(this.m_driveSubsystem.getRobotPose().getX());
+        this.translationYController.reset(this.m_driveSubsystem.getRobotPose().getY());
+        this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
+        
         double robotPoseX = this.m_driveSubsystem.getRobotPose().getX();
         double robotPoseY = this.m_driveSubsystem.getRobotPose().getY();
         double distenceFromPoseX = robotPoseX - this.goalEndPose.getX();
         double distanceFronPoseY = robotPoseY - this.goalEndPose.getY();
         this.startingRobotDistenceFromPose = Math.sqrt(Math.pow(distenceFromPoseX + distanceFronPoseY, 2));
-
-        this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
-    }
+        }
 
     public void execute() {
 
@@ -76,7 +94,10 @@ public class GoToPoseAutonWhileShooting extends Command{
         //double distanceToAprilTagY = robotPoseYBefore - aprilTagPosition.getY();
         //double distanceToAprilTag = Math.sqrt(Math.pow(distanceToAprilTagX, 2) + Math.pow(distanceToAprilTagY, 2));
 
-        Translation2d robotTransformVelocity = CalculateGoToPoseVelocityAuton.calculateGoToPoseVelocity(m_driveSubsystem.getRobotPose(), this.goalEndPose);
+        Translation2d robotTransformVelocity = new Translation2d(
+            this.translationXController.calculate(this.m_driveSubsystem.getRobotPose().getX(), this.goalEndPose.getX()),
+            this.translationYController.calculate(this.m_driveSubsystem.getRobotPose().getY(), this.goalEndPose.getY())
+        );
 
         SmartDashboard.putNumber("Goal X Vel S", robotTransformVelocity.getX());
         SmartDashboard.putNumber("Goal Y Vel S", robotTransformVelocity.getY());
