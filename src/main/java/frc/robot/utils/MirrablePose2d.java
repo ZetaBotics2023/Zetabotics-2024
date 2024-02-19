@@ -8,6 +8,7 @@ import frc.robot.Constants.FieldConstants;
 //TODO: Please for the love of all that is holy make this a method that returns a Pose2d
 public class MirrablePose2d extends Pose2d{
     public MirrablePose2d(Pose2d pose2d, boolean shouldMirror) {
-        super(shouldMirror ? FieldConstants.kWidth - pose2d.getX() : pose2d.getX(), pose2d.getY(), shouldMirror ? pose2d.getRotation().times(-1) : pose2d.getRotation());
+        super(shouldMirror ? FieldConstants.kLength - pose2d.getX() : pose2d.getX(), pose2d.getY(),
+         shouldMirror ? new Rotation2d(Math.PI).minus(pose2d.getRotation()) : pose2d.getRotation());
     }
 }
