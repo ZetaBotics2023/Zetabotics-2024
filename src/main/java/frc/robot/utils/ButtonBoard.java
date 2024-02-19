@@ -9,75 +9,154 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;  
-
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;  
 
 public class ButtonBoard extends XboxController {
 
+    public enum Button {
+        /** Left bumper. */
+        kBottomRightBlack(5),
+        /** Right bumper. */
+        kTopRightBlack(6),
+        /** Left stick. */
+        kWhiteLeft(9),
+        /** Right stick. */
+        kWhiteRight(10),
+        /** A. */
+        kGreen(1),
+        /** B. */
+        kRed(2),
+        /** X. */
+        kBlue(3),
+        /** Y. */
+        kYellow(4),
+        /** Back. */
+        kBlackSelect(7),
+        /** Start. */
+        kBlackStart(8);
+    
+        /** Button value. */
+        public final int value;
+        public boolean previousValue;
+    
+        Button(int value) {
+          this.value = value;
+        }
+    }
+    
+    public enum AlternateButton {
+        /** Left X. */
+        kRedUp(0, 1),
+        kRedDown(0, -1),
+        /** Left Y. */
+        kRedLeft(1, -1),
+        kRedRight(1, 1),
+        /** Left trigger. */
+        kBlackBottomLeft(2, 1),
+        /** Right trigger. */
+        kBlackTopLeft(3, 1);
+    
+        /** Axis value. */
+        public final int value;
+        public boolean previousValue;
+        public final int triggerValue;
+        
+        /*
+         * Construct an alternate button that converts an axis into a button press.
+         */
+        AlternateButton(int value, int triggerValue) {
+          this.value = value;
+          this.triggerValue = triggerValue;
+        }
+    }
+
     private int buttonPreset = 0;
-    private ArrayList<HashMap<Button, Pair<Runnable, Runnable>>> presetList = new ArrayList<>();
 
     public ButtonBoard(int port) {
         super(port);
     }
 
-    public JoystickButton getButton(Button button) {
-        return new JoystickButton(this, button.value);
+    public void createButtonTrigger(ButtonBoard.Button button, int presetSlot, Runnable onTrue, Runnable onFalse) {
+        Trigger onTrueTrigger = new Trigger(
+            () -> {
+                
+                if (getPreset() != presetSlot) return false;
+
+                // Indexes start at one for getRawButtonPressed, so add one. //TODO: Verify if this is correct
+                boolean isPressed = getRawButtonPressed(button.value + 1);
+                boolean wasPressed = button.previousValue;
+                if (isPressed && !wasPressed) {
+                    button.previousValue = true;
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        Trigger onFalseTrigger = new Trigger(
+            () -> {
+
+                if (getPreset() != presetSlot) return false;
+
+                boolean isPressed = getRawButtonPressed(button.value + 1);
+                boolean wasPressed = button.previousValue;
+                if (!isPressed && wasPressed) {
+                    button.previousValue = false;
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        onTrueTrigger.onTrue(Commands.runOnce(onTrue));
+        onFalseTrigger.onTrue(Commands.runOnce(onFalse));
+
+        
     }
 
-    public void buttonOnTrue(Button button, int presetSlot, Runnable onTrue, Runnable onFalse) {
+    public void createButtonTrigger(ButtonBoard.AlternateButton button, int presetSlot, Runnable onTrue, Runnable onFalse) {
+        Trigger onTrueTrigger = new Trigger(
+            () -> {
 
-        JoystickButton joystickButton = getButton(button);
+                if (getPreset() != presetSlot) return false;
 
-        if (presetList.size() <= presetSlot) {
-            if (presetList.size() == presetSlot) {
-                presetList.add(new HashMap<>());
-            } else {
-                throw new RuntimeException("You cannot write to slot '" + presetSlot + "' until you first write to all previous slots!");
+                // Indexes start at zero for getRawAxis, so DON'T add one. //TODO: Verify if this is correct
+                boolean isPressed = getRawAxis(button.value) == button.triggerValue;
+                boolean wasPressed = button.previousValue;
+                if (isPressed && !wasPressed) {
+                    button.previousValue = true;
+                    return true;
+                }
+                return false;
             }
-        }
-        HashMap<Button, Pair<Runnable, Runnable>> targetMap = presetList.get(presetSlot);
+        );
 
-        targetMap.put(button, new Pair<Runnable,Runnable>(onTrue, onFalse));
+        Trigger onFalseTrigger = new Trigger(
+            () -> {
 
-        Subsystem[] subsystems = {};
+                if (getPreset() != presetSlot) return false;
 
-        if (onTrue != null) {
-            joystickButton.onTrue(
-                Commands.runOnce(() -> {
-                    buttonCallback(
-                    button,
-                    true
-                    );
-                }, 
-                subsystems)
-                );
-        }
+                boolean isPressed = getRawAxis(button.value) == button.triggerValue;
+                boolean wasPressed = button.previousValue;
+                if (!isPressed && wasPressed) {
+                    button.previousValue = false;
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        onTrueTrigger.onTrue(Commands.runOnce(onTrue));
+        onFalseTrigger.onTrue(Commands.runOnce(onFalse));
+
         
-        if (onFalse != null) {
-            joystickButton.onFalse(
-                Commands.runOnce(() -> {
-                    buttonCallback(
-                    button,
-                    true
-                    );
-                }, 
-                subsystems)
-                );
-        }
     }
 
     public int getPreset() {
         return this.buttonPreset;
     }
-
-    public void buttonCallback(Button button, boolean onTrue) {
-        Pair<Runnable, Runnable> command = presetList.get(buttonPreset).get(button);
-        if (onTrue) {
-            command.getFirst().run();
-        }
-        else {
-            command.getSecond().run();
-        }
+    public void setPreset(int preset) {
+        this.buttonPreset = preset;
     }
 }

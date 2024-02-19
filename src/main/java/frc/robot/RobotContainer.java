@@ -20,16 +20,20 @@ import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.Auto
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseAutonWhileShootingWithPIDS;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseitionWithPIDSAuto;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionAfterTimeWithPIDS;
+import frc.robot.commands.ClimberCommands.ClimbDownDualCommand;
+import frc.robot.commands.ClimberCommands.ClimbUpDualCommand;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
 import frc.robot.commands.IntakeCommands.PickupFromGroundCommand;
 import frc.robot.commands.IntakeCommands.ShootIntoAmpWithIntakeCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedAutonCommand;
 import frc.robot.commands.ShooterCommands.StopShooterCommand;
+import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
+import frc.robot.utils.ButtonBoard;
 import frc.robot.utils.GenerateAuto;
 import frc.robot.utils.MirrablePose2d;
 
@@ -65,6 +69,7 @@ public class RobotContainer {
   private final IntakeSensorSubsystem m_intakeSensorSubsystem;
   private final PivotSubsystem m_pivotSubsystem;
   private final ShooterSubsystem m_shooterSubsystem;
+  private final ClimberSubsystem m_climberSubsystem;
 
   private final PickupFromGroundCommand pickupFromGroundCommand;
 
@@ -72,7 +77,12 @@ public class RobotContainer {
   private final ShootIntoAmpWithIntakeCommand shootIntoAmpWithIntakeCommand;
   private final AutoShootPositionCommand autoShootPositionCommand;
 
+  private final ClimbDownDualCommand climbDownDualCommand;
+  private final ClimbUpDualCommand climbUpDualCommand;
+
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
+  ButtonBoard m_buttonBoard = new ButtonBoard(OperatorConstants.kButtonBoardPort);
+  XboxController m_buttonBoardAlternative = new XboxController(OperatorConstants.kButtonBoardAltPort); // In the case that our button board is unusable, we will use a backup controller
 
   public RobotContainer() {
     /*
@@ -93,6 +103,7 @@ public class RobotContainer {
     this.m_pivotSubsystem = new PivotSubsystem(true);
     this.m_intakeSensorSubsystem = new IntakeSensorSubsystem();
     this.m_shooterSubsystem = new ShooterSubsystem(false, true);
+    this.m_climberSubsystem = new ClimberSubsystem(false, false);
 
 
     // Config Commands
@@ -107,6 +118,10 @@ public class RobotContainer {
 
     this.autoShootPositionCommand = new AutoShootPositionCommand(m_driveSubsystem,
      m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
+
+    this.climbDownDualCommand = new ClimbDownDualCommand(m_climberSubsystem);
+    this.climbUpDualCommand = new ClimbUpDualCommand(m_climberSubsystem);
+
 
     this.lockSwerves = new LockSwerves(m_driveSubsystem);
 
@@ -139,21 +154,43 @@ public class RobotContainer {
     final JoystickButton resetOdometry = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
     resetOdometry.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotPose));
 
-    final JoystickButton pickUpFromGround = new JoystickButton(m_driverController, XboxController.Button.kX.value);
+    // *** Button monkey controls begin here! ***
+
+    // pickupFromGroundCommand
+    m_buttonBoard.createButtonTrigger(ButtonBoard.Button.kBlue, 0, this.pickupFromGroundCommand::schedule, this.pickupFromGroundCommand::cancel);
+    final JoystickButton pickUpFromGround = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kX.value);
     pickUpFromGround.onTrue(this.pickupFromGroundCommand);
     pickUpFromGround.onFalse(Commands.runOnce(this.pickupFromGroundCommand::cancel));
 
-    final JoystickButton shootNote = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+    // autoShootCommand
+    m_buttonBoard.createButtonTrigger(ButtonBoard.Button.kRed, 0, this.autoShootCommand::schedule, this.autoShootCommand::cancel);
+    final JoystickButton shootNote = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kB.value);
     shootNote.onTrue(this.autoShootCommand);
     shootNote.onFalse(Commands.runOnce(this.autoShootCommand::cancel));
 
-    final JoystickButton shootNoteAutoPose = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+    // autoShootPositionCommand
+    m_buttonBoard.createButtonTrigger(ButtonBoard.Button.kGreen, 0, this.autoShootPositionCommand::schedule, this.autoShootPositionCommand::cancel);
+    final JoystickButton shootNoteAutoPose = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kA.value);
     shootNoteAutoPose.onTrue(this.autoShootPositionCommand);
     shootNoteAutoPose.onFalse(Commands.runOnce(this.autoShootPositionCommand::cancel));   
 
-    final JoystickButton shootNoteIntoAmpWithIntake = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+    // shootIntoAmpIntakeCommand
+    m_buttonBoard.createButtonTrigger(ButtonBoard.Button.kYellow, 0, this.shootIntoAmpWithIntakeCommand::schedule, this.shootIntoAmpWithIntakeCommand::cancel);
+    final JoystickButton shootNoteIntoAmpWithIntake = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kY.value);
     shootNoteIntoAmpWithIntake.onTrue(this.shootIntoAmpWithIntakeCommand);
     shootNoteIntoAmpWithIntake.onFalse(Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
+  
+    // climbUpDualCommand
+    m_buttonBoard.createButtonTrigger(ButtonBoard.AlternateButton.kRedUp, 0, this.climbUpDualCommand::schedule, this.climbUpDualCommand::cancel);
+    final JoystickButton moveClimbersUp = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
+    moveClimbersUp.onTrue(this.climbUpDualCommand);
+    moveClimbersUp.onFalse(Commands.runOnce(this.climbUpDualCommand::cancel));
+
+    // climbDownDualCommand
+    m_buttonBoard.createButtonTrigger(ButtonBoard.AlternateButton.kRedDown, 0, this.climbDownDualCommand::schedule, this.climbDownDualCommand::cancel);
+    final JoystickButton moveClimbersDown = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightBumper.value);
+    moveClimbersDown.onTrue(this.climbDownDualCommand);
+    moveClimbersDown.onFalse(Commands.runOnce(this.climbDownDualCommand::cancel));
   }
   
   public Command getAutonomousCommand() {

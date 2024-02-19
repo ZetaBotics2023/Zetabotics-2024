@@ -22,6 +22,9 @@ import frc.robot.utils.MirrablePose2d;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kButtonBoardPort = 1;
+    public static final int kButtonBoardAltPort = 2;
+
     public static final double kDeadband = .1;
     public static String kLastAuto;
   }
@@ -331,5 +334,10 @@ public final class Constants {
     public static final double kPivotRotationToleranceDegrees = 1;
     public static final double kGroundPickupMinimumPosition = 100;
     public static final double kShootInAmpIntakeTime = 2;
+  }
+
+  public static final class LEDConstants {
+    public static final int kLEDPWMPort = 9;
+    public static final int kLEDLength = 150;
   }
 }
