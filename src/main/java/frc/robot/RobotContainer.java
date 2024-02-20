@@ -103,7 +103,7 @@ public class RobotContainer {
     this.m_pivotSubsystem = new PivotSubsystem(true);
     this.m_intakeSensorSubsystem = new IntakeSensorSubsystem();
     this.m_shooterSubsystem = new ShooterSubsystem(false, true);
-    this.m_climberSubsystem = new ClimberSubsystem(false, false);
+    this.m_climberSubsystem = new ClimberSubsystem(false, true);
 
 
     // Config Commands
@@ -157,19 +157,19 @@ public class RobotContainer {
     // *** Button monkey controls begin here! ***
 
     // pickupFromGroundCommand
-    m_buttonBoard.createButtonTrigger(ButtonBoard.Button.kBlue, 0, this.pickupFromGroundCommand::schedule, this.pickupFromGroundCommand::cancel);
+    m_buttonBoard.createButtonTrigger(ButtonBoard.AlternateButton.kRedUp, 0, this.pickupFromGroundCommand::schedule, this.pickupFromGroundCommand::cancel);
     final JoystickButton pickUpFromGround = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kX.value);
     pickUpFromGround.onTrue(this.pickupFromGroundCommand);
     pickUpFromGround.onFalse(Commands.runOnce(this.pickupFromGroundCommand::cancel));
 
     // autoShootCommand
-    m_buttonBoard.createButtonTrigger(ButtonBoard.Button.kRed, 0, this.autoShootCommand::schedule, this.autoShootCommand::cancel);
+    m_buttonBoard.createButtonTrigger(ButtonBoard.AlternateButton.kRedLeft, 0, this.autoShootCommand::schedule, this.autoShootCommand::cancel);
     final JoystickButton shootNote = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kB.value);
     shootNote.onTrue(this.autoShootCommand);
     shootNote.onFalse(Commands.runOnce(this.autoShootCommand::cancel));
 
     // autoShootPositionCommand
-    m_buttonBoard.createButtonTrigger(ButtonBoard.Button.kGreen, 0, this.autoShootPositionCommand::schedule, this.autoShootPositionCommand::cancel);
+    m_buttonBoard.createButtonTrigger(ButtonBoard.AlternateButton.kRedLeft, 0, this.autoShootPositionCommand::schedule, this.autoShootPositionCommand::cancel);
     final JoystickButton shootNoteAutoPose = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kA.value);
     shootNoteAutoPose.onTrue(this.autoShootPositionCommand);
     shootNoteAutoPose.onFalse(Commands.runOnce(this.autoShootPositionCommand::cancel));   

@@ -84,7 +84,7 @@ public class ButtonBoard extends XboxController {
                 if (getPreset() != presetSlot) return false;
 
                 // Indexes start at one for getRawButtonPressed, so add one. //TODO: Verify if this is correct
-                boolean isPressed = getRawButtonPressed(button.value + 1);
+                boolean isPressed = getRawButtonPressed(button.value);
                 boolean wasPressed = button.previousValue;
                 if (isPressed && !wasPressed) {
                     button.previousValue = true;
@@ -99,7 +99,7 @@ public class ButtonBoard extends XboxController {
 
                 if (getPreset() != presetSlot) return false;
 
-                boolean isPressed = getRawButtonPressed(button.value + 1);
+                boolean isPressed = getRawButtonPressed(button.value);
                 boolean wasPressed = button.previousValue;
                 if (!isPressed && wasPressed) {
                     button.previousValue = false;

@@ -23,7 +23,7 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kButtonBoardPort = 1;
-    public static final int kButtonBoardAltPort = 2;
+    public static final int kButtonBoardAltPort = 0;
 
     public static final double kDeadband = .1;
     public static String kLastAuto;
@@ -187,12 +187,12 @@ public final class Constants {
 
 
     // Translation Contraints
-    public static final double kMaxTranslationSpeedMPS = 4.1;
+    public static final double kMaxTranslationSpeedMPS = 3.5;
     public static final double kMaxTranslationAcceloration = 2;
     public static final TrapezoidProfile.Constraints kTranslationControllerConstraints =
      new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPS, kMaxTranslationAcceloration);
 
-     public static final double kMaxTranslationSpeedMPSAuto = 4.1;
+    public static final double kMaxTranslationSpeedMPSAuto = 4.1;
     public static final double kMaxTranslationAccelorationAuto = 2;
     public static final TrapezoidProfile.Constraints kTranslationAutoControllerConstraints =
      new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPSAuto, kMaxTranslationAccelorationAuto);
@@ -203,7 +203,7 @@ public final class Constants {
     public static final double kTranslationAutoPIDControllerVelocityTolerance = .1;
     public static final double kTranslationAutoPIDControllerPositionalTolerance = .1;
 
-    public static final double kTranslationPIDControllerP = 2.5;
+    public static final double kTranslationPIDControllerP = 8.5;
     public static final double kTranslationPIDControllerI = 0;
     public static final double kTranslationPIDControllerD = 0;
 
@@ -272,8 +272,8 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    public static final int kLeftClimberMotorControllerID = 18;
-    public static final int kRightClimberMotorControllerID = 19;
+    public static final int kLeftClimberMotorControllerID = 22;
+    public static final int kRightClimberMotorControllerID = 23;
 
     public static final double kLeftShooterGearRatio = 1.0;
     public static final double kRightShooterGearRatio = 1.0;
@@ -281,8 +281,8 @@ public final class Constants {
     public static final double kClimberMaxHeight = 1.0;
     public static final double kClimberMinHeight = 0.0;
 
-    public static final double kClimbUpPercentOutput = 0.8;
-    public static final double kClimbDownPercentOutput = 0.8;
+    public static final double kClimbUpPercentOutput = 1;
+    public static final double kClimbDownPercentOutput = -1;
       
     public static final double kPassIntoClimberPositionRotationDegrees = 0.0;
   }
@@ -292,7 +292,7 @@ public final class Constants {
     public static final int kIntakeMotorControllerID = 15; 
     public static final int distenceSensorID = 0;
 
-    public static final double kPivotThroughBoreZeroOffset = 94;
+    public static final double kPivotThroughBoreZeroOffset = 93.75;
 
     public static final double kFarthestNotePositionMilameters = 480; 
 
@@ -319,7 +319,7 @@ public final class Constants {
     public static final double kIZoneIntakePositionController = .5/360;
 
     // Rotation constants
-    public static final double kGroundPickupPivotRotationDegrees = 188;
+    public static final double kGroundPickupPivotRotationDegrees = 189;
     public static final double kGroundPickupIntakeRPM = 1000;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;

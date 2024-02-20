@@ -33,8 +33,8 @@ public class ClimberSubsystem extends SubsystemBase{
         this.m_leftClimber.setInverted(leftClimberRev);
         this.m_rightClimber.setInverted(rightClimberRev);
 
-        this.m_leftClimber.setSmartCurrentLimit(0);
-        this.m_rightClimber.setSmartCurrentLimit(0);
+        this.m_leftClimber.setSmartCurrentLimit(40);
+        this.m_rightClimber.setSmartCurrentLimit(40);
 
            
         this.m_leftClimber.burnFlash();
