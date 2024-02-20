@@ -77,78 +77,35 @@ public class ButtonBoard extends XboxController {
         super(port);
     }
 
-    public void createButtonTrigger(ButtonBoard.Button button, int presetSlot, Runnable onTrue, Runnable onFalse) {
-        Trigger onTrueTrigger = new Trigger(
+    public void createButtonTrigger(ButtonBoard.Button button, int presetSlot, Command onTrue, Command onFalse) {
+        Trigger buttonTrigger = new Trigger(
             () -> {
                 
                 if (getPreset() != presetSlot) return false;
 
                 // Indexes start at one for getRawButtonPressed, so add one. //TODO: Verify if this is correct
-                boolean isPressed = getRawButtonPressed(button.value);
-                boolean wasPressed = button.previousValue;
-                if (isPressed && !wasPressed) {
-                    button.previousValue = true;
-                    return true;
-                }
-                return false;
+                return getRawButtonPressed(button.value + 1);
             }
         );
 
-        Trigger onFalseTrigger = new Trigger(
-            () -> {
-
-                if (getPreset() != presetSlot) return false;
-
-                boolean isPressed = getRawButtonPressed(button.value);
-                boolean wasPressed = button.previousValue;
-                if (!isPressed && wasPressed) {
-                    button.previousValue = false;
-                    return true;
-                }
-                return false;
-            }
-        );
-
-        onTrueTrigger.onTrue(Commands.runOnce(onTrue));
-        onFalseTrigger.onTrue(Commands.runOnce(onFalse));
-
-        
+        buttonTrigger.onTrue(onTrue);
+        buttonTrigger.onFalse(onFalse);
     }
 
-    public void createButtonTrigger(ButtonBoard.AlternateButton button, int presetSlot, Runnable onTrue, Runnable onFalse) {
-        Trigger onTrueTrigger = new Trigger(
+    public void createButtonTrigger(ButtonBoard.AlternateButton button, int presetSlot, Command onTrue, Command onFalse) {
+        Trigger buttonTrigger = new Trigger(
             () -> {
 
                 if (getPreset() != presetSlot) return false;
 
                 // Indexes start at zero for getRawAxis, so DON'T add one. //TODO: Verify if this is correct
-                boolean isPressed = getRawAxis(button.value) == button.triggerValue;
-                boolean wasPressed = button.previousValue;
-                if (isPressed && !wasPressed) {
-                    button.previousValue = true;
-                    return true;
-                }
-                return false;
+                return getRawAxis(button.value) == button.triggerValue;
             }
         );
 
-        Trigger onFalseTrigger = new Trigger(
-            () -> {
 
-                if (getPreset() != presetSlot) return false;
-
-                boolean isPressed = getRawAxis(button.value) == button.triggerValue;
-                boolean wasPressed = button.previousValue;
-                if (!isPressed && wasPressed) {
-                    button.previousValue = false;
-                    return true;
-                }
-                return false;
-            }
-        );
-
-        onTrueTrigger.onTrue(Commands.runOnce(onTrue));
-        onFalseTrigger.onTrue(Commands.runOnce(onFalse));
+        buttonTrigger.onTrue(onTrue);
+        buttonTrigger.onFalse(onFalse);
 
         
     }
