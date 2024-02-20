@@ -31,6 +31,8 @@ import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDSubsystem.RGBColor;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.ButtonBoard;
@@ -70,6 +72,7 @@ public class RobotContainer {
   private final PivotSubsystem m_pivotSubsystem;
   private final ShooterSubsystem m_shooterSubsystem;
   private final ClimberSubsystem m_climberSubsystem;
+  private final LEDSubsystem m_ledSubsystem;
 
   private final PickupFromGroundCommand pickupFromGroundCommand;
 
@@ -91,24 +94,28 @@ public class RobotContainer {
      */
     this.autonSelector = new SendableChooser<>();
     this.m_driveSubsystem = new DriveSubsystem();
-
-    this.fieldOrientedDriveCommand = new FieldOrientedDriveCommand(
-        m_driveSubsystem,
-        () -> -modifyAxis(m_driverController.getLeftY()),
-        () -> -modifyAxis(m_driverController.getLeftX()),
-        () -> -modifyAxis(m_driverController.getRightX()));
-
-    this.m_driveSubsystem.setDefaultCommand(fieldOrientedDriveCommand);
-    this.m_intakeSubsystem = new IntakeSubsystem(false);
-    this.m_pivotSubsystem = new PivotSubsystem(true);
-    this.m_intakeSensorSubsystem = new IntakeSensorSubsystem();
-    this.m_shooterSubsystem = new ShooterSubsystem(false, true);
-    this.m_climberSubsystem = new ClimberSubsystem(false, true);
-
+    
+        this.fieldOrientedDriveCommand = new FieldOrientedDriveCommand(
+            m_driveSubsystem,
+            () -> -modifyAxis(m_driverController.getLeftY()),
+            () -> -modifyAxis(m_driverController.getLeftX()),
+            () -> -modifyAxis(m_driverController.getRightX()));
+    
+        this.m_driveSubsystem.setDefaultCommand(fieldOrientedDriveCommand);
+        this.m_intakeSubsystem = new IntakeSubsystem(false);
+        this.m_pivotSubsystem = new PivotSubsystem(true);
+        this.m_intakeSensorSubsystem = new IntakeSensorSubsystem();
+        this.m_shooterSubsystem = new ShooterSubsystem(false, true);
+        this.m_climberSubsystem = new ClimberSubsystem(false, true);
+        this.m_ledSubsystem = new LEDSubsystem();
+    
+        this.m_ledSubsystem.setDefaultCommand(
+          Commands.runOnce(() -> {this.m_ledSubsystem.setSolidColor(RGBColor.Orange.color);
+          }));
 
     // Config Commands
     this.pickupFromGroundCommand = new PickupFromGroundCommand(
-        this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
+        this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem, this.m_ledSubsystem);
 
     this.shootIntoAmpWithIntakeCommand = new ShootIntoAmpWithIntakeCommand(
       this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
@@ -285,7 +292,7 @@ public class RobotContainer {
 
   public Command createIntakeCommand(String poseName, double waitTime) {
     return new ParallelRaceGroupCommand(new PickupFromGroundCommand(m_intakeSubsystem, m_pivotSubsystem,
-     m_intakeSensorSubsystem),
+     m_intakeSensorSubsystem, this.m_ledSubsystem),
       new GoToPositionAfterTimeWithPIDS(
         new GoToPoseitionWithPIDSAuto(m_driveSubsystem, 
         AutonConfigurationConstants.robotPositions.get(poseName)), waitTime));

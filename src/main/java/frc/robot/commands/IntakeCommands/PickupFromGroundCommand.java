@@ -1,11 +1,14 @@
 package frc.robot.commands.IntakeCommands;
 
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDSubsystem.RGBColor;
 
 /**
  * Command to retrieve a note from the ground
@@ -15,12 +18,14 @@ public class PickupFromGroundCommand extends Command {
     private IntakeSubsystem intakeSubsystem;
     private PivotSubsystem pivotSubsystem;
     private IntakeSensorSubsystem intakeSensorSubsystem;
+    private LEDSubsystem m_ledSubsystem;
 
-    public PickupFromGroundCommand(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem) {
+    public PickupFromGroundCommand(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem, LEDSubsystem m_ledSubsystem) {
         this.intakeSubsystem = intakeSusbsystem;
         this.pivotSubsystem = pivotSubsystem;
         this.intakeSensorSubsystem = intakeSensorSubsystem;
-        addRequirements(this.intakeSubsystem, this.pivotSubsystem, this.intakeSensorSubsystem);
+        this.m_ledSubsystem = m_ledSubsystem;
+        addRequirements(this.intakeSubsystem, this.pivotSubsystem, this.intakeSensorSubsystem, this.m_ledSubsystem);
     }
 
     // Called when the command is initially scheduled.
@@ -28,6 +33,7 @@ public class PickupFromGroundCommand extends Command {
     public void initialize() { 
         this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kGroundPickupPivotRotationDegrees);
         this.intakeSubsystem.runAtRPM(IntakeConstants.kGroundPickupIntakeRPM);
+        this.m_ledSubsystem.setSolidColor(RGBColor.Red.color);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -44,6 +50,7 @@ public class PickupFromGroundCommand extends Command {
     public void end(boolean interrupted) {
         this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
         this.intakeSubsystem.runAtRPM(0);
+        this.m_ledSubsystem.setSolidColor(RGBColor.Green.color);
         SmartDashboard.putBoolean("Go Up", interrupted);
     }
 
