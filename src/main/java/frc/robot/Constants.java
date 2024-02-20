@@ -278,13 +278,14 @@ public final class Constants {
     public static final double kLeftShooterGearRatio = 1.0;
     public static final double kRightShooterGearRatio = 1.0;
 
-    public static final double kClimberMaxHeight = 1.0;
-    public static final double kClimberMinHeight = 0.0;
+    public static final double kClimberMaxHeight = 300;
+    public static final double kClimberMinHeight = 25;
 
     public static final double kClimbUpPercentOutput = 1;
     public static final double kClimbDownPercentOutput = -1;
       
     public static final double kPassIntoClimberPositionRotationDegrees = 0.0;
+    public static final double kClimerMinPose = 0;
   }
 
   public static final class IntakeConstants {
