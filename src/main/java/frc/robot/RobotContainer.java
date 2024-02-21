@@ -108,10 +108,10 @@ public class RobotContainer {
         this.m_shooterSubsystem = new ShooterSubsystem(false, true);
         this.m_climberSubsystem = new ClimberSubsystem(false, true);
         this.m_ledSubsystem = new LEDSubsystem();
-    
+
         this.m_ledSubsystem.setDefaultCommand(
           Commands.runOnce(() -> {this.m_ledSubsystem.setSolidColor(RGBColor.Orange.color);
-          }));
+          }, this.m_ledSubsystem));
 
     // Config Commands
     this.pickupFromGroundCommand = new PickupFromGroundCommand(
@@ -236,7 +236,7 @@ public class RobotContainer {
         AutonConfigurationConstants.kLeft_ShootPreloaded.add(new RampShooterAtDifforentSpeedAutonCommand(m_shooterSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloaded.add(createGoToPositionCommand("LeftNoteShootPose"));
         AutonConfigurationConstants.kLeft_ShootPreloaded.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem,
-             m_intakeSensorSubsystem));
+            m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloaded.add(new StopShooterCommand(m_shooterSubsystem));
 
         return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kLeft_ShootPreloaded);
