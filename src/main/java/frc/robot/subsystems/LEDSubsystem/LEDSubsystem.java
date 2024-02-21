@@ -5,8 +5,14 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 
+/*
+ * A subsystem that allows us to control our LED light strip
+ */
 public class LEDSubsystem extends SubsystemBase{
 
+    /* 
+     * An enum to represent common color values
+     */
     public enum RGBColor {
 
         Red(new int[] {255, 0, 0}),
@@ -24,6 +30,9 @@ public class LEDSubsystem extends SubsystemBase{
         } 
     }
 
+    /*
+     * An enum to represent common color patterns
+     */
     public enum Pattern {
         Rainbow(new int[][]{
         RGBColor.Red.color,
@@ -43,7 +52,6 @@ public class LEDSubsystem extends SubsystemBase{
             this.pattern = pattern;
         }
     }
-
     public AddressableLED m_led;
     public AddressableLEDBuffer m_ledBuffer;
 
@@ -57,6 +65,9 @@ public class LEDSubsystem extends SubsystemBase{
         m_led.start();
     }
 
+    /*
+     * Sets every light on the strip to the same color
+     */
     public void setSolidColor(int[] color) {
         for (var i = 0; i < m_ledBuffer.getLength(); i++) {
             m_ledBuffer.setRGB(i, color[0], color[1], color[2]);
@@ -65,6 +76,9 @@ public class LEDSubsystem extends SubsystemBase{
          m_led.setData(m_ledBuffer);
     }
 
+    /*
+     * Sets every light on the strip to follow a pattern
+     */
     public void setPattern(int[][] pattern) {
         int colorIndex = 0;
         for (var i = 0; i < m_ledBuffer.getLength(); i++) {
