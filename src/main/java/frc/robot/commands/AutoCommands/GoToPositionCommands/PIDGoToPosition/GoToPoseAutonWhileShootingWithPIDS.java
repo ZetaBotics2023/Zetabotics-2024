@@ -6,7 +6,6 @@
 package frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -20,7 +19,6 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.CalculateGoToPoseVelocityAuton;
 import frc.robot.utils.MirrablePose2d;
 
 
