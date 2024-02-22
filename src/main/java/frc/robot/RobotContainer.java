@@ -183,9 +183,9 @@ public class RobotContainer {
 
     // shootIntoAmpIntakeCommand
     m_buttonBoard.createButtonTrigger(ButtonBoard.Button.kYellow, 0, this.shootIntoAmpWithIntakeCommand, Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
-    final JoystickButton shootNoteIntoAmpWithIntake = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kY.value);
-    shootNoteIntoAmpWithIntake.onTrue(this.shootIntoAmpWithIntakeCommand);
-    shootNoteIntoAmpWithIntake.onFalse(Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
+    //final JoystickButton shootNoteIntoAmpWithIntake = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kY.value);
+    //shootNoteIntoAmpWithIntake.onTrue(this.shootIntoAmpWithIntakeCommand);
+    //shootNoteIntoAmpWithIntake.onFalse(Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
   
     // climbUpDualCommand
     m_buttonBoard.createButtonTrigger(ButtonBoard.AlternateButton.kRedUp, 0, this.climbUpDualCommand, Commands.runOnce(this.climbUpDualCommand::cancel));
