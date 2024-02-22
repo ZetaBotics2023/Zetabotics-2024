@@ -1,6 +1,7 @@
 package frc.robot.subsystems.ClimberSubsystem;
 
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -43,13 +44,19 @@ public class ClimberSubsystem extends SubsystemBase{
         this.m_leftClimber.setSmartCurrentLimit(40);
         this.m_rightClimber.setSmartCurrentLimit(40);
 
-           
+        this.m_leftClimber.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.kClimberMaxHeight);
+        this.m_leftClimber.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.kClimberMinHeight);
+        
+        this.m_rightClimber.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.kClimberMaxHeight);
+        this.m_rightClimber.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.kClimberMinHeight);
+
         this.m_leftClimber.burnFlash();
         this.m_rightClimber.burnFlash();
     }
 
     @Override
     public void periodic() {
+        /*
         if(!shouldLeftMotorMove(this.desiredLeftMotorPercent)) {
             setPercentOutput(0, this.desiredRightMotorPercent);
         }
@@ -57,6 +64,7 @@ public class ClimberSubsystem extends SubsystemBase{
         if(!shouldRightMotorMove(this.desiredRightMotorPercent)) {
             setPercentOutput(this.desiredLeftMotorPercent, 0);
         }
+         */
     }
 
     /*
@@ -70,6 +78,7 @@ public class ClimberSubsystem extends SubsystemBase{
      * Runs both motors at the given percentages for each
      */
     public void setPercentOutput(double leftPercent, double rightPercent) {
+        /* 
         if(shouldLeftMotorMove(leftPercent)) {
             this.desiredLeftMotorPercent = leftPercent;
         } else {
@@ -81,9 +90,9 @@ public class ClimberSubsystem extends SubsystemBase{
         } else {
             this.desiredRightMotorPercent = 0;
         }
-        
-        this.m_leftClimber.set(this.desiredLeftMotorPercent);
-        this.m_rightClimber.set(this.desiredRightMotorPercent);
+        */
+        this.m_leftClimber.set(leftPercent);
+        this.m_rightClimber.set(rightPercent);
     }
 
     /*

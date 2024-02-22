@@ -206,7 +206,7 @@ public final class Constants {
     public static final double kTranslationAutoPIDControllerVelocityTolerance = .1;
     public static final double kTranslationAutoPIDControllerPositionalTolerance = .1;
 
-    public static final double kTranslationPIDControllerP = 8.5;
+    public static final double kTranslationPIDControllerP = 2.5;
     public static final double kTranslationPIDControllerI = 0;
     public static final double kTranslationPIDControllerD = 0;
 
@@ -219,8 +219,8 @@ public final class Constants {
     public static final double kHeadingPIDControllerI = .00005;
     public static final double kHeadingPIDControllerD = 0;
     public static final double kHeadingPIDControllerTolerance = 1;
-    public static final double kMaxAngularSpeedRadiansPerSecond = 280;
-    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 360;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 360;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 720;
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
     public static final double kAutoPositonTolorence = .2;
 
@@ -228,8 +228,8 @@ public final class Constants {
     public static final double kHeadingPIDControllerAutoI = .00005;
     public static final double kHeadingPIDControllerAutoD = 0;
     public static final double kHeadingPIDControllerToleranceAuto = 2;
-    public static final double kMaxAngularSpeedRadiansPerSecondAuto = 280;
-    public static final double kMaxAngularAccelerationRadiansPerSecondSquaredAuto = 360;
+    public static final double kMaxAngularSpeedRadiansPerSecondAuto = 360;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquaredAuto = 720;
     public static final TrapezoidProfile.Constraints kThetaControllerConstraintsAuto = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
     public static final double kAutoPositonTolorenceAuto = .1;
   }
@@ -281,8 +281,8 @@ public final class Constants {
     public static final double kLeftShooterGearRatio = 1.0;
     public static final double kRightShooterGearRatio = 1.0;
 
-    public static final double kClimberMaxHeight = 300;
-    public static final double kClimberMinHeight = 25;
+    public static final float kClimberMaxHeight = 300;
+    public static final float kClimberMinHeight = 25;
 
     public static final double kClimbUpPercentOutput = 1;
     public static final double kClimbDownPercentOutput = -1;

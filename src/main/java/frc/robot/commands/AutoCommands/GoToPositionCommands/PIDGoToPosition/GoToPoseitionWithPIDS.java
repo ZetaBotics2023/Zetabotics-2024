@@ -28,20 +28,20 @@ public class GoToPoseitionWithPIDS extends Command{
         this.goalEndPose = goalEndPose;
 
         this.translationXController = new ProfiledPIDController(
-            AutoConstants.kTranslationAutoPIDControllerP, AutoConstants.kTranslationAutoPIDControllerI, AutoConstants.kTranslationAutoPIDControllerD, AutoConstants.kTranslationAutoControllerConstraints);
-        this.translationXController.setTolerance(AutoConstants.kTranslationAutoPIDControllerPositionalTolerance, AutoConstants.kTranslationAutoPIDControllerVelocityTolerance);
+            AutoConstants.kTranslationPIDControllerP, AutoConstants.kTranslationPIDControllerI, AutoConstants.kTranslationPIDControllerD, AutoConstants.kTranslationControllerConstraints);
+        this.translationXController.setTolerance(AutoConstants.kTranslationPIDControllerPositionalTolerance, AutoConstants.kTranslationPIDControllerVelocityTolerance);
         this.translationXController.setIntegratorRange(-.3, .3);
         this.translationXController.reset(this.m_driveSubsystem.getRobotPose().getX());
 
         this.translationYController = new ProfiledPIDController(
-            AutoConstants.kTranslationAutoPIDControllerP, AutoConstants.kTranslationAutoPIDControllerI, AutoConstants.kTranslationAutoPIDControllerD, AutoConstants.kTranslationAutoControllerConstraints);
-        this.translationYController.setTolerance(AutoConstants.kTranslationAutoPIDControllerPositionalTolerance, AutoConstants.kTranslationAutoPIDControllerVelocityTolerance);
+            AutoConstants.kTranslationPIDControllerP, AutoConstants.kTranslationPIDControllerI, AutoConstants.kTranslationPIDControllerD, AutoConstants.kTranslationControllerConstraints);
+        this.translationYController.setTolerance(AutoConstants.kTranslationPIDControllerPositionalTolerance, AutoConstants.kTranslationPIDControllerVelocityTolerance);
         this.translationYController.setIntegratorRange(-.3, .3);
         this.translationYController.reset(this.m_driveSubsystem.getRobotPose().getY());
 
-        this.headingPIDController = new ProfiledPIDController(AutoConstants.kHeadingPIDControllerAutoP, AutoConstants.kHeadingPIDControllerAutoI,
-        AutoConstants.kHeadingPIDControllerAutoD, AutoConstants.kThetaControllerConstraintsAuto);
-        this.headingPIDController.setTolerance(AutoConstants.kHeadingPIDControllerToleranceAuto);
+        this.headingPIDController = new ProfiledPIDController(AutoConstants.kHeadingPIDControllerP, AutoConstants.kHeadingPIDControllerI,
+        AutoConstants.kHeadingPIDControllerD, AutoConstants.kThetaControllerConstraints);
+        this.headingPIDController.setTolerance(AutoConstants.kHeadingPIDControllerTolerance);
         this.headingPIDController.setIntegratorRange(-0.3, 0.3);
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
 
