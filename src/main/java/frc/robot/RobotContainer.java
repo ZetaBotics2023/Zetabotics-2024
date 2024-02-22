@@ -211,10 +211,18 @@ public class RobotContainer {
     moveClimbersDown.onFalse(Commands.runOnce(this.climbDownDualCommand::cancel));
   }
   
+  /*
+   * Creates and returns a command that will execute the selected autonomous from SmartDashboard 
+   */
   public Command getAutonomousCommand() {
     return configureAutons(this.autonSelector.getSelected());
   }
 
+  /*
+   * Changes the value of a joystick axis to:
+   * - Apply deadband
+   * - Square it
+   */
   private static double modifyAxis(double value) {
     // Deadband
     value = MathUtil.applyDeadband(value, OperatorConstants.kDeadband);
@@ -223,6 +231,9 @@ public class RobotContainer {
     return value;
   }
 
+  /*
+   * Popualtes the list of robot positions in AutonConfigurationConstants to have usable field coordinates
+   */
   public void configureAutonPoints() {
     AutonConfigurationConstants.robotPositions.put("LeftNoteShootPose", new MirrablePose2d(new Pose2d(1.7, 7, Rotation2d.fromDegrees(35)), !AutonConfigurationConstants.kIsBlueAlience));
     AutonConfigurationConstants.robotPositions.put("CenterNoteShootPose", new MirrablePose2d(new Pose2d(2.00, 5.55, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlience));
@@ -241,6 +252,9 @@ public class RobotContainer {
     //AutonConfigurationConstatns.robotPositions.put("RightNoteLeavePose", new MirrablePose2d(new Pose2d(2.20, 4.15, new Rotation2d(0)), !AutonConfigurationConstatns.kIsBlueAlience));
   }
 
+  /*
+   * Given the name of an auton, populates the corresponding autonomous object in AutonConfigurationConstants
+   */
   public Command configureAutons(String autonName) {
     switch(autonName) {
       case "Left:ShootPreloaded":
@@ -301,6 +315,9 @@ public class RobotContainer {
       return null;
   }
 
+  /*
+   * Given the name of a target field position and a time to wait before doing so, create a command that runs the intake and moves to the position
+   */
   public Command createIntakeCommand(String poseName, double waitTime) {
     return new ParallelRaceGroupCommand(new PickupFromGroundCommand(m_intakeSubsystem, m_pivotSubsystem,
      m_intakeSensorSubsystem, this.m_ledSubsystem),
@@ -309,11 +326,17 @@ public class RobotContainer {
         AutonConfigurationConstants.robotPositions.get(poseName)), waitTime));
   }
 
+  /*
+   * Given the name of a target field position, create a command that moves to the position
+   */
   public GoToPoseitionWithPIDSAuto createGoToPositionCommand(String poseName) {
     return new GoToPoseitionWithPIDSAuto(this.m_driveSubsystem,
           AutonConfigurationConstants.robotPositions.get(poseName));
   }
 
+  /*
+   * Given the name of a target field position and a percentage at which to start shooting, create a command that moves to a position and shoots during transit
+   */
    public GoToPoseAutonWhileShootingWithPIDS createGoToPoseAutonWhileShooting(String poseName, double percentToPose) {
     return new GoToPoseAutonWhileShootingWithPIDS(
           this.m_driveSubsystem,

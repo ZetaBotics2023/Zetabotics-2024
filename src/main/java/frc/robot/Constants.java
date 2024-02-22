@@ -19,6 +19,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.SequentialGroupCommand;
 import frc.robot.utils.MirrablePose2d;
 
+/*
+ * Contains constant values our code needs to use
+ */
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
