@@ -40,7 +40,7 @@ public class IntakeSensorSubsystem extends SubsystemBase{
      * @return
      */
     public boolean isNoteInIntake() {
-        boolean isInRange = this.distanceSensor.getRange() < IntakeConstants.kFarthestNotePositionMilameters;
+        boolean isInRange = this.distanceSensor.getRange() < IntakeConstants.kFarthestNotePositionMillimeters;
         // Only return the value if the sensor is sensing a range at the current time, otherwise false
         return this.distanceSensor.isRangeValid() && isInRange;
     }

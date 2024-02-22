@@ -14,7 +14,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 
 
-public class GoToPoseitionWithPIDSAuto extends Command{
+public class GoToPositionWithPIDSAuto extends Command{
 
     DriveSubsystem m_driveSubsystem;
     Pose2d rbootPose;
@@ -24,7 +24,7 @@ public class GoToPoseitionWithPIDSAuto extends Command{
     private ProfiledPIDController translationYController;
     private ProfiledPIDController headingPIDController;
     
-    public GoToPoseitionWithPIDSAuto(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose) {
+    public GoToPositionWithPIDSAuto(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;
 
@@ -74,7 +74,7 @@ public class GoToPoseitionWithPIDSAuto extends Command{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.abs(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees() - this.goalEndPose.getRotation().getDegrees()) <= AutoConstants.kHeadingPIDControllerTolerance && Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <= AutoConstants.kAutoPositonTolorenceAuto &&
-         Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <= AutoConstants.kAutoPositonTolorenceAuto;
+        return Math.abs(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees() - this.goalEndPose.getRotation().getDegrees()) <= AutoConstants.kHeadingPIDControllerTolerance && Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <= AutoConstants.kAutoPositonToleranceAuto &&
+         Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <= AutoConstants.kAutoPositonToleranceAuto;
     }
 }

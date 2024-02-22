@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimberConstants;
 
+/*
+ * This subsystem allows us to control our climber motors
+ */
 public class ClimberSubsystem extends SubsystemBase{
     private final CANSparkMax m_leftClimber;
     private final CANSparkMax m_rightClimber;
@@ -64,10 +67,16 @@ public class ClimberSubsystem extends SubsystemBase{
          */
     }
 
+    /*
+     * Runs both motors at a given percentage
+     */
     public void setPercentOutput(double percent) {
         setPercentOutput(percent, percent);
     }
 
+    /*
+     * Runs both motors at the given percentages for each
+     */
     public void setPercentOutput(double leftPercent, double rightPercent) {
         /* 
         if(shouldLeftMotorMove(leftPercent)) {
@@ -86,10 +95,16 @@ public class ClimberSubsystem extends SubsystemBase{
         this.m_rightClimber.set(rightPercent);
     }
 
+    /*
+     * Returns how many rotations the left motor has completed
+     */
     public double getLeftMotorPositionRotations() {
         return this.m_leftEncoder.getPosition();
     }
 
+    /*
+     * Returns how many rotations the right motor has completed
+     */
     public double getRightMotorPositionRotations() {
         return this.m_rightEncoder.getPosition();
     }

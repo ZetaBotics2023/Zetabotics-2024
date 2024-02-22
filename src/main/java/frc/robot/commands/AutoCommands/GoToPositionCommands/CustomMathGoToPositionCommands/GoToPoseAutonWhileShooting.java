@@ -131,9 +131,9 @@ public class GoToPoseAutonWhileShooting extends Command{
         this.goalEndPose.getRotation().getDegrees()) <= 
         AutoConstants.kHeadingPIDControllerTolerance &&
         Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <=
-        AutoConstants.kAutoPositonTolorenceAuto &&
+        AutoConstants.kAutoPositonToleranceAuto &&
         Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <=
-        AutoConstants.kAutoPositonTolorenceAuto;
+        AutoConstants.kAutoPositonToleranceAuto;
 
         return isInPosition && this.handOfftoShooterAuton.isFinished();
     }

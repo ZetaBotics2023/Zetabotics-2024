@@ -24,7 +24,7 @@ import frc.robot.utils.CalculateGoToPoseVelocityAuton;
 import frc.robot.utils.MirrablePose2d;
 
 
-public class GoToPoseAutonWhileShootingWithPIDS extends Command{
+public class GoToPoseAutonWhileShootingWithPIDs extends Command{
     private DriveSubsystem m_driveSubsystem;
     private Pose2d goalEndPose;
     private HandOffToShooterAuton handOfftoShooterAuton;
@@ -37,7 +37,7 @@ public class GoToPoseAutonWhileShootingWithPIDS extends Command{
     private ProfiledPIDController headingPIDController;
 
 
-    public GoToPoseAutonWhileShootingWithPIDS(DriveSubsystem m_driveSubsystem, HandOffToShooterAuton handOffToShooterAuton,
+    public GoToPoseAutonWhileShootingWithPIDs(DriveSubsystem m_driveSubsystem, HandOffToShooterAuton handOffToShooterAuton,
      MirrablePose2d goalEndPose, double percentToPose) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;
@@ -154,9 +154,9 @@ public class GoToPoseAutonWhileShootingWithPIDS extends Command{
         this.goalEndPose.getRotation().getDegrees()) <= 
         AutoConstants.kHeadingPIDControllerTolerance &&
         Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <=
-        AutoConstants.kAutoPositonTolorenceAuto &&
+        AutoConstants.kAutoPositonToleranceAuto &&
         Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <=
-        AutoConstants.kAutoPositonTolorenceAuto;
+        AutoConstants.kAutoPositonToleranceAuto;
 
         return isInPosition && this.handOfftoShooterAuton.isFinished();
     }
