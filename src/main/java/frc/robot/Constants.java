@@ -247,7 +247,14 @@ public final class Constants {
     public static final ArrayList<Command> kLeft_ShootPreloadedLeft = new ArrayList<Command>();
     public static final ArrayList<Command> kLeft_ShootPreloadedLeftCenter = new ArrayList<Command>();
     public static final ArrayList<Command> kLeft_ShootPreloadedLeftCenterRight = new ArrayList<Command>();
+
     public static final MirrablePose2d kLeftStartingPose = new MirrablePose2d(new Pose2d(1.5134, 7, new Rotation2d()), !kIsBlueAlliance);
+    public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(5.55, 7, new Rotation2d()), !kIsBlueAlliance);
+    public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(4.15, 7, new Rotation2d()), !kIsBlueAlliance);
+
+    public static final double kLeftNoteIntakeDownTime = 2;
+    public static final double kCenterNoteIntakeDownTime = 2;
+    public static final double kRightNoteIntakeDownTime = 2;
   }
 
   public static final class ShooterConstants {
