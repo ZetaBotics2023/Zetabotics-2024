@@ -26,6 +26,7 @@ import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
 import frc.robot.commands.IntakeCommands.PickupFromGroundCommand;
 import frc.robot.commands.IntakeCommands.ShootIntoAmpWithIntakeCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedAutonCommand;
+import frc.robot.commands.ShooterCommands.ShootAtDiffSpeedCommand;
 import frc.robot.commands.ShooterCommands.StopShooterCommand;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
@@ -80,6 +81,8 @@ public class RobotContainer {
   private final ShootIntoAmpWithIntakeCommand shootIntoAmpWithIntakeCommand;
   private final AutoShootPositionCommand autoShootPositionCommand;
 
+  private final ShootAtDiffSpeedCommand shootAtDiffSpeedCommand;
+
   private final ClimbDownDualCommand climbDownDualCommand;
   private final ClimbUpDualCommand climbUpDualCommand;
 
@@ -125,6 +128,8 @@ public class RobotContainer {
 
     this.autoShootPositionCommand = new AutoShootPositionCommand(m_driveSubsystem,
      m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
+
+     this.shootAtDiffSpeedCommand = new ShootAtDiffSpeedCommand(m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem)
 
     this.climbDownDualCommand = new ClimbDownDualCommand(m_climberSubsystem);
     this.climbUpDualCommand = new ClimbUpDualCommand(m_climberSubsystem);
@@ -174,6 +179,12 @@ public class RobotContainer {
     final JoystickButton shootNote = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kB.value);
     shootNote.onTrue(this.autoShootCommand);
     shootNote.onFalse(Commands.runOnce(this.autoShootCommand::cancel));
+
+    // run
+    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kRed, this.shootAtDiffSpeedCommand, Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
+    final JoystickButton rampShooter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
+    rampShooter.onTrue(this.shootAtDiffSpeedCommand);
+    rampShooter.onFalse(Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
 
     // autoShootPositionCommand
     m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 90, this.autoShootPositionCommand, Commands.runOnce(this.autoShootPositionCommand::cancel));
