@@ -5,10 +5,10 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 
 
-public class RampShooterAtDifforentSpeedAutonCommand extends Command {
+public class RampShooterAtDifferentSpeedAutonCommand extends Command {
     private ShooterSubsystem shooterSubsystem;
 
-    public RampShooterAtDifforentSpeedAutonCommand(ShooterSubsystem shooterSubsystem){
+    public RampShooterAtDifferentSpeedAutonCommand(ShooterSubsystem shooterSubsystem){
         this.shooterSubsystem = shooterSubsystem;
         addRequirements(shooterSubsystem);
     }
