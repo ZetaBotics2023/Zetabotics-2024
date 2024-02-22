@@ -1,6 +1,9 @@
 package frc.robot.subsystems.SwerveDrive;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,6 +11,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveDriveConstants;
+import frc.robot.utils.InTeleop;
 import frc.robot.utils.LimelightUtil;
 import frc.robot.utils.VisionPose;
 
@@ -50,6 +56,8 @@ public class DriveSubsystem extends SubsystemBase {
     private final Pose2d startingPose = new Pose2d(0, 0, new Rotation2d(0));
 
     private final Field2d field2d = new Field2d();
+
+    private Matrix<N3, N1> visionMeasurementStdDevs = new Matrix<N3, N1>(Nat.N3(), Nat.N1(), new double[] {0.5, 0.5, 0.9});
 
     public DriveSubsystem() {
         this.frontLeftSwerveModule =  new SwerveModule(
@@ -123,7 +131,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     boolean withInOneMeter = withInOneMeterX && withInOneMeterY;
     if(estimatedPose.isValidTarget()) { //&& withInOneMeter) {
-      this.poseEstimator.addVisionMeasurement(estimatedPose.getPose(), estimatedPose.getTimeStamp());
+      this.poseEstimator.addVisionMeasurement(estimatedPose.getPose(), estimatedPose.getTimeStamp(), this.visionMeasurementStdDevs);
     }
     this.field2d.setRobotPose(this.poseEstimator.getEstimatedPosition());
     
