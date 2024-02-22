@@ -19,6 +19,9 @@ import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.utils.LimelightUtil;
 import frc.robot.utils.VisionPose;
 
+/*
+ * The subsystem that controls our swerve drive
+ */
 public class DriveSubsystem extends SubsystemBase {
 
     private ChassisSpeeds desiredChassisSpeeds;
@@ -105,6 +108,9 @@ public class DriveSubsystem extends SubsystemBase {
     updateDashboard();
   }
 
+  /*
+   * Use our pose estimator to update our odometry measurements
+   */
  private void updateOdometry() {
     this.poseEstimator.update(this.m_gyro.getRotation2d(), getModulePositions());
     
@@ -123,6 +129,9 @@ public class DriveSubsystem extends SubsystemBase {
     
   }
 
+  /*
+   * Posts helpful debugging info to SmartDashboard
+   */
   private void updateDashboard() {
     if(_updateCount++ >= 0)
     {
@@ -147,6 +156,9 @@ public class DriveSubsystem extends SubsystemBase {
       }
     }
 
+   /*
+    * Returns an array containing the positions of all swerve modules
+    */
   public SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] positions = {
         this.frontLeftSwerveModule.getPosition(),
@@ -157,6 +169,9 @@ public class DriveSubsystem extends SubsystemBase {
 
     return positions;
   }
+  /*
+   * Returns an array containing the states of all swerve modules
+   */
   private SwerveModuleState[] getModuleStates() {
     SwerveModuleState[] swerveModuleStates = {
         this.frontLeftSwerveModule.getState(),
@@ -168,6 +183,12 @@ public class DriveSubsystem extends SubsystemBase {
     return swerveModuleStates;
   }
   
+  /*
+   * Sets the desired states of the swerves to the given states.
+   * This just changes the targets of our PID loop.
+   * Make sure to pass them in as follows:
+   * Front left, front right, back left, back right
+   */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
       desiredStates, SwerveDriveConstants.kMaxSpeedMetersPerSecond);
@@ -192,6 +213,9 @@ public class DriveSubsystem extends SubsystemBase {
     */
   }
 
+  /*
+   * Returns the module states in the form of chassis speeds
+   */
   public ChassisSpeeds getChassisSpeeds() {
     return SwerveDriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
   }
@@ -244,6 +268,9 @@ public class DriveSubsystem extends SubsystemBase {
     return this.m_gyro.getRotation2d();
   }
 
+  /*
+   * Returns the current chassis speeds in the form of a linear velocity
+   */
   public double getCurrentChassisSpeeds()
   {
     ChassisSpeeds currentSpeeds = SwerveDriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());

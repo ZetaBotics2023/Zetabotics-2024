@@ -2,6 +2,7 @@ package frc.robot.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.Pair;
@@ -12,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;  
 
-public class ButtonBoard extends XboxController {
+public class ButtonBoard {
 
     public enum Button {
         /** Left bumper. */
@@ -44,70 +45,31 @@ public class ButtonBoard extends XboxController {
           this.value = value;
         }
     }
-    
-    public enum AlternateButton {
-        /** Left X. */
-        kRedUp(0, 1),
-        kRedDown(0, -1),
-        /** Left Y. */
-        kRedLeft(1, -1),
-        kRedRight(1, 1),
-        /** Left trigger. */
-        kBlackBottomLeft(2, 1),
-        /** Right trigger. */
-        kBlackTopLeft(3, 1);
-    
-        /** Axis value. */
-        public final int value;
-        public boolean previousValue;
-        public final int triggerValue;
-        
-        /*
-         * Construct an alternate button that converts an axis into a button press.
-         */
-        AlternateButton(int value, int triggerValue) {
-          this.value = value;
-          this.triggerValue = triggerValue;
-        }
-    }
+
 
     private int buttonPreset = 0;
+    private XboxController controller;
 
     public ButtonBoard(int port) {
-        super(port);
+        this.controller = new XboxController(port);
     }
 
-    public void createButtonTrigger(ButtonBoard.Button button, int presetSlot, Command onTrue, Command onFalse) {
-        Trigger buttonTrigger = new Trigger(
-            () -> {
-                
-                if (getPreset() != presetSlot) return false;
-
-                // Indexes start at one for getRawButtonPressed, so add one. //TODO: Verify if this is correct
-                return getRawButtonPressed(button.value + 1);
-            }
-        );
-
-        buttonTrigger.onTrue(onTrue);
-        buttonTrigger.onFalse(onFalse);
+    public void bindToButton(int slot, Button button, Command onTrue, Command onFalse) {
+        JoystickButton joystickButton = new JoystickButton(this.controller, button.value);
+        BooleanSupplier slotBoolSupplier = () -> {return slot == getPreset();};
+        joystickButton.and(slotBoolSupplier);
+        joystickButton.onFalse(onFalse);
+        joystickButton.onTrue(onTrue);
     }
 
-    public void createButtonTrigger(ButtonBoard.AlternateButton button, int presetSlot, Command onTrue, Command onFalse) {
-        Trigger buttonTrigger = new Trigger(
-            () -> {
+    public <T> void bindToAxis(int slot, Supplier<T> valueSupplier, T targetValue, Command onTrue, Command onFalse) {
+        BooleanSupplier triggeredBoolSupplier = () -> {return valueSupplier.get() == targetValue;};
 
-                if (getPreset() != presetSlot) return false;
-
-                // Indexes start at zero for getRawAxis, so DON'T add one. //TODO: Verify if this is correct
-                return getRawAxis(button.value) == button.triggerValue;
-            }
-        );
-
-
-        buttonTrigger.onTrue(onTrue);
-        buttonTrigger.onFalse(onFalse);
-
-        
+        Trigger axisTrigger = new Trigger(triggeredBoolSupplier);
+        BooleanSupplier slotBoolSupplier = () -> {return slot == getPreset();};
+        axisTrigger.and(slotBoolSupplier);
+        axisTrigger.onFalse(onFalse);
+        axisTrigger.onTrue(onTrue);
     }
 
     public int getPreset() {
@@ -115,5 +77,9 @@ public class ButtonBoard extends XboxController {
     }
     public void setPreset(int preset) {
         this.buttonPreset = preset;
+    }
+
+    public XboxController getController() {
+        return controller;
     }
 }

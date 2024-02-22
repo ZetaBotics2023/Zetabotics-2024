@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 
+/*
+ * This subsystem allows us to ccontrol our shooter
+ */
 public class ShooterSubsystem extends SubsystemBase{
     private final CANSparkMax m_leftShooter; 
     private final CANSparkMax m_rightShooter;
@@ -84,13 +87,18 @@ public class ShooterSubsystem extends SubsystemBase{
         
     }
 
+    /*
+     * Periodic just outputs our shooter velocities to SmartDashboard
+     */
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Actully Shooter RPM Right", this.m_rightEncoder.getVelocity());
         SmartDashboard.putNumber("Actully Shooter RPM Left", this.m_leftEncoder.getVelocity());
     }
 
-    //runs both motors at the same speed for x amount of time (i think)
+    /*
+     * Runs both motors at the same speed for a given amount of time
+     */
     public void runAtRPMForTime(double rpm, double seconds) {
         this.leftShooterPID.setReference(rpm, ControlType.kVelocity);
         this.rightShooterPID.setReference(rpm, ControlType.kVelocity);
@@ -98,7 +106,10 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
 
-    //method that runs left at the passed rpm and right at that rpm*powerRatio
+    /* 
+     * Method that runs the left motor at a given RPM and right at that RPM scaled by our power ratio.
+     * This achieves more stability by applying spin to our note, which makes it fly straighter.
+     */
     public void runAtRPMAndRPMRatio(double rpm) {
         this.targetVelocityRPM = rpm;
         SmartDashboard.putNumber("Desired Shooter RPM", rpm);
