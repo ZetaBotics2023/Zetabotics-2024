@@ -156,17 +156,17 @@ public class RobotContainer {
     lockSwerves.onTrue(Commands.runOnce(this.lockSwerves::schedule));
     lockSwerves.onFalse(Commands.runOnce(this.lockSwerves::cancel));
 
-    final JoystickButton resetHeading = new JoystickButton(m_driverController, XboxController.Button.kY.value);
-    resetHeading.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotHeading));
+    //final JoystickButton resetHeading = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+    //resetHeading.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotHeading));
 
-    final JoystickButton resetOdometry = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+    final JoystickButton resetOdometry = new JoystickButton(m_driverController, XboxController.Button.kY.value);
     resetOdometry.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotPose));
 
     // *** Button monkey controls begin here! ***
-
+ 
     // pickupFromGroundCommand
     m_buttonBoard.bindToButton(0, ButtonBoard.Button.kBlue, this.pickupFromGroundCommand, Commands.runOnce(this.pickupFromGroundCommand::cancel));
-    final JoystickButton pickUpFromGround = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kX.value);
+    final JoystickButton pickUpFromGround = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
     pickUpFromGround.onTrue(this.pickupFromGroundCommand);
     pickUpFromGround.onFalse(Commands.runOnce(this.pickupFromGroundCommand::cancel));
 
@@ -178,7 +178,7 @@ public class RobotContainer {
 
     // run
     m_buttonBoard.bindToButton(0, ButtonBoard.Button.kRed, this.shootAtDiffSpeedCommand, Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
-    final JoystickButton rampShooter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
+    final JoystickButton rampShooter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightBumper.value);
     rampShooter.onTrue(this.shootAtDiffSpeedCommand);
     rampShooter.onFalse(Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
 
@@ -190,10 +190,11 @@ public class RobotContainer {
 
     // shootIntoAmpIntakeCommand
     m_buttonBoard.bindToButton(0, ButtonBoard.Button.kYellow, this.shootIntoAmpWithIntakeCommand, Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
-    final JoystickButton shootNoteIntoAmpWithIntake = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kY.value);
+    final JoystickButton shootNoteIntoAmpWithIntake = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightStick.value);
     shootNoteIntoAmpWithIntake.onTrue(this.shootIntoAmpWithIntakeCommand);
     shootNoteIntoAmpWithIntake.onFalse(Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
   
+    /* 
     // climbUpDualCommand
     m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 180, this.climbUpDualCommand, Commands.runOnce(this.climbUpDualCommand::cancel));
     final JoystickButton moveClimbersUp = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
@@ -205,6 +206,7 @@ public class RobotContainer {
     final JoystickButton moveClimbersDown = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightBumper.value);
     moveClimbersDown.onTrue(this.climbDownDualCommand);
     moveClimbersDown.onFalse(Commands.runOnce(this.climbDownDualCommand::cancel));
+    */
   }
   
   /*
