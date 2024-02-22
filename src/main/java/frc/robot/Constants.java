@@ -103,7 +103,7 @@ public final class Constants {
     public static final double kIModuleTurningController = .0;
     public static final double kDModuleTurningController = .0;
 
-    public static final double kPostitionToleranceDegrees = .1;
+    public static final double kPositionToleranceDegrees = .1;
     public static final double kVelocityToleranceDegreesPerSec = 1.0;
 
     public static final double kMaxModuleAngularSpeedDegreesPerSecond =  30.0;
@@ -191,14 +191,14 @@ public final class Constants {
 
     // Translation Contraints
     public static final double kMaxTranslationSpeedMPS = 3.5;
-    public static final double kMaxTranslationAcceloration = 2;
+    public static final double kMaxTranslationAcceleration = 2;
     public static final TrapezoidProfile.Constraints kTranslationControllerConstraints =
-     new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPS, kMaxTranslationAcceloration);
+     new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPS, kMaxTranslationAcceleration);
 
     public static final double kMaxTranslationSpeedMPSAuto = 4.1;
-    public static final double kMaxTranslationAccelorationAuto = 2;
+    public static final double kMaxTranslationAccelerationAuto = 2;
     public static final TrapezoidProfile.Constraints kTranslationAutoControllerConstraints =
-     new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPSAuto, kMaxTranslationAccelorationAuto);
+     new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPSAuto, kMaxTranslationAccelerationAuto);
 
     public static final double kTranslationPIDControllerVelocityTolerance = .1;
     public static final double kTranslationPIDControllerPositionalTolerance = .1;
@@ -222,7 +222,7 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadiansPerSecond = 360;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 720;
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-    public static final double kAutoPositonTolorence = .2;
+    public static final double kAutoPositonTolerance = .2;
 
     public static final double kHeadingPIDControllerAutoP = .035;
     public static final double kHeadingPIDControllerAutoI = .00005;
@@ -231,7 +231,7 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadiansPerSecondAuto = 360;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquaredAuto = 720;
     public static final TrapezoidProfile.Constraints kThetaControllerConstraintsAuto = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-    public static final double kAutoPositonTolorenceAuto = .1;
+    public static final double kAutoPositonToleranceAuto = .1;
   }
 
   public static final class AutonConfigurationConstants {
@@ -240,7 +240,7 @@ public final class Constants {
 
     public static final HashMap<String, MirrablePose2d> robotPositions = new HashMap<String, MirrablePose2d>();
 
-    public static boolean kIsBlueAlience = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;     
+    public static boolean kIsBlueAlliance = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;     
     public static String startingPose = "Left";
 
     public static final ArrayList<Command> kLeft_ShootPreloaded = new ArrayList<Command>();
@@ -271,7 +271,7 @@ public final class Constants {
     public static final double kShooterRPM = 2800;//SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
     public static final double kShootTime = 10;
     public static final double kShootTimeAuto = 2;
-    public static final double kShooterRPMTolorence = 75;
+    public static final double kShooterRPMTolerance = 75;
   }
 
   public static final class ClimberConstants {
@@ -298,7 +298,7 @@ public final class Constants {
 
     public static final double kPivotThroughBoreZeroOffset = 93.75;
 
-    public static final double kFarthestNotePositionMilameters = 480; 
+    public static final double kFarthestNotePositionMillimeters = 480; 
 
     public static final double kPivotGearRatio = 125.0/1.0;
     public static final double kIntakeGearRatio = 3.0/1.0;

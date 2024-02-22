@@ -125,15 +125,15 @@ public class ShooterSubsystem extends SubsystemBase{
 
     //Checks if both motors are at the desired RPM (i did separate methods because idk how to combine them without it being clunky)
     public boolean isLeftMotorAtTargetVelocity() {
-        return Math.abs(this.m_leftEncoder.getVelocity() - this.targetVelocityRPM) <= ShooterConstants.kShooterRPMTolorence;
+        return Math.abs(this.m_leftEncoder.getVelocity() - this.targetVelocityRPM) <= ShooterConstants.kShooterRPMTolerance;
     }
 
     public boolean isRightMotorAtTargetVelocity() {
-        return Math.abs(this.m_rightEncoder.getVelocity() - this.targetVelocityRPM) <= ShooterConstants.kShooterRPMTolorence;
+        return Math.abs(this.m_rightEncoder.getVelocity() - this.targetVelocityRPM) <= ShooterConstants.kShooterRPMTolerance;
     }
 
     public boolean isRightMotorAtTargetRatioVelocity() {
-        return Math.abs(this.m_rightEncoder.getVelocity() - this.targetVelocityRPM * ShooterConstants.kShooterPowerRatio) <= ShooterConstants.kShooterRPMTolorence;
+        return Math.abs(this.m_rightEncoder.getVelocity() - this.targetVelocityRPM * ShooterConstants.kShooterPowerRatio) <= ShooterConstants.kShooterRPMTolerance;
     }
 
 }
