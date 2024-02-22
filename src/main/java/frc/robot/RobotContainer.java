@@ -13,9 +13,6 @@ import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
 import frc.robot.commands.ParallelRaceGroupCommand;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.CustomMathGoToPositionCommands.GoToPoseAutonWhileShooting;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.CustomMathGoToPositionCommands.GoToPositionAfterTime;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.CustomMathGoToPositionCommands.GoToPositionAuton;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.AutoShootPositionCommand;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseAutonWhileShootingWithPIDs;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionWithPIDSAuto;
@@ -25,7 +22,7 @@ import frc.robot.commands.ClimberCommands.ClimbUpDualCommand;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
 import frc.robot.commands.IntakeCommands.PickupFromGroundCommand;
 import frc.robot.commands.IntakeCommands.ShootIntoAmpWithIntakeCommand;
-import frc.robot.commands.ShooterCommands.RampShooterAtDifferentSpeedAutonCommand;
+import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
 import frc.robot.commands.ShooterCommands.ShootAtDiffSpeedCommand;
 import frc.robot.commands.ShooterCommands.StopShooterCommand;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
@@ -40,8 +37,6 @@ import frc.robot.utils.ButtonBoard;
 import frc.robot.utils.GenerateAuto;
 import frc.robot.utils.InTeleop;
 import frc.robot.utils.MirrablePose2d;
-
-import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -277,7 +272,7 @@ public class RobotContainer {
     }
     switch(autonName) {
       case "Left:ShootPreloaded":
-        AutonConfigurationConstants.kLeft_ShootPreloaded.add(new RampShooterAtDifferentSpeedAutonCommand(m_shooterSubsystem));
+        AutonConfigurationConstants.kLeft_ShootPreloaded.add(new RampShooterAtDifforentSpeedCommand(m_shooterSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloaded.add(createGoToPositionCommand("LeftNoteShootPose"));
 
         AutonConfigurationConstants.kLeft_ShootPreloaded.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem,
@@ -286,7 +281,7 @@ public class RobotContainer {
 
         return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kLeft_ShootPreloaded);
       case "Left:ShootPreloadedLeft":
-        AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new RampShooterAtDifferentSpeedAutonCommand(m_shooterSubsystem));
+        AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new RampShooterAtDifforentSpeedCommand(m_shooterSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(createGoToPositionCommand("LeftNoteShootPose"));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(createGoToPositionCommand("LeftNoteIntakeZero"));
@@ -298,7 +293,7 @@ public class RobotContainer {
         return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kLeft_ShootPreloadedLeft);
       
       case "Left:ShootPreloadedLeftCenter":
-        AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new RampShooterAtDifferentSpeedAutonCommand(m_shooterSubsystem));
+        AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new RampShooterAtDifforentSpeedCommand(m_shooterSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(createGoToPositionCommand("LeftNoteShootPose"));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(createGoToPositionCommand("LeftNoteIntakeZero"));
@@ -313,7 +308,7 @@ public class RobotContainer {
         return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter);
       
       case "Left:ShootPreloadedLeftCenterRight":
-        AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(new RampShooterAtDifferentSpeedAutonCommand(m_shooterSubsystem));
+        AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(new RampShooterAtDifforentSpeedCommand(m_shooterSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(createGoToPositionCommand("LeftNoteShootPose"));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(createGoToPositionCommand("LeftNoteIntakeZero"));
