@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -34,7 +35,7 @@ public final class Constants {
 
   public static class SwerveDriveConstants {
     
-    public static final int kFrontLeftDriveMotorId = 1;
+    public static final int kFrontLeftDriveMotorId = 24;
     public static final int kFrontRightDriveMotorId = 2;
     public static final int kBackLeftDriveMotorId = 3;
     public static final int kBackRightDriveMotorId = 4;
@@ -177,6 +178,7 @@ public final class Constants {
     public static final Pose2d kRedAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(16.579342, 5.547868), Rotation2d.fromDegrees(180));
     public static final Pose2d kBlueAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(-0.0381, 5.547868), Rotation2d.fromDegrees(0));
     public static final double kDegreeOffset = 3.58;
+    public static final Transform3d robotToCam = new Transform3d();
 
   };
 
@@ -210,7 +212,7 @@ public final class Constants {
     public static final double kTranslationPIDControllerI = 0;
     public static final double kTranslationPIDControllerD = 0;
 
-    public static final double kTranslationAutoPIDControllerP = 2.5;
+    public static final double kTranslationAutoPIDControllerP = 2;
     public static final double kTranslationAutoPIDControllerI = 0;
     public static final double kTranslationAutoPIDControllerD = 0;
 
@@ -249,12 +251,12 @@ public final class Constants {
     public static final ArrayList<Command> kLeft_ShootPreloadedLeftCenterRight = new ArrayList<Command>();
 
     public static final MirrablePose2d kLeftStartingPose = new MirrablePose2d(new Pose2d(1.5134, 7, new Rotation2d()), !kIsBlueAlliance);
-    public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(5.55, 7, new Rotation2d()), !kIsBlueAlliance);
-    public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(4.15, 7, new Rotation2d()), !kIsBlueAlliance);
+    public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(0, 5.55, new Rotation2d()), !kIsBlueAlliance);
+    public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(0, 4.15, new Rotation2d()), !kIsBlueAlliance);
 
-    public static final double kLeftNoteIntakeDownTime = 2;
-    public static final double kCenterNoteIntakeDownTime = 2;
-    public static final double kRightNoteIntakeDownTime = 2;
+    public static final double kLeftNoteIntakeDownTime = .85;
+    public static final double kCenterNoteIntakeDownTime = 1.1;
+    public static final double kRightNoteIntakeDownTime = .95;
   }
 
   public static final class ShooterConstants {
@@ -278,7 +280,7 @@ public final class Constants {
     public static final double kShooterPowerRatio = .75; // TODO: Also wrong
     public static final double kShooterRPM = 2800;//SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
     public static final double kShootTime = 10;
-    public static final double kShootTimeAuto = 2;
+    public static final double kShootTimeAuto = .5;
     public static final double kShooterRPMTolerance = 75;
   }
 
@@ -311,7 +313,7 @@ public final class Constants {
     public static final double kPivotGearRatio = 125.0/1.0;
     public static final double kIntakeGearRatio = 3.0/1.0;
     
-    public static final double kPPivotController = 2.5;
+    public static final double kPPivotController = 3;
     public static final double kIPivotController = 0;
     public static final double kDPivotController = 0;
     public static final double kFPivotController = 0;

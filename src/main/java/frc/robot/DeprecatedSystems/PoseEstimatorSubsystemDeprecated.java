@@ -1,5 +1,5 @@
 package frc.robot.DeprecatedSystems;
-/* 
+
 import java.io.IOException;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
@@ -45,7 +45,7 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * model's state estimates less. This
    * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians, then
    * meters.
-   
+   */
   private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, 0.1);//gray matter has lower
 
   /**
@@ -53,7 +53,7 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * trust global measurements from vision
    * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
    * radians.
-   
+   */
   private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.5, 0.5, 0.9); // gray mater has higher
 
   private final DriveSubsystem m_driveSubsystem;
@@ -71,7 +71,7 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
     this.m_driveSubsystem = m_driveSubsystem;
     PhotonPoseEstimator photonPoseEstimator;
     //try {
-      var layout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
+      var layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
       layout.setOrigin(originPosition);
       // The Pose Strategy may be incorrect
       photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
@@ -101,7 +101,7 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * Sets the alliance. This is used to configure the origin of the AprilTag map
    * 
    * @param alliance alliance
-   
+   */
   public void setAlliance(Alliance alliance) {
     var fieldTags = photonPoseEstimator.getFieldTags();
     boolean allianceChanged = false;
@@ -200,7 +200,7 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * a match.
    * 
    * @param newPose new pose
-   
+   */
   public void setCurrentPose(Pose2d newPose) {
     poseEstimator.resetPosition(
         m_driveSubsystem.getHeadingInRotation2d(),
@@ -219,7 +219,7 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * Resets the position on the field to 0,0 0-degrees, with forward being
    * downfield. This resets
    * what "forward" is for field oriented driving.
-   
+   */
   public void resetFieldPosition() {
     setCurrentPose(new Pose2d());
   }
@@ -232,24 +232,18 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * 
    * @param poseToFlip pose to transform to the other alliance
    * @return pose relative to the other alliance's coordinate system
-   
+   */
   private Pose2d flipAlliance(Pose2d poseToFlip) {
     return poseToFlip.relativeTo(new Pose2d(
         new Translation2d(FieldConstants.kLength, FieldConstants.kWidth),
         new Rotation2d(Math.PI)));
   }
 
-  
-  /* CODE FOR PATHPLANNER ADD BACK AT SOME POINT IF WE GO WITH PHOTON VISION
-  public void addTrajectory(PathPlannerTrajectory traj) {
-    field2d.getObject("Trajectory").setTrajectory(traj);
-  }
-  
 
   /**
    * Resets the holonomic rotation of the robot (gyro last year)
    * This would be used if Apriltags are not getting accurate pose estimation
-   
+   */
   public void resetHolonomicRotation() {
     poseEstimator.resetPosition(
         Rotation2d.fromDegrees(0),
@@ -263,4 +257,3 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
   }
 
 }
-*/

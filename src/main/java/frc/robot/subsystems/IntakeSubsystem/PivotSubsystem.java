@@ -46,17 +46,11 @@ public class PivotSubsystem extends SubsystemBase {
         // Temp voltage for safty, increase onces tuned.
         this.m_pivot.setSmartCurrentLimit(40);
 
-        SmartDashboard.putNumber("Pivot P", IntakeConstants.kPPivotController);
-        SmartDashboard.putNumber("Pivot I", IntakeConstants.kIPivotController);
-        SmartDashboard.putNumber("Pivot D", IntakeConstants.kDPivotController);
-        SmartDashboard.putNumber("Pivot F", IntakeConstants.kFPivotController);
-
-
         this.pivotPID.setFeedbackDevice(this.m_pivotAbsEncoder);
-        this.pivotPID.setP(SmartDashboard.getNumber("Pivot P", IntakeConstants.kPPivotController));
-        this.pivotPID.setI(SmartDashboard.getNumber("Pivot I", IntakeConstants.kIPivotController));
-        this.pivotPID.setD(SmartDashboard.getNumber("Pivot D", IntakeConstants.kDPivotController));
-        this.pivotPID.setFF(SmartDashboard.getNumber("Pivot F", IntakeConstants.kFPivotController));
+        this.pivotPID.setP(IntakeConstants.kPPivotController);
+        this.pivotPID.setI(IntakeConstants.kIPivotController);
+        this.pivotPID.setD(IntakeConstants.kDPivotController);
+        this.pivotPID.setFF(IntakeConstants.kFPivotController);
         this.pivotPID.setIZone(IntakeConstants.kIZoneIntakeVelocityController);
         this.pivotPID.setOutputRange(-1, 1);
         this.m_pivot.burnFlash();
