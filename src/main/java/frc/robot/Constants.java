@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -178,7 +179,7 @@ public final class Constants {
     public static final Pose2d kRedAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(16.579342, 5.547868), Rotation2d.fromDegrees(180));
     public static final Pose2d kBlueAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(-0.0381, 5.547868), Rotation2d.fromDegrees(0));
     public static final double kDegreeOffset = 3.58;
-    public static final Transform3d robotToCam = new Transform3d();
+    public static final Transform3d robotToCam = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));//new Transform3d(-0.352425, 0, 0.38735, new Rotation3d(0, Math.toRadians(22.5), (Math.toRadians(180))));
 
   };
 

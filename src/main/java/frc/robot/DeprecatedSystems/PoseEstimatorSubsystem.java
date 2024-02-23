@@ -32,7 +32,7 @@ import frc.robot.utils.InTeleop;
 import frc.robot.Constants.FieldConstants;
 
 // We should probable swich this over to make use of WPILib SwerveDrive PoseEstimator and Limelight tag reading rather than photon vission
-public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
+public class PoseEstimatorSubsystem extends SubsystemBase {
 
   // Kalman Filter Configuration. These can be "tuned-to-taste" based on how much
   // you trust your various sensors. Smaller numbers will cause the filter to
@@ -54,7 +54,7 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
    * radians.
    */
-  private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.5, 0.5, 0.9); // gray mater has higher
+  private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0, 0, 0); // gray mater has higher
 
   private final DriveSubsystem m_driveSubsystem;
   private final SwerveDrivePoseEstimator poseEstimator;
@@ -67,7 +67,7 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
   private final ArrayList<Double> xValues = new ArrayList<Double>();
   private final ArrayList<Double> yValues = new ArrayList<Double>();
 
-  public PoseEstimatorSubsystemDeprecated(PhotonCamera photonCamera, DriveSubsystem m_driveSubsystem) {
+  public PoseEstimatorSubsystem(PhotonCamera photonCamera, DriveSubsystem m_driveSubsystem) {
     this.m_driveSubsystem = m_driveSubsystem;
     PhotonPoseEstimator photonPoseEstimator;
     //try {
@@ -151,7 +151,6 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
     // }
     // double RMS = Math.sqrt((1.0 / (double) xValues.size() * summation));
     // System.out.println("RMS: " + RMS);
-
     // If the pose estimator exists, we have a frame, and it's a new frame, and we're in the field, use the measurement
     if (photonPoseEstimator != null) {
       // Update pose estimator with the best visible target
@@ -162,15 +161,13 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
             && estimatedPose.getX() > 0.0 && estimatedPose.getX() <= FieldConstants.kLength
             && estimatedPose.getY() > 0.0 && estimatedPose.getY() <= FieldConstants.kWidth) {
           previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
-          if(InTeleop.inTeleop)
-          {
-            poseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
-          }
+            poseEstimator.addVisionMeasurement(new Pose2d(estimatedPose.toPose2d().getX() + .6 , estimatedPose.toPose2d().getY(), this.m_driveSubsystem.getHeadingInRotation2d()), estimatedRobotPose.timestampSeconds);
+            SmartDashboard.putNumber("Estemated Pose", estimatedPose.toPose2d().getX());
+
         }
       });
     }
     
-    SmartDashboard.putBoolean("In teleop", InTeleop.inTeleop);
     Pose2d dashboardPose = getCurrentPose();
     if (originPosition == OriginPosition.kRedAllianceWallRightSide) {
       // Flip the pose when red, since the dashboard field photo cannot be rotated
