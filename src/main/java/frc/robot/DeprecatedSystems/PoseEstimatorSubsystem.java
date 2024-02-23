@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.proto.Photon;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -67,8 +68,11 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private final ArrayList<Double> xValues = new ArrayList<Double>();
   private final ArrayList<Double> yValues = new ArrayList<Double>();
 
+  private PhotonCamera photonCamera;
+
   public PoseEstimatorSubsystem(PhotonCamera photonCamera, DriveSubsystem m_driveSubsystem) {
     this.m_driveSubsystem = m_driveSubsystem;
+    this.photonCamera = photonCamera;
     PhotonPoseEstimator photonPoseEstimator;
     //try {
       var layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
@@ -76,7 +80,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
       // The Pose Strategy may be incorrect
       photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
           Constants.VisionConstants.robotToCam);
-      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR);
     //} catch (IOException e) {
       //DriverStation.reportError("Failed to load AprilTagFieldLayout", e.getStackTrace());
       //photonPoseEstimator = null;
@@ -161,7 +165,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             && estimatedPose.getX() > 0.0 && estimatedPose.getX() <= FieldConstants.kLength
             && estimatedPose.getY() > 0.0 && estimatedPose.getY() <= FieldConstants.kWidth) {
           previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
-            poseEstimator.addVisionMeasurement(new Pose2d(estimatedPose.toPose2d().getX() + .6 , estimatedPose.toPose2d().getY(), this.m_driveSubsystem.getHeadingInRotation2d()), estimatedRobotPose.timestampSeconds);
+            if(this.photonCamera.getLatestResult().getMultiTagResult().fiducialIDsUsed.size() >= 2 && InTeleop.inTeleop) {
+                poseEstimator.addVisionMeasurement(new Pose2d(estimatedPose.toPose2d().getX() + .6 , estimatedPose.toPose2d().getY(), this.m_driveSubsystem.getHeadingInRotation2d()), estimatedRobotPose.timestampSeconds);
+            }
             SmartDashboard.putNumber("Estemated Pose", estimatedPose.toPose2d().getX());
 
         }

@@ -193,7 +193,7 @@ public final class Constants {
 
 
     // Translation Contraints
-    public static final double kMaxTranslationSpeedMPS = 3.5;
+    public static final double kMaxTranslationSpeedMPS = 4.1;
     public static final double kMaxTranslationAcceleration = 2;
     public static final TrapezoidProfile.Constraints kTranslationControllerConstraints =
      new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPS, kMaxTranslationAcceleration);
@@ -209,7 +209,7 @@ public final class Constants {
     public static final double kTranslationAutoPIDControllerVelocityTolerance = .1;
     public static final double kTranslationAutoPIDControllerPositionalTolerance = .1;
 
-    public static final double kTranslationPIDControllerP = 2.5;
+    public static final double kTranslationPIDControllerP = 2;
     public static final double kTranslationPIDControllerI = 0;
     public static final double kTranslationPIDControllerD = 0;
 
@@ -261,6 +261,7 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
+
     public static final int kLeftShooterMotorControllerID = 16;
     public static final int kRightShooterMotorControllerID = 17;
 
@@ -273,8 +274,8 @@ public final class Constants {
     public static final double kFLeftShooterController = 0.0;
     public static final double kIZoneShooterController = 0.0; 
 
-    public static final double kMinShootingDistanceMeters = Units.inchesToMeters(85);
-    public static final double kMaxShootingDistanceMeters = Units.inchesToMeters(90);
+    public static final double kMinShootingDistanceMeters = 2.1;
+    public static final double kMaxShootingDistanceMeters = 2.1;
 
     public static final double kMinShootingDistanceFromWallMeters = Units.inchesToMeters(40);
 

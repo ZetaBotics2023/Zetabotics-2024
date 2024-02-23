@@ -54,7 +54,7 @@ public class AutoShootPositionCommand extends Command{
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
 
         Pose2d startingPose = this.m_driveSubsystem.getRobotPose();
-        Pose2d shootingPosition = CalculateSpeakerShootingPosition.calculateTargetPosition(startingPose);
+        Pose2d shootingPosition = new Pose2d(2.2, 5.2, Rotation2d.fromDegrees(-17.5));//new Pose2d(2.2, 5.55, new Rotation2d());//CalculateSpeakerShootingPosition.calculateTargetPosition(startingPose);
         this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPosition);
 
         goToPosition.schedule();
