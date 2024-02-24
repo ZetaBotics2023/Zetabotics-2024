@@ -13,13 +13,14 @@ import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
 import frc.robot.commands.ParallelRaceGroupCommand;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.AutoShootPositionCommand;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCommand;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseAutonWhileShootingWithPIDs;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionWithPIDSAuto;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionAfterTimeWithPIDS;
 import frc.robot.commands.ClimberCommands.ClimbDownDualCommand;
 import frc.robot.commands.ClimberCommands.ClimbUpDualCommand;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
+import frc.robot.commands.IntakeCommands.IntakeSpin;
 import frc.robot.commands.IntakeCommands.PickupFromGroundCommand;
 import frc.robot.commands.IntakeCommands.ShootIntoAmpWithIntakeCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
@@ -82,6 +83,8 @@ public class RobotContainer {
   private final ClimbDownDualCommand climbDownDualCommand;
   private final ClimbUpDualCommand climbUpDualCommand;
 
+  private IntakeSpin intakeSpinCommand;
+
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
   ButtonBoard m_buttonBoard = new ButtonBoard(OperatorConstants.kButtonBoardPort);
   XboxController m_buttonBoardAlternative = new XboxController(OperatorConstants.kButtonBoardAltPort); // In the case that our button board is unusable, we will use a backup controller
@@ -129,7 +132,8 @@ public class RobotContainer {
 
     this.climbDownDualCommand = new ClimbDownDualCommand(m_climberSubsystem);
     this.climbUpDualCommand = new ClimbUpDualCommand(m_climberSubsystem);
-
+    this.intakeSpinCommand = new IntakeSpin(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
+    
 
     this.lockSwerves = new LockSwerves(m_driveSubsystem);
 
@@ -152,9 +156,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    final JoystickButton lockSwerves = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
-    lockSwerves.onTrue(Commands.runOnce(this.lockSwerves::schedule));
-    lockSwerves.onFalse(Commands.runOnce(this.lockSwerves::cancel));
+    //final JoystickButton lockSwerves = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
+    //lockSwerves.onTrue(Commands.runOnce(this.lockSwerves::schedule));
+    //lockSwerves.onFalse(Commands.runOnce(this.lockSwerves::cancel));
 
     //final JoystickButton resetHeading = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
     //resetHeading.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotHeading));
@@ -193,9 +197,11 @@ public class RobotContainer {
     // shootIntoAmpIntakeCommand
     m_buttonBoard.bindToButton(0, ButtonBoard.Button.kYellow, this.shootIntoAmpWithIntakeCommand, Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
     final JoystickButton shootNoteIntoAmpWithIntake = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightStick.value);
-    shootNoteIntoAmpWithIntake.onTrue(this.shootIntoAmpWithIntakeCommand);
-    shootNoteIntoAmpWithIntake.onFalse(Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
-  
+    shootNoteIntoAmpWithIntake.onTrue(this.intakeSpinCommand);
+    shootNoteIntoAmpWithIntake.onFalse(Commands.runOnce(this.intakeSpinCommand::cancel));
+    
+    
+    
     /* 
     // climbUpDualCommand
     m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 180, this.climbUpDualCommand, Commands.runOnce(this.climbUpDualCommand::cancel));

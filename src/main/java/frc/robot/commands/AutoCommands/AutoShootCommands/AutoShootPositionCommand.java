@@ -2,12 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition;
+package frc.robot.commands.AutoCommands.AutoShootCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseitionWithPIDS;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
 import frc.robot.commands.ShooterCommands.StopShooterCommand;
@@ -54,7 +55,7 @@ public class AutoShootPositionCommand extends Command{
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
 
         Pose2d startingPose = this.m_driveSubsystem.getRobotPose();
-        Pose2d shootingPosition = new Pose2d(2.2, 5.2, Rotation2d.fromDegrees(-17.5));//new Pose2d(2.2, 5.55, new Rotation2d());//CalculateSpeakerShootingPosition.calculateTargetPosition(startingPose);
+        Pose2d shootingPosition = new Pose2d(2.2, 4.5, Rotation2d.fromDegrees(-28)); //new Pose2d(2.1, 6.7, Rotation2d.fromDegrees(26)); //new Pose2d(2.3, 5.55, new Rotation2d());////CalculateSpeakerShootingPosition.calculateTargetPosition(startingPose);
         this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPosition);
 
         goToPosition.schedule();

@@ -78,9 +78,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
       var layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
       layout.setOrigin(originPosition);
       // The Pose Strategy may be incorrect
-      photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
+      photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, photonCamera,
           Constants.VisionConstants.robotToCam);
-      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR);
+      photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     //} catch (IOException e) {
       //DriverStation.reportError("Failed to load AprilTagFieldLayout", e.getStackTrace());
       //photonPoseEstimator = null;
@@ -165,10 +165,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             && estimatedPose.getX() > 0.0 && estimatedPose.getX() <= FieldConstants.kLength
             && estimatedPose.getY() > 0.0 && estimatedPose.getY() <= FieldConstants.kWidth) {
           previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
-            if(this.photonCamera.getLatestResult().getMultiTagResult().fiducialIDsUsed.size() >= 2 && InTeleop.inTeleop) {
-                poseEstimator.addVisionMeasurement(new Pose2d(estimatedPose.toPose2d().getX() + .6 , estimatedPose.toPose2d().getY(), this.m_driveSubsystem.getHeadingInRotation2d()), estimatedRobotPose.timestampSeconds);
-            }
+             
+            poseEstimator.addVisionMeasurement(new Pose2d(estimatedPose.toPose2d().getX() , estimatedPose.toPose2d().getY(), this.m_driveSubsystem.getHeadingInRotation2d()), estimatedRobotPose.timestampSeconds);
+             
             SmartDashboard.putNumber("Estemated Pose", estimatedPose.toPose2d().getX());
+            SmartDashboard.putNumber("Estemated Pose Y", estimatedPose.toPose2d().getY());
+
 
         }
       });
