@@ -52,7 +52,7 @@ public class HandOffToShooterCommand extends Command {
      */
     @Override
     public boolean isFinished() {
-         if(this.shootWaitTime == null && !this.intakeSensorSubsystem.isNoteInIntake()) {
+        if(this.shootWaitTime == null && !this.intakeSensorSubsystem.isNoteInIntake()) {
             this.shootWaitTime = new WaitCommand(ShooterConstants.kShootTime);
             SmartDashboard.putString("HandOffState", "Started Timer");
             this.shootWaitTime.schedule();

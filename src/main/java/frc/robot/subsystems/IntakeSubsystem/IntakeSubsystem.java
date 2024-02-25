@@ -68,7 +68,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {
         if(this.waitForSwichToPose != null &&this.waitForSwichToPose.isFinished()) {
             this.waitForSwichToPose = null;
-            setTargetPoseitionRotations(this.m_intakeEncoder.getPosition() + 2000);
+            setTargetPoseitionRotations(this.m_intakeEncoder.getPosition() + 3000);
             this.intakePID.setReference(this.targetRPM * IntakeConstants.kIntakeGearRatio, ControlType.kVelocity, 0);
         }
         SmartDashboard.putNumber("Desired Intake Speed", targetRPM);

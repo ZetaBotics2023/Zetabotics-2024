@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseitionWithPIDS;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
@@ -17,9 +18,9 @@ import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.CalculateSpeakerShootingPosition;
+import frc.robot.utils.MirrablePose2d;
 
-public class AutoShootPositionCommand extends Command{
+public class AutoShootPositionCenterCommand extends Command{
     private DriveSubsystem m_driveSubsystem;
     private ShooterSubsystem m_shooterSubsystem;
     private IntakeSubsystem m_intakeSubsystem;
@@ -33,7 +34,7 @@ public class AutoShootPositionCommand extends Command{
 
     private GoToPoseitionWithPIDS goToPosition;
 
-    public AutoShootPositionCommand(DriveSubsystem m_driveSubsystem, ShooterSubsystem m_shooterSubsystem, 
+    public AutoShootPositionCenterCommand(DriveSubsystem m_driveSubsystem, ShooterSubsystem m_shooterSubsystem, 
     IntakeSubsystem m_intakeSubsystem, PivotSubsystem m_pivotSubsystem, IntakeSensorSubsystem m_intakeSensorSubsystem) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.m_shooterSubsystem = m_shooterSubsystem;
@@ -53,24 +54,19 @@ public class AutoShootPositionCommand extends Command{
         this.rampShooterCommand = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
-
-        Pose2d shootingPosition = new Pose2d(2.2, 4.5, Rotation2d.fromDegrees(-28)); 
-        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPosition);
         
+        MirrablePose2d shootingPose = new MirrablePose2d(new Pose2d(2.3, 5.55, new Rotation2d()), !AutonConfigurationConstants.kIsBlueAlliance);
+        Pose2d shootingPosition = new Pose2d(shootingPose.getX(), shootingPose.getY(), shootingPose.getRotation());
+        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPosition);
+
         goToPosition.schedule();
         rampShooterCommand.schedule();
-
-        SmartDashboard.putNumber("Auto Position Goal X", shootingPosition.getX()); 
-        SmartDashboard.putNumber("Auto Position Goal Y", shootingPosition.getY()); 
-        SmartDashboard.putNumber("Auto Position Goal Theta", shootingPosition.getRotation().getDegrees()); 
-        SmartDashboard.putString("Shooting Stage Pose", "Scheduled go to pose and ramp shooter");
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         if(!handOffToShooterCommand.isScheduled() && this.rampShooterCommand.isFinished() && this.goToPosition.isFinished()) {
-            SmartDashboard.putString("Shooting Stage Pose", "Hand Off To Shooter Scheduled");
             handOffToShooterCommand.schedule();
         }
     }
@@ -78,7 +74,6 @@ public class AutoShootPositionCommand extends Command{
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        SmartDashboard.putString("Shooting Stage Pose", "Done: Stopping Shooting");
         this.rampShooterCommand.cancel();
         this.handOffToShooterCommand.cancel();
         this.goToPosition.cancel();
@@ -88,7 +83,7 @@ public class AutoShootPositionCommand extends Command{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;//this.handOffToShooterCommand.isFinished();
+        return false;
     }
 
 }

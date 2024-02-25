@@ -55,7 +55,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
    * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
    * radians.
    */
-  private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0, 0, 0); // gray mater has higher
+  private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(.5, .5, 0); // gray mater has higher
 
   private final DriveSubsystem m_driveSubsystem;
   private final SwerveDrivePoseEstimator poseEstimator;

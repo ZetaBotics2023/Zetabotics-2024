@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseitionWithPIDS;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
@@ -18,8 +19,9 @@ import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.CalculateSpeakerShootingPosition;
+import frc.robot.utils.MirrablePose2d;
 
-public class AutoShootPositionCommand extends Command{
+public class AutoShootPositionRightCommand extends Command{
     private DriveSubsystem m_driveSubsystem;
     private ShooterSubsystem m_shooterSubsystem;
     private IntakeSubsystem m_intakeSubsystem;
@@ -33,7 +35,7 @@ public class AutoShootPositionCommand extends Command{
 
     private GoToPoseitionWithPIDS goToPosition;
 
-    public AutoShootPositionCommand(DriveSubsystem m_driveSubsystem, ShooterSubsystem m_shooterSubsystem, 
+    public AutoShootPositionRightCommand(DriveSubsystem m_driveSubsystem, ShooterSubsystem m_shooterSubsystem, 
     IntakeSubsystem m_intakeSubsystem, PivotSubsystem m_pivotSubsystem, IntakeSensorSubsystem m_intakeSensorSubsystem) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.m_shooterSubsystem = m_shooterSubsystem;
@@ -54,9 +56,10 @@ public class AutoShootPositionCommand extends Command{
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
 
-        Pose2d shootingPosition = new Pose2d(2.2, 4.5, Rotation2d.fromDegrees(-28)); 
+        MirrablePose2d shootingPose = new MirrablePose2d(new Pose2d(2.2, 4.5, Rotation2d.fromDegrees(-28)), !AutonConfigurationConstants.kIsBlueAlliance);
+        Pose2d shootingPosition = new Pose2d(shootingPose.getX(), shootingPose.getY(), shootingPose.getRotation());
         this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPosition);
-        
+
         goToPosition.schedule();
         rampShooterCommand.schedule();
 

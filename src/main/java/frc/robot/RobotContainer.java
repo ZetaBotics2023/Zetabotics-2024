@@ -9,11 +9,16 @@ package frc.robot;
 
 import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
 import frc.robot.commands.ParallelRaceGroupCommand;
+import frc.robot.commands.AutoCommands.WaitCommandWrapper;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCenterCommand;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCommand;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionLeftCommand;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionRightCommand;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseAutonWhileShootingWithPIDs;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionWithPIDSAuto;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionAfterTimeWithPIDS;
@@ -47,6 +52,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -76,7 +82,10 @@ public class RobotContainer {
 
   private final AutoShootCommand autoShootCommand;
   private final ShootIntoAmpWithIntakeCommand shootIntoAmpWithIntakeCommand;
-  private final AutoShootPositionCommand autoShootPositionCommand;
+
+  private final AutoShootPositionLeftCommand autoShootPositionLeftCommand;
+  private final AutoShootPositionCenterCommand autoShootPositionCenterCommand;
+  private final AutoShootPositionRightCommand autoShootPositionRightCommand;
 
   private final ShootAtDiffSpeedCommand shootAtDiffSpeedCommand;
 
@@ -125,7 +134,13 @@ public class RobotContainer {
     this.autoShootCommand = new AutoShootCommand(this.m_shooterSubsystem, 
       this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
 
-    this.autoShootPositionCommand = new AutoShootPositionCommand(m_driveSubsystem,
+    this.autoShootPositionLeftCommand = new AutoShootPositionLeftCommand(m_driveSubsystem,
+     m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
+
+    this.autoShootPositionCenterCommand = new AutoShootPositionCenterCommand(m_driveSubsystem,
+     m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
+
+    this.autoShootPositionRightCommand = new AutoShootPositionRightCommand(m_driveSubsystem,
      m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
 
      this.shootAtDiffSpeedCommand = new ShootAtDiffSpeedCommand(m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
@@ -138,13 +153,7 @@ public class RobotContainer {
     this.lockSwerves = new LockSwerves(m_driveSubsystem);
 
     // End Command Config
-    
-    //AutoConstants.namedEventMap.put("PickUpFromGround", this.pickupFromGroundCommand);
-    //NamedCommands.registerCommands(AutoConstants.namedEventMap);
-
-    //this.autonSelector = AutoBuilder.buildAutoChooser();s
-    // Autos go here
-    //SmartDashboard.putData("Auton Selector", autonSelector);
+  
     configureBindings();
     configureAutonPoints();
     this.autonSelector.addOption("Left:ShootPreloaded", "Left:ShootPreloaded");
@@ -156,12 +165,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    //final JoystickButton lockSwerves = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
+   // final JoystickButton lockSwerves = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
     //lockSwerves.onTrue(Commands.runOnce(this.lockSwerves::schedule));
     //lockSwerves.onFalse(Commands.runOnce(this.lockSwerves::cancel));
-
-    //final JoystickButton resetHeading = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
-    //resetHeading.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotHeading));
 
     final JoystickButton resetOdometry = new JoystickButton(m_driverController, XboxController.Button.kY.value);
     resetOdometry.onTrue(Commands.runOnce(this.m_driveSubsystem::resetRobotPose));
@@ -170,10 +176,22 @@ public class RobotContainer {
  
     // pickupFromGroundCommand
     
-    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kBlue, this.pickupFromGroundCommand, Commands.runOnce(this.pickupFromGroundCommand::cancel));
+    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kTopRightBlack, this.pickupFromGroundCommand, Commands.runOnce(this.pickupFromGroundCommand::cancel));
     final JoystickButton pickUpFromGround = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
     pickUpFromGround.onTrue(this.pickupFromGroundCommand);
     pickUpFromGround.onFalse(Commands.runOnce(this.pickupFromGroundCommand::cancel));
+
+    // shootIntoAmpIntakeCommand
+    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kYellow, this.shootIntoAmpWithIntakeCommand, Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
+    final JoystickButton shootNoteIntoAmpWithIntake = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightStick.value);
+    shootNoteIntoAmpWithIntake.onTrue(this.intakeSpinCommand);
+    shootNoteIntoAmpWithIntake.onFalse(Commands.runOnce(this.intakeSpinCommand::cancel));
+
+    // Ramp Shooter
+    m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 0,
+      this.shootAtDiffSpeedCommand, Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));    final JoystickButton rampShooter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightBumper.value);
+    rampShooter.onTrue(this.shootAtDiffSpeedCommand);
+    rampShooter.onFalse(Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
 
     // autoShootCommand
     m_buttonBoard.bindToButton(0, ButtonBoard.Button.kGreen, this.autoShootCommand, Commands.runOnce(this.autoShootCommand::cancel));
@@ -181,28 +199,22 @@ public class RobotContainer {
     shootNote.onTrue(this.autoShootCommand);
     shootNote.onFalse(Commands.runOnce(this.autoShootCommand::cancel));
 
-    // run
-     
-    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kRed, this.shootAtDiffSpeedCommand, Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
-    final JoystickButton rampShooter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightBumper.value);
-    rampShooter.onTrue(this.shootAtDiffSpeedCommand);
-    rampShooter.onFalse(Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
+    // autoShootPositionCommand Left
+    m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 90,
+     this.autoShootPositionLeftCommand, Commands.runOnce(this.autoShootPositionLeftCommand::cancel));
 
-    // autoShootPositionCommand
-    m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 90, this.autoShootPositionCommand, Commands.runOnce(this.autoShootPositionCommand::cancel));
-    final JoystickButton shootNoteAutoPose = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kA.value);
-    shootNoteAutoPose.onTrue(this.autoShootPositionCommand);
-    shootNoteAutoPose.onFalse(Commands.runOnce(this.autoShootPositionCommand::cancel));   
+    // autoShootPositionCommand Center
+    m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 180,
+     this.autoShootPositionCenterCommand, Commands.runOnce(this.autoShootPositionCenterCommand::cancel));
+    final JoystickButton shootNoteAutoPoseCenter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kA.value);
+    shootNoteAutoPoseCenter.onTrue(this.autoShootPositionCenterCommand);
+    shootNoteAutoPoseCenter.onFalse(Commands.runOnce(this.autoShootPositionCenterCommand::cancel));
 
-    // shootIntoAmpIntakeCommand
-    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kYellow, this.shootIntoAmpWithIntakeCommand, Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
-    final JoystickButton shootNoteIntoAmpWithIntake = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightStick.value);
-    shootNoteIntoAmpWithIntake.onTrue(this.intakeSpinCommand);
-    shootNoteIntoAmpWithIntake.onFalse(Commands.runOnce(this.intakeSpinCommand::cancel));
+    // autoShootPositionCommand Right
+    m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 270, 
+    this.autoShootPositionRightCommand, Commands.runOnce(this.autoShootPositionRightCommand::cancel));
     
-    
-    
-    /* 
+     /* 
     // climbUpDualCommand
     m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 180, this.climbUpDualCommand, Commands.runOnce(this.climbUpDualCommand::cancel));
     final JoystickButton moveClimbersUp = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
@@ -242,7 +254,7 @@ public class RobotContainer {
    * Popualtes the list of robot positions in AutonConfigurationConstants to have usable field coordinates
    */
   public void configureAutonPoints() {
-    AutonConfigurationConstants.robotPositions.put("LeftNoteShootPose", new MirrablePose2d(new Pose2d(1.8, 7, Rotation2d.fromDegrees(35)), !AutonConfigurationConstants.kIsBlueAlliance));
+    AutonConfigurationConstants.robotPositions.put("LeftNoteShootPose", new MirrablePose2d(new Pose2d(1.85, 7, Rotation2d.fromDegrees(35)), !AutonConfigurationConstants.kIsBlueAlliance));
     AutonConfigurationConstants.robotPositions.put("CenterNoteShootPose", new MirrablePose2d(new Pose2d(2.1, 5.55, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
     AutonConfigurationConstants.robotPositions.put("RightNoteShootPose", new MirrablePose2d(new Pose2d(2.00, 4.15,  Rotation2d.fromDegrees(-40)), !AutonConfigurationConstants.kIsBlueAlliance));
 
@@ -312,6 +324,7 @@ public class RobotContainer {
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(createIntakeCommand("CenterNoteIntakePose", AutonConfigurationConstants.kCenterNoteIntakeDownTime));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(createGoToPositionCommand("CenterNoteShootPose"));
+        AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new WaitCommandWrapper(1.2));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new StopShooterCommand(m_shooterSubsystem));
 
@@ -326,6 +339,7 @@ public class RobotContainer {
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(createGoToPositionCommand("CenterNoteShootPose"));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(createIntakeCommand("CenterNoteIntakePose", AutonConfigurationConstants.kCenterNoteIntakeDownTime));
+        AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(disableVision());
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(createGoToPositionCommand("RightNoteShootPose"));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(createGoToPositionCommand("RightNoteIntakeZero"));
@@ -369,6 +383,14 @@ public class RobotContainer {
           AutonConfigurationConstants.robotPositions.get(poseName),
           percentToPose
     );    
+  }
+
+  public Command enableVision() {
+    return Commands.runOnce(() -> {VisionConstants.useVision = true;});
+  }
+
+  public Command disableVision() {
+    return Commands.runOnce(() -> {VisionConstants.useVision = false;});
   }
 }
 

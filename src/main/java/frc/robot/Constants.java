@@ -167,7 +167,7 @@ public final class Constants {
 
   public static final class FieldConstants {
     // Current length is the one pathplanner uses the one I caclulated is slightly larger at 16.59127999998984m if the red aleicne paths are undershootingss in the X axis maybe change it to the one I calculated
-    public static final double kLength = 16.54;//Units.feetToMeters(54);
+    public static final double kLength = Units.feetToMeters(54.2708);//Units.feetToMeters(54);
     public static final double kWidth = Units.feetToMeters(27);
   }
 
@@ -182,7 +182,7 @@ public final class Constants {
     // new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
     //0.38735
     public static final Transform3d robotToCam = new Transform3d(-0.352425, 0, .51435, new Rotation3d(0, Math.toRadians(-22.5), (Math.toRadians(180))));
-
+    public static boolean useVision = true;
   };
 
   public static final class AutoConstants {
@@ -257,8 +257,8 @@ public final class Constants {
     public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(0, 5.55, new Rotation2d()), !kIsBlueAlliance);
     public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(0, 4.15, new Rotation2d()), !kIsBlueAlliance);
 
-    public static final double kLeftNoteIntakeDownTime = .85;
-    public static final double kCenterNoteIntakeDownTime = 1.1;
+    public static final double kLeftNoteIntakeDownTime = .7;
+    public static final double kCenterNoteIntakeDownTime = .95;
     public static final double kRightNoteIntakeDownTime = .95;
   }
 
@@ -284,7 +284,7 @@ public final class Constants {
     public static final double kShooterPowerRatio = .75; // TODO: Also wrong
     public static final double kShooterRPM = 2800;//SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
     public static final double kShootTime = 10;
-    public static final double kShootTimeAuto = .5;
+    public static final double kShootTimeAuto = .4;
     public static final double kShooterRPMTolerance = 75;
   }
 
