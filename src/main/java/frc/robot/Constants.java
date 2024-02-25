@@ -253,13 +253,17 @@ public final class Constants {
     public static final ArrayList<Command> kLeft_ShootPreloadedLeftCenter = new ArrayList<Command>();
     public static final ArrayList<Command> kLeft_ShootPreloadedLeftCenterRight = new ArrayList<Command>();
 
+    public static final ArrayList<Command> kRight_ShootPreloadedRightCenter = new ArrayList<Command>();
+    public static final ArrayList<Command> kRight_ShootPreloadedRight = new ArrayList<Command>();
+
+
     public static final MirrablePose2d kLeftStartingPose = new MirrablePose2d(new Pose2d(1.5134, 7, new Rotation2d()), !kIsBlueAlliance);
-    public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(0, 5.55, new Rotation2d()), !kIsBlueAlliance);
-    public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(0, 4.15, new Rotation2d()), !kIsBlueAlliance);
+    public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(1.5134, 5.55, new Rotation2d()), !kIsBlueAlliance);
+    public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(1.5134, 4.11, new Rotation2d()), !kIsBlueAlliance);
 
     public static final double kLeftNoteIntakeDownTime = .7;
     public static final double kCenterNoteIntakeDownTime = .95;
-    public static final double kRightNoteIntakeDownTime = .95;
+    public static final double kRightNoteIntakeDownTime = 1;
   }
 
   public static final class ShooterConstants {

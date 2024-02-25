@@ -161,6 +161,8 @@ public class RobotContainer {
     this.autonSelector.addOption("Left:ShootPreloadedLeftCenter", "Left:ShootPreloadedLeftCenter");
     this.autonSelector.addOption("Left:ShootPreloadedLeftCenterRight", "Left:ShootPreloadedLeftCenterRight");
 
+    this.autonSelector.addOption("Right:ShootPreloadedRightCenter", "Right:ShootPreloadedRightCenter");
+
     SmartDashboard.putData("Auto Selector", this.autonSelector);
   }
 
@@ -255,15 +257,15 @@ public class RobotContainer {
    */
   public void configureAutonPoints() {
     AutonConfigurationConstants.robotPositions.put("LeftNoteShootPose", new MirrablePose2d(new Pose2d(1.85, 7, Rotation2d.fromDegrees(35)), !AutonConfigurationConstants.kIsBlueAlliance));
-    AutonConfigurationConstants.robotPositions.put("CenterNoteShootPose", new MirrablePose2d(new Pose2d(2.1, 5.55, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
-    AutonConfigurationConstants.robotPositions.put("RightNoteShootPose", new MirrablePose2d(new Pose2d(2.00, 4.15,  Rotation2d.fromDegrees(-40)), !AutonConfigurationConstants.kIsBlueAlliance));
+    AutonConfigurationConstants.robotPositions.put("CenterNoteShootPose", new MirrablePose2d(new Pose2d(2.2, 5.55, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
+    AutonConfigurationConstants.robotPositions.put("RightNoteShootPose", new MirrablePose2d(new Pose2d(2.00, 4.11,  Rotation2d.fromDegrees(-40)), !AutonConfigurationConstants.kIsBlueAlliance));
 
     AutonConfigurationConstants.robotPositions.put("LeftNoteIntakePose", new MirrablePose2d(new Pose2d(2.5, 7.00, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
     AutonConfigurationConstants.robotPositions.put("CenterNoteIntakePose", new MirrablePose2d(new Pose2d(2.5, 5.55, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
-    AutonConfigurationConstants.robotPositions.put("RightNoteIntakePose", new MirrablePose2d(new Pose2d(2.5, 4.15, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
+    AutonConfigurationConstants.robotPositions.put("RightNoteIntakePose", new MirrablePose2d(new Pose2d(2.5, 4.11, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
 
     AutonConfigurationConstants.robotPositions.put("LeftNoteIntakeZero", new MirrablePose2d(new Pose2d(1.7, 7.00, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
-    AutonConfigurationConstants.robotPositions.put("RightNoteIntakeZero", new MirrablePose2d(new Pose2d(2, 4.15, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
+    AutonConfigurationConstants.robotPositions.put("RightNoteIntakeZero", new MirrablePose2d(new Pose2d(2, 4.11, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
 
     //AutonConfigurationConstatns.robotPositions.put("LeftNoteLeavePose", new MirrablePose2d(new Pose2d(2.20, 7.00, new Rotation2d(0)), !AutonConfigurationConstatns.kIsBlueAlience));
     //AutonConfigurationConstatns.robotPositions.put("CenterNoteLeavePose", new MirrablePose2d(new Pose2d(2.20, 5.55, new Rotation2d(0)), !AutonConfigurationConstatns.kIsBlueAlience));
@@ -309,6 +311,7 @@ public class RobotContainer {
         AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(createGoToPositionCommand("LeftNoteIntakeZero"));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(createIntakeCommand("LeftNoteIntakePose", AutonConfigurationConstants.kLeftNoteIntakeDownTime));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(createGoToPositionCommand("LeftNoteShootPose"));
+        AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new WaitCommandWrapper(1.2));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedLeft.add(new StopShooterCommand(m_shooterSubsystem));
     
@@ -349,7 +352,37 @@ public class RobotContainer {
         AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight.add(new StopShooterCommand(m_shooterSubsystem));
 
         return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterRight);
-      }
+
+        case "Right:ShootPreloadedRight":
+          AutonConfigurationConstants.kRight_ShootPreloadedRight.add(new RampShooterAtDifforentSpeedCommand(m_shooterSubsystem));
+          AutonConfigurationConstants.kRight_ShootPreloadedRight.add(createGoToPositionCommand("RightNoteShootPose"));
+          AutonConfigurationConstants.kRight_ShootPreloadedRight.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
+          AutonConfigurationConstants.kRight_ShootPreloadedRight.add(createGoToPositionCommand("RightNoteIntakeZero"));
+          AutonConfigurationConstants.kRight_ShootPreloadedRight.add(createIntakeCommand("RightNoteIntakePose", AutonConfigurationConstants.kLeftNoteIntakeDownTime));
+          AutonConfigurationConstants.kRight_ShootPreloadedRight.add(createGoToPositionCommand("RightNoteShootPose"));
+          AutonConfigurationConstants.kRight_ShootPreloadedRight.add(new WaitCommandWrapper(1.2));
+          AutonConfigurationConstants.kRight_ShootPreloadedRight.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
+          AutonConfigurationConstants.kRight_ShootPreloadedRight.add(new StopShooterCommand(m_shooterSubsystem));
+
+          return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kRight_ShootPreloadedRight);
+
+        case "Right:ShootPreloadedRightCenter":
+          AutonConfigurationConstants.kRight_ShootPreloadedRightCenter.add(new RampShooterAtDifforentSpeedCommand(m_shooterSubsystem));
+          AutonConfigurationConstants.kRight_ShootPreloadedRightCenter.add(createGoToPositionCommand("RightNoteShootPose"));
+          AutonConfigurationConstants.kRight_ShootPreloadedRightCenter.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
+          AutonConfigurationConstants.kRight_ShootPreloadedRightCenter.add(createGoToPositionCommand("RightNoteIntakeZero"));
+          AutonConfigurationConstants.kRight_ShootPreloadedRightCenter.add(createIntakeCommand("RightNoteIntakePose", AutonConfigurationConstants.kLeftNoteIntakeDownTime));
+          AutonConfigurationConstants.kRight_ShootPreloadedRightCenter.add(createGoToPositionCommand("CenterNoteShootPose"));
+          AutonConfigurationConstants.kRight_ShootPreloadedRightCenter.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
+          AutonConfigurationConstants.kRight_ShootPreloadedRightCenter.add(createIntakeCommand("CenterNoteIntakePose", AutonConfigurationConstants.kCenterNoteIntakeDownTime));
+          AutonConfigurationConstants.kRight_ShootPreloadedRightCenter.add(createGoToPositionCommand("CenterNoteShootPose"));
+          AutonConfigurationConstants.kRight_ShootPreloadedRightCenter.add(new WaitCommandWrapper(1.2));
+          AutonConfigurationConstants.kRight_ShootPreloadedRightCenter.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
+          AutonConfigurationConstants.kRight_ShootPreloadedRightCenter.add(new StopShooterCommand(m_shooterSubsystem));
+
+          return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kRight_ShootPreloadedRightCenter);
+      
+        }
 
       return null;
   }
