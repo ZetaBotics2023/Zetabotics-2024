@@ -182,29 +182,13 @@ public class RobotContainer {
     rampShooter.onTrue(this.shootAtDiffSpeedCommand);
     rampShooter.onFalse(Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
 
-    // autoShootPositionCommand
-    m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 90, this.autoShootPositionCommand, Commands.runOnce(this.autoShootPositionCommand::cancel));
-    final JoystickButton shootNoteAutoPose = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kA.value);
-    shootNoteAutoPose.onTrue(this.autoShootPositionCommand);
-    shootNoteAutoPose.onFalse(Commands.runOnce(this.autoShootPositionCommand::cancel));   
+    
 
     // shootIntoAmpIntakeCommand
     m_buttonBoard.bindToButton(0, ButtonBoard.Button.kYellow, this.shootIntoAmpWithIntakeCommand, Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
     final JoystickButton shootNoteIntoAmpWithIntake = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kY.value);
     shootNoteIntoAmpWithIntake.onTrue(this.shootIntoAmpWithIntakeCommand);
     shootNoteIntoAmpWithIntake.onFalse(Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
-  
-    // climbUpDualCommand
-    m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 180, this.climbUpDualCommand, Commands.runOnce(this.climbUpDualCommand::cancel));
-    final JoystickButton moveClimbersUp = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
-    moveClimbersUp.onTrue(this.climbUpDualCommand);
-    moveClimbersUp.onFalse(Commands.runOnce(this.climbUpDualCommand::cancel));
-
-    // climbDownDualCommand
-    m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 0, this.climbDownDualCommand, Commands.runOnce(this.climbDownDualCommand::cancel));
-    final JoystickButton moveClimbersDown = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightBumper.value);
-    moveClimbersDown.onTrue(this.climbDownDualCommand);
-    moveClimbersDown.onFalse(Commands.runOnce(this.climbDownDualCommand::cancel));
   }
   
   /*

@@ -62,16 +62,6 @@ public class ButtonBoard {
         joystickButton.onTrue(onTrue);
     }
 
-    public <T> void bindToAxis(int slot, Supplier<T> valueSupplier, T targetValue, Command onTrue, Command onFalse) {
-        BooleanSupplier triggeredBoolSupplier = () -> {return valueSupplier.get() == targetValue;};
-
-        Trigger axisTrigger = new Trigger(triggeredBoolSupplier);
-        BooleanSupplier slotBoolSupplier = () -> {return slot == getPreset();};
-        axisTrigger.and(slotBoolSupplier);
-        axisTrigger.onFalse(onFalse);
-        axisTrigger.onTrue(onTrue);
-    }
-
     public int getPreset() {
         return this.buttonPreset;
     }
@@ -81,5 +71,29 @@ public class ButtonBoard {
 
     public XboxController getController() {
         return controller;
+    }
+
+    public static void pollPOVButtons() {
+        /* 
+        // autoShootPositionCommand
+        m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 90, this.autoShootPositionCommand, Commands.runOnce(this.autoShootPositionCommand::cancel));
+        final JoystickButton shootNoteAutoPose = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kA.value);
+        shootNoteAutoPose.onTrue(this.autoShootPositionCommand);
+        shootNoteAutoPose.onFalse(Commands.runOnce(this.autoShootPositionCommand::cancel));   
+
+        
+    
+        // climbUpDualCommand
+        m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 180, this.climbUpDualCommand, Commands.runOnce(this.climbUpDualCommand::cancel));
+        final JoystickButton moveClimbersUp = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
+        moveClimbersUp.onTrue(this.climbUpDualCommand);
+        moveClimbersUp.onFalse(Commands.runOnce(this.climbUpDualCommand::cancel));
+
+        // climbDownDualCommand
+        m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 0, this.climbDownDualCommand, Commands.runOnce(this.climbDownDualCommand::cancel));
+        final JoystickButton moveClimbersDown = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightBumper.value);
+        moveClimbersDown.onTrue(this.climbDownDualCommand);
+        moveClimbersDown.onFalse(Commands.runOnce(this.climbDownDualCommand::cancel));
+        */
     }
 }
