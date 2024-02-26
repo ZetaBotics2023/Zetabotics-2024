@@ -262,7 +262,6 @@ public final class Constants {
     public static final ArrayList<Command> kRight_ShootPreloadedRight = new ArrayList<Command>();
     public static final ArrayList<Command> kRight_ShootPreloadedRightCenter = new ArrayList<Command>();
 
-
     public static final MirrablePose2d kLeftStartingPose = new MirrablePose2d(new Pose2d(1.5134, 7, new Rotation2d()), !kIsBlueAlliance);
     public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(1.5134, 5.55, new Rotation2d()), !kIsBlueAlliance);
     public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(1.5134, 4.11, new Rotation2d()), !kIsBlueAlliance);

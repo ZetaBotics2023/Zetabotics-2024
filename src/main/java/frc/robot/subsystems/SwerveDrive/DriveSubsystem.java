@@ -62,7 +62,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private Matrix<N3, N1> visionMeasurementStdDevs = new Matrix<N3, N1>(Nat.N3(), Nat.N1(), new double[] {0.5, 0.5, 0.9});
 
-    PoseEstimatorSubsystem m_poseEstimatorSubsystem;
+    private PoseEstimatorSubsystem m_poseEstimatorSubsystem;
     public DriveSubsystem() {
         this.frontLeftSwerveModule =  new SwerveModule(
             SwerveDriveConstants.kFrontLeftDriveMotorId, SwerveDriveConstants.kFrontLeftTurnMotorId, SwerveDriveConstants.kFrontLeftTurnEncoderId,
