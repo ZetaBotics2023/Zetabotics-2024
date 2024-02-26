@@ -1,5 +1,7 @@
 package frc.robot.subsystems.SwerveDrive;
 
+import org.photonvision.PhotonCamera;
+
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.Matrix;
@@ -21,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveDriveConstants;
+import frc.robot.DeprecatedSystems.PoseEstimatorSubsystem;
 import frc.robot.utils.InTeleop;
 import frc.robot.utils.LimelightUtil;
 import frc.robot.utils.VisionPose;
@@ -59,6 +62,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private Matrix<N3, N1> visionMeasurementStdDevs = new Matrix<N3, N1>(Nat.N3(), Nat.N1(), new double[] {0.5, 0.5, 0.9});
 
+    PoseEstimatorSubsystem m_poseEstimatorSubsystem;
     public DriveSubsystem() {
         this.frontLeftSwerveModule =  new SwerveModule(
             SwerveDriveConstants.kFrontLeftDriveMotorId, SwerveDriveConstants.kFrontLeftTurnMotorId, SwerveDriveConstants.kFrontLeftTurnEncoderId,
@@ -85,17 +89,17 @@ public class DriveSubsystem extends SubsystemBase {
 
         NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight-zeta");
 
-
-        ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
-        visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
-        visionTab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
+        this.m_poseEstimatorSubsystem = new PoseEstimatorSubsystem(new PhotonCamera("Photon"), this);
+        //ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
+        //visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
+        //visionTab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
  
         SmartDashboard.updateValues(); 
     }
 
   @Override
   public void periodic() {
-    updateOdometry();
+    //updateOdometry();
 
     if (desiredChassisSpeeds != null) {  
           SwerveModuleState[] desiredStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(desiredChassisSpeeds);   
@@ -328,21 +332,25 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public Pose2d getRobotPose() {
-    return this.poseEstimator.getEstimatedPosition();
+    return this.m_poseEstimatorSubsystem.getCurrentPose();// this.poseEstimator.getEstimatedPosition();
   }
 
   public void setRobotPose(Pose2d newPose) {
-    this.poseEstimator.resetPosition(this.m_gyro.getRotation2d(), getModulePositions(), newPose);
+    this.m_poseEstimatorSubsystem.setCurrentPose(newPose);//this.poseEstimator.resetPosition(this.m_gyro.getRotation2d(), getModulePositions(), newPose);
   }
 
   public void resetRobotPose() {
-    Pose2d newPose = new Pose2d();
-    this.poseEstimator.resetPosition(newPose.getRotation(), getModulePositions(), newPose);
+    this.m_gyro.reset();
+    this.m_poseEstimatorSubsystem.resetPose();
+    //this.m_gyro.reset();
+    //Pose2d newPose = new Pose2d();
+    //this.poseEstimator.resetPosition(newPose.getRotation(), getModulePositions(), newPose);
   }
 
 
+
   public void resetRobotHeading() {
-    this.m_gyro.reset();
-    this.poseEstimator.resetPosition(m_gyro.getRotation2d(), getModulePositions(), new Pose2d());
+    Pose2d estimatedPose = this.poseEstimator.getEstimatedPosition();
+    this.poseEstimator.resetPosition(m_gyro.getRotation2d(), getModulePositions(), new Pose2d(estimatedPose.getX(), estimatedPose.getY(), new Rotation2d()));
   }
 }

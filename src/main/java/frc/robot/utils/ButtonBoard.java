@@ -56,7 +56,7 @@ public class ButtonBoard {
 
     public void bindToButton(int slot, Button button, Command onTrue, Command onFalse) {
         JoystickButton joystickButton = new JoystickButton(this.controller, button.value);
-        BooleanSupplier slotBoolSupplier = () -> {return slot == getPreset();};
+        BooleanSupplier slotBoolSupplier = () -> {return slot == buttonPreset;};
         joystickButton.and(slotBoolSupplier);
         joystickButton.onFalse(onFalse);
         joystickButton.onTrue(onTrue);

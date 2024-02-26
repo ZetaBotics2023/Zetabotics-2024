@@ -12,25 +12,21 @@ import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 /**
  * Sends a loaded note into our shooter
  */
-public class HandOffToShooterCommand extends Command {
+public class IntakeSpin extends Command {
     private IntakeSubsystem intakeSubsystem;
     private PivotSubsystem pivotSubsystem;
     private IntakeSensorSubsystem intakeSensorSubsystem;
     private WaitCommand shootWaitTime = null;
 
-    public HandOffToShooterCommand(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem) {
+    public IntakeSpin(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem) {
         this.intakeSubsystem = intakeSusbsystem;
-        this.pivotSubsystem = pivotSubsystem;
-        this.intakeSensorSubsystem = intakeSensorSubsystem;
-        addRequirements(this.intakeSubsystem, this.pivotSubsystem, this.intakeSensorSubsystem);
+        addRequirements(this.intakeSubsystem);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        this.shootWaitTime = null;
-        this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
-        this.intakeSubsystem.runAtRPM(IntakeConstants.kPassIntoShooterIntakeRPM);
+        this.intakeSubsystem.runAtRPM(IntakeConstants.kGroundPickupIntakeRPM);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -52,15 +48,6 @@ public class HandOffToShooterCommand extends Command {
      */
     @Override
     public boolean isFinished() {
-        if(this.shootWaitTime == null && !this.intakeSensorSubsystem.isNoteInIntake()) {
-            this.shootWaitTime = new WaitCommand(ShooterConstants.kShootTime);
-            SmartDashboard.putString("HandOffState", "Started Timer");
-            this.shootWaitTime.schedule();
-        } 
-        if(this.shootWaitTime != null) {
-            SmartDashboard.putString("HandOffState", this.shootWaitTime.isFinished() ? "Ended Timer" : "Timer Still Going");
-            return this.shootWaitTime.isFinished();
-        }
-        return false;
+       return false;
     }
 }

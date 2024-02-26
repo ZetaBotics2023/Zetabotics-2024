@@ -1,5 +1,5 @@
 package frc.robot.DeprecatedSystems;
-/* 
+
 import java.io.IOException;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.proto.Photon;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -32,7 +33,7 @@ import frc.robot.utils.InTeleop;
 import frc.robot.Constants.FieldConstants;
 
 // We should probable swich this over to make use of WPILib SwerveDrive PoseEstimator and Limelight tag reading rather than photon vission
-public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
+public class PoseEstimatorSubsystem extends SubsystemBase {
 
   // Kalman Filter Configuration. These can be "tuned-to-taste" based on how much
   // you trust your various sensors. Smaller numbers will cause the filter to
@@ -45,7 +46,7 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * model's state estimates less. This
    * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians, then
    * meters.
-   
+   */
   private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, 0.1);//gray matter has lower
 
   /**
@@ -53,8 +54,8 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * trust global measurements from vision
    * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
    * radians.
-   
-  private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.5, 0.5, 0.9); // gray mater has higher
+   */
+  private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(.4, .4, 0); // gray mater has higher
 
   private final DriveSubsystem m_driveSubsystem;
   private final SwerveDrivePoseEstimator poseEstimator;
@@ -67,14 +68,17 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
   private final ArrayList<Double> xValues = new ArrayList<Double>();
   private final ArrayList<Double> yValues = new ArrayList<Double>();
 
-  public PoseEstimatorSubsystemDeprecated(PhotonCamera photonCamera, DriveSubsystem m_driveSubsystem) {
+  private PhotonCamera photonCamera;
+
+  public PoseEstimatorSubsystem(PhotonCamera photonCamera, DriveSubsystem m_driveSubsystem) {
     this.m_driveSubsystem = m_driveSubsystem;
+    this.photonCamera = photonCamera;
     PhotonPoseEstimator photonPoseEstimator;
     //try {
-      var layout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
+      var layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
       layout.setOrigin(originPosition);
       // The Pose Strategy may be incorrect
-      photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
+      photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, photonCamera,
           Constants.VisionConstants.robotToCam);
       photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     //} catch (IOException e) {
@@ -101,7 +105,7 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * Sets the alliance. This is used to configure the origin of the AprilTag map
    * 
    * @param alliance alliance
-   
+   */
   public void setAlliance(Alliance alliance) {
     var fieldTags = photonPoseEstimator.getFieldTags();
     boolean allianceChanged = false;
@@ -151,7 +155,6 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
     // }
     // double RMS = Math.sqrt((1.0 / (double) xValues.size() * summation));
     // System.out.println("RMS: " + RMS);
-
     // If the pose estimator exists, we have a frame, and it's a new frame, and we're in the field, use the measurement
     if (photonPoseEstimator != null) {
       // Update pose estimator with the best visible target
@@ -162,15 +165,17 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
             && estimatedPose.getX() > 0.0 && estimatedPose.getX() <= FieldConstants.kLength
             && estimatedPose.getY() > 0.0 && estimatedPose.getY() <= FieldConstants.kWidth) {
           previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
-          if(InTeleop.inTeleop)
-          {
-            poseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
-          }
+             
+            poseEstimator.addVisionMeasurement(new Pose2d(estimatedPose.toPose2d().getX() , estimatedPose.toPose2d().getY(), this.m_driveSubsystem.getHeadingInRotation2d()), estimatedRobotPose.timestampSeconds);
+             
+            SmartDashboard.putNumber("Estemated Pose", estimatedPose.toPose2d().getX());
+            SmartDashboard.putNumber("Estemated Pose Y", estimatedPose.toPose2d().getY());
+
+
         }
       });
     }
     
-    SmartDashboard.putBoolean("In teleop", InTeleop.inTeleop);
     Pose2d dashboardPose = getCurrentPose();
     if (originPosition == OriginPosition.kRedAllianceWallRightSide) {
       // Flip the pose when red, since the dashboard field photo cannot be rotated
@@ -200,7 +205,7 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * a match.
    * 
    * @param newPose new pose
-   
+   */
   public void setCurrentPose(Pose2d newPose) {
     poseEstimator.resetPosition(
         m_driveSubsystem.getHeadingInRotation2d(),
@@ -219,7 +224,7 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * Resets the position on the field to 0,0 0-degrees, with forward being
    * downfield. This resets
    * what "forward" is for field oriented driving.
-   
+   */
   public void resetFieldPosition() {
     setCurrentPose(new Pose2d());
   }
@@ -232,24 +237,18 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
    * 
    * @param poseToFlip pose to transform to the other alliance
    * @return pose relative to the other alliance's coordinate system
-   
+   */
   private Pose2d flipAlliance(Pose2d poseToFlip) {
     return poseToFlip.relativeTo(new Pose2d(
         new Translation2d(FieldConstants.kLength, FieldConstants.kWidth),
         new Rotation2d(Math.PI)));
   }
 
-  
-  /* CODE FOR PATHPLANNER ADD BACK AT SOME POINT IF WE GO WITH PHOTON VISION
-  public void addTrajectory(PathPlannerTrajectory traj) {
-    field2d.getObject("Trajectory").setTrajectory(traj);
-  }
-  
 
   /**
    * Resets the holonomic rotation of the robot (gyro last year)
    * This would be used if Apriltags are not getting accurate pose estimation
-   
+   */
   public void resetHolonomicRotation() {
     poseEstimator.resetPosition(
         Rotation2d.fromDegrees(0),
@@ -263,4 +262,3 @@ public class PoseEstimatorSubsystemDeprecated extends SubsystemBase {
   }
 
 }
-*/

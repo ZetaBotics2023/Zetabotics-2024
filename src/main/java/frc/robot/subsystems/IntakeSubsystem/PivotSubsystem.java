@@ -39,7 +39,7 @@ public class PivotSubsystem extends SubsystemBase {
         this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
         this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
         
-        this.m_pivot.setIdleMode(IdleMode.kCoast);
+        this.m_pivot.setIdleMode(IdleMode.kBrake);
         this.m_pivot.setInverted(pivotMotorRev);
 
         // This may need to be changed
@@ -50,6 +50,7 @@ public class PivotSubsystem extends SubsystemBase {
         this.pivotPID.setP(IntakeConstants.kPPivotController);
         this.pivotPID.setI(IntakeConstants.kIPivotController);
         this.pivotPID.setD(IntakeConstants.kDPivotController);
+        this.pivotPID.setFF(IntakeConstants.kFPivotController);
         this.pivotPID.setIZone(IntakeConstants.kIZoneIntakeVelocityController);
         this.pivotPID.setOutputRange(-1, 1);
         this.m_pivot.burnFlash();
