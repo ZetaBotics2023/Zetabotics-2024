@@ -11,7 +11,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;  
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCenterCommand;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionLeftCommand;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionRightCommand;  
 
 public class ButtonBoard {
 
@@ -62,16 +65,6 @@ public class ButtonBoard {
         joystickButton.onTrue(onTrue);
     }
 
-    public <T> void bindToAxis(int slot, Supplier<T> valueSupplier, T targetValue, Command onTrue, Command onFalse) {
-        BooleanSupplier triggeredBoolSupplier = () -> {return valueSupplier.get() == targetValue;};
-
-        Trigger axisTrigger = new Trigger(triggeredBoolSupplier);
-        BooleanSupplier slotBoolSupplier = () -> {return slot == getPreset();};
-        axisTrigger.and(slotBoolSupplier);
-        axisTrigger.onFalse(onFalse);
-        axisTrigger.onTrue(onTrue);
-    }
-
     public int getPreset() {
         return this.buttonPreset;
     }
@@ -81,5 +74,27 @@ public class ButtonBoard {
 
     public XboxController getController() {
         return controller;
+    }
+
+    public static void pollPOVButtons(ButtonBoard buttonBoard, AutoShootPositionLeftCommand autoShootPositionLeftCommand, AutoShootPositionCenterCommand autoShootPositionCenterCommand, AutoShootPositionRightCommand autoShootPositionRightCommand) {
+        int pov = buttonBoard.getController().getPOV();
+
+        if (pov == 270) {
+            autoShootPositionLeftCommand.schedule();
+        } else {
+            autoShootPositionLeftCommand.cancel();
+        }
+
+        if (pov == 0) {
+            autoShootPositionCenterCommand.schedule();
+        } else {
+            autoShootPositionCenterCommand.cancel();
+        }
+
+        if (pov == 90) {
+            autoShootPositionRightCommand.schedule();
+        } else {
+            autoShootPositionRightCommand.cancel();
+        }
     }
 }
