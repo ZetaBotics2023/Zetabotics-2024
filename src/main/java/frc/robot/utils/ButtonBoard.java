@@ -11,7 +11,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;  
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCenterCommand;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionLeftCommand;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionRightCommand;  
 
 public class ButtonBoard {
 
@@ -73,27 +76,25 @@ public class ButtonBoard {
         return controller;
     }
 
-    public static void pollPOVButtons() {
-        /* 
-        // autoShootPositionCommand
-        m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 90, this.autoShootPositionCommand, Commands.runOnce(this.autoShootPositionCommand::cancel));
-        final JoystickButton shootNoteAutoPose = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kA.value);
-        shootNoteAutoPose.onTrue(this.autoShootPositionCommand);
-        shootNoteAutoPose.onFalse(Commands.runOnce(this.autoShootPositionCommand::cancel));   
+    public static void pollPOVButtons(ButtonBoard buttonBoard, AutoShootPositionLeftCommand autoShootPositionLeftCommand, AutoShootPositionCenterCommand autoShootPositionCenterCommand, AutoShootPositionRightCommand autoShootPositionRightCommand) {
+        int pov = buttonBoard.getController().getPOV();
 
-        
-    
-        // climbUpDualCommand
-        m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 180, this.climbUpDualCommand, Commands.runOnce(this.climbUpDualCommand::cancel));
-        final JoystickButton moveClimbersUp = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
-        moveClimbersUp.onTrue(this.climbUpDualCommand);
-        moveClimbersUp.onFalse(Commands.runOnce(this.climbUpDualCommand::cancel));
+        if (pov == 270) {
+            autoShootPositionLeftCommand.schedule();
+        } else {
+            autoShootPositionLeftCommand.cancel();
+        }
 
-        // climbDownDualCommand
-        m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 0, this.climbDownDualCommand, Commands.runOnce(this.climbDownDualCommand::cancel));
-        final JoystickButton moveClimbersDown = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightBumper.value);
-        moveClimbersDown.onTrue(this.climbDownDualCommand);
-        moveClimbersDown.onFalse(Commands.runOnce(this.climbDownDualCommand::cancel));
-        */
+        if (pov == 0) {
+            autoShootPositionCenterCommand.schedule();
+        } else {
+            autoShootPositionCenterCommand.cancel();
+        }
+
+        if (pov == 90) {
+            autoShootPositionRightCommand.schedule();
+        } else {
+            autoShootPositionRightCommand.cancel();
+        }
     }
 }

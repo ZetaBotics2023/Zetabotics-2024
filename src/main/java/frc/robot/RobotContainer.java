@@ -13,7 +13,9 @@ import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
 import frc.robot.commands.ParallelRaceGroupCommand;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.AutoShootPositionCommand;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCenterCommand;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionLeftCommand;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionRightCommand;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseAutonWhileShootingWithPIDs;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionWithPIDSAuto;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionAfterTimeWithPIDS;
@@ -75,7 +77,6 @@ public class RobotContainer {
 
   private final AutoShootCommand autoShootCommand;
   private final ShootIntoAmpWithIntakeCommand shootIntoAmpWithIntakeCommand;
-  private final AutoShootPositionCommand autoShootPositionCommand;
 
   private final ShootAtDiffSpeedCommand shootAtDiffSpeedCommand;
 
@@ -85,6 +86,9 @@ public class RobotContainer {
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
   ButtonBoard m_buttonBoard = new ButtonBoard(OperatorConstants.kButtonBoardPort);
   XboxController m_buttonBoardAlternative = new XboxController(OperatorConstants.kButtonBoardAltPort); // In the case that our button board is unusable, we will use a backup controller
+  private AutoShootPositionLeftCommand autoShootPositionLeftCommand;
+  private AutoShootPositionCenterCommand autoShootPositionCenterCommand;
+  private AutoShootPositionRightCommand autoShootPositionRightCommand;
 
   public RobotContainer() {
     /*
@@ -122,7 +126,13 @@ public class RobotContainer {
     this.autoShootCommand = new AutoShootCommand(this.m_shooterSubsystem, 
       this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
 
-    this.autoShootPositionCommand = new AutoShootPositionCommand(m_driveSubsystem,
+      this.autoShootPositionLeftCommand = new AutoShootPositionLeftCommand(m_driveSubsystem,
+     m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
+
+    this.autoShootPositionCenterCommand = new AutoShootPositionCenterCommand(m_driveSubsystem,
+     m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
+
+     this.autoShootPositionRightCommand = new AutoShootPositionRightCommand(m_driveSubsystem,
      m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
 
      this.shootAtDiffSpeedCommand = new ShootAtDiffSpeedCommand(m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
@@ -183,29 +193,18 @@ public class RobotContainer {
     rampShooter.onFalse(Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
 
     // autoShootPositionCommand Center
-    m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 180,
-     this.autoShootPositionCenterCommand, Commands.runOnce(this.autoShootPositionCenterCommand::cancel));
     final JoystickButton shootNoteAutoPoseCenter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kA.value);
     shootNoteAutoPoseCenter.onTrue(this.autoShootPositionCenterCommand);
     shootNoteAutoPoseCenter.onFalse(Commands.runOnce(this.autoShootPositionCenterCommand::cancel));
 
-    // autoShootPositionCommand Right
-    m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 270, 
-    this.autoShootPositionRightCommand, Commands.runOnce(this.autoShootPositionRightCommand::cancel));
-    
-     /* 
-    // climbUpDualCommand
-    m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 180, this.climbUpDualCommand, Commands.runOnce(this.climbUpDualCommand::cancel));
-    final JoystickButton moveClimbersUp = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
-    moveClimbersUp.onTrue(this.climbUpDualCommand);
-    moveClimbersUp.onFalse(Commands.runOnce(this.climbUpDualCommand::cancel));
+  }
 
-    // climbDownDualCommand
-    m_buttonBoard.bindToAxis(0, m_buttonBoard.getController()::getPOV, 0, this.climbDownDualCommand, Commands.runOnce(this.climbDownDualCommand::cancel));
-    final JoystickButton moveClimbersDown = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kRightBumper.value);
-    moveClimbersDown.onTrue(this.climbDownDualCommand);
-    moveClimbersDown.onFalse(Commands.runOnce(this.climbDownDualCommand::cancel));
-    */
+  public void pollPOVButtons() {
+    ButtonBoard.pollPOVButtons(
+      this.m_buttonBoard, 
+      this.autoShootPositionLeftCommand,
+      this.autoShootPositionCenterCommand,
+      this.autoShootPositionRightCommand);
   }
   
   /*
@@ -215,6 +214,8 @@ public class RobotContainer {
     InTeleop.inTeleop = false;
     return configureAutons(this.autonSelector.getSelected());
   }
+
+  
 
   /*
    * Changes the value of a joystick axis to:
