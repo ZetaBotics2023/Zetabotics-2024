@@ -253,8 +253,14 @@ public final class Constants {
     public static final ArrayList<Command> kLeft_ShootPreloadedLeftCenter = new ArrayList<Command>();
     public static final ArrayList<Command> kLeft_ShootPreloadedLeftCenterRight = new ArrayList<Command>();
 
-    public static final ArrayList<Command> kRight_ShootPreloadedRightCenter = new ArrayList<Command>();
+    public static final ArrayList<Command> kCenter_ShootPreloaded = new ArrayList<Command>();;
+    public static final ArrayList<Command> kCenter_ShootPreloadedCenter = new ArrayList<Command>();
+    public static final ArrayList<Command> kCenter_ShootPreloadedCenterLeft = new ArrayList<Command>();
+    public static final ArrayList<Command> kCenter_ShootPreloadedCenterRight = new ArrayList<Command>();
+
+    public static final ArrayList<Command> kRight_ShootPreloaded = new ArrayList<Command>();;
     public static final ArrayList<Command> kRight_ShootPreloadedRight = new ArrayList<Command>();
+    public static final ArrayList<Command> kRight_ShootPreloadedRightCenter = new ArrayList<Command>();
 
 
     public static final MirrablePose2d kLeftStartingPose = new MirrablePose2d(new Pose2d(1.5134, 7, new Rotation2d()), !kIsBlueAlliance);
