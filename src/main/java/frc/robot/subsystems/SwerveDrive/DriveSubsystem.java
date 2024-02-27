@@ -347,6 +347,10 @@ public class DriveSubsystem extends SubsystemBase {
     //this.poseEstimator.resetPosition(newPose.getRotation(), getModulePositions(), newPose);
   }
 
+  public PoseEstimatorSubsystem getPoseEstimatorSubsystem() {
+    return m_poseEstimatorSubsystem;
+  }
+
 
 
   public void resetRobotHeading() {

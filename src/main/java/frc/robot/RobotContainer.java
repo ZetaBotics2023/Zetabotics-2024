@@ -16,6 +16,7 @@ import frc.robot.commands.LockSwerves;
 import frc.robot.commands.ParallelRaceGroupCommand;
 import frc.robot.commands.AutoCommands.WaitCommandWrapper;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCenterCommand;
+import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCommand;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionLeftCommand;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionRightCommand;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseAutonWhileShootingWithPIDs;
@@ -42,9 +43,12 @@ import frc.robot.utils.GenerateAuto;
 import frc.robot.utils.InTeleop;
 import frc.robot.utils.MirrablePose2d;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -207,11 +211,11 @@ public class RobotContainer {
   }
 
   public void pollPOVButtons() {
-    ButtonBoard.pollPOVButtons(
-      this.m_buttonBoard, 
-      this.autoShootPositionLeftCommand,
-      this.autoShootPositionCenterCommand,
-      this.autoShootPositionRightCommand);
+    //ButtonBoard.pollPOVButtons(
+      //this.m_buttonBoard, 
+      //this.autoShootPositionLeftCommand,
+      //this.autoShootPositionCenterCommand,
+      //this.autoShootPositionRightCommand);
   }
   
   /*
@@ -465,6 +469,10 @@ public Command enableVision() {
 
   public Command disableVision() {
     return Commands.runOnce(() -> {VisionConstants.useVision = false;});
+  }
+
+  public void onAllianceChanged(Optional<Alliance> currentAlliance) {
+    this.m_driveSubsystem.getPoseEstimatorSubsystem().setAlliance(currentAlliance);
   }
 
 }

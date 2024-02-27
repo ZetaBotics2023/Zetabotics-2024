@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -104,12 +105,13 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   /**
    * Sets the alliance. This is used to configure the origin of the AprilTag map
    * 
-   * @param alliance alliance
+   * @param currentAlliance alliance
    */
-  public void setAlliance(Alliance alliance) {
+  public void setAlliance(Optional<Alliance> alliance) {
     var fieldTags = photonPoseEstimator.getFieldTags();
+    Alliance currentAlliance = alliance.orElse(Alliance.Blue);
     boolean allianceChanged = false;
-    switch (alliance) {
+    switch (currentAlliance) {
       case Blue:
         fieldTags.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
         allianceChanged = (originPosition == OriginPosition.kRedAllianceWallRightSide);

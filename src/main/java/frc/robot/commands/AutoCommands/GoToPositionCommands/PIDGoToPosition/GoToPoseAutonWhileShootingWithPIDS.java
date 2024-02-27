@@ -36,7 +36,7 @@ public class GoToPoseAutonWhileShootingWithPIDs extends Command{
 
 
     public GoToPoseAutonWhileShootingWithPIDs(DriveSubsystem m_driveSubsystem, HandOffToShooterAuton handOffToShooterAuton,
-     MirrablePose2d goalEndPose, double percentToPose) {
+     Pose2d goalEndPose, double percentToPose) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;
         this.handOfftoShooterAuton = handOffToShooterAuton;

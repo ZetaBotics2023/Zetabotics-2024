@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -167,8 +168,9 @@ public final class Constants {
 
   public static final class FieldConstants {
     // Current length is the one pathplanner uses the one I caclulated is slightly larger at 16.59127999998984m if the red aleicne paths are undershootingss in the X axis maybe change it to the one I calculated
-    public static final double kLength = Units.feetToMeters(54.2708);//Units.feetToMeters(54);
-    public static final double kWidth = Units.feetToMeters(27);
+    public static final double kLength = 16.45;//Units.feetToMeters(54.2708);//Units.feetToMeters(54);
+    public static final double kWidth = Units.feetToMeters(26.9375);
+    public static Optional<Alliance> alliance;
   }
 
   public static final class VisionConstants {
@@ -246,7 +248,6 @@ public final class Constants {
     public static final HashMap<String, MirrablePose2d> robotPositions = new HashMap<String, MirrablePose2d>();
 
     public static boolean kIsBlueAlliance = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;     
-    public static String startingPose = "Left";
 
     public static final ArrayList<Command> kLeft_ShootPreloaded = new ArrayList<Command>();
     public static final ArrayList<Command> kLeft_ShootPreloadedLeft = new ArrayList<Command>();
