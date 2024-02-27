@@ -31,6 +31,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.InTeleop;
+import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.FieldConstants;
 
 // We should probable swich this over to make use of WPILib SwerveDrive PoseEstimator and Limelight tag reading rather than photon vission
@@ -116,11 +117,13 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         fieldTags.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
         allianceChanged = (originPosition == OriginPosition.kRedAllianceWallRightSide);
         originPosition = OriginPosition.kBlueAllianceWallRightSide;
+        AutonConfigurationConstants.kIsBlueAlliance = true;
         break;
       case Red:
         fieldTags.setOrigin(OriginPosition.kRedAllianceWallRightSide);
         allianceChanged = (originPosition == OriginPosition.kBlueAllianceWallRightSide);
         originPosition = OriginPosition.kRedAllianceWallRightSide;
+        AutonConfigurationConstants.kIsBlueAlliance = false;
         break;
       default:
         // No valid alliance data. Nothing we can do about it
@@ -130,7 +133,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
       // Since a tag may have been seen and the tags are all relative to the
       // coordinate system, the estimated pose
       // needs to be transformed to the new coordinate system.
-      var newPose = flipAlliance(poseEstimator.getEstimatedPosition());
+      Pose2d newPose = flipAlliance(poseEstimator.getEstimatedPosition());
+      newPose = new Pose2d(newPose.getX(), newPose.getY(), new Rotation2d());
       setCurrentPose(newPose);
     }
   }

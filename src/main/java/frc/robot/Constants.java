@@ -263,9 +263,9 @@ public final class Constants {
     public static final ArrayList<Command> kRight_ShootPreloadedRight = new ArrayList<Command>();
     public static final ArrayList<Command> kRight_ShootPreloadedRightCenter = new ArrayList<Command>();
 
-    public static final MirrablePose2d kLeftStartingPose = new MirrablePose2d(new Pose2d(1.5134, 7, new Rotation2d()), !kIsBlueAlliance);
-    public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(1.5134, 5.55, new Rotation2d()), !kIsBlueAlliance);
-    public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(1.5134, 4.11, new Rotation2d()), !kIsBlueAlliance);
+    public static final MirrablePose2d kLeftStartingPose = new MirrablePose2d(new Pose2d(1.5134, 7, new Rotation2d()));
+    public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(1.5134, 5.55, new Rotation2d()));
+    public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(1.5134, 4.11, new Rotation2d()));
 
     public static final double kLeftNoteIntakeDownTime = .7;
     public static final double kCenterNoteIntakeDownTime = 1.1;
@@ -296,6 +296,12 @@ public final class Constants {
     public static final double kShootTime = 10;
     public static final double kShootTimeAuto = .4;
     public static final double kShooterRPMTolerance = 75;
+
+    public static final MirrablePose2d kLeftShootingPose = new MirrablePose2d(new Pose2d(2.1, 6.7, Rotation2d.fromDegrees(26)));
+    public static final MirrablePose2d kCenterShootingPose = new MirrablePose2d(new Pose2d(2.3, 5.55, new Rotation2d()));
+    public static final MirrablePose2d kRightShootingPose = new MirrablePose2d(new Pose2d(2.2, 4.5, Rotation2d.fromDegrees(-28)));
+
+
   }
 
   public static final class ClimberConstants {

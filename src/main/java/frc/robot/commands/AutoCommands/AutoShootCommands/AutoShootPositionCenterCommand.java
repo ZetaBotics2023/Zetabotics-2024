@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonConfigurationConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseitionWithPIDS;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
@@ -55,9 +56,8 @@ public class AutoShootPositionCenterCommand extends Command{
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
         
-        MirrablePose2d shootingPose = new MirrablePose2d(new Pose2d(2.3, 5.55, new Rotation2d()), !AutonConfigurationConstants.kIsBlueAlliance);
-        Pose2d shootingPosition = new Pose2d(shootingPose.getX(), shootingPose.getY(), shootingPose.getRotation());
-        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPosition);
+        MirrablePose2d shootingPose = ShooterConstants.kCenterShootingPose;
+        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPose.getPose(!AutonConfigurationConstants.kIsBlueAlliance));
 
         goToPosition.schedule();
         rampShooterCommand.schedule();

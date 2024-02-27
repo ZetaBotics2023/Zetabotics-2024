@@ -211,11 +211,14 @@ public class RobotContainer {
   }
 
   public void pollPOVButtons() {
-    //ButtonBoard.pollPOVButtons(
-      //this.m_buttonBoard, 
-      //this.autoShootPositionLeftCommand,
-      //this.autoShootPositionCenterCommand,
-      //this.autoShootPositionRightCommand);
+    ButtonBoard.pollPOVButtons(
+      this.m_buttonBoard, 
+        new AutoShootPositionLeftCommand(m_driveSubsystem,
+      m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem),
+        new AutoShootPositionCenterCommand(m_driveSubsystem,
+      m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem),
+        new AutoShootPositionRightCommand(m_driveSubsystem,
+      m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
   }
   
   /*
@@ -225,8 +228,6 @@ public class RobotContainer {
     InTeleop.inTeleop = false;
     return configureAutons(this.autonSelector.getSelected());
   }
-
-  
 
   /*
    * Changes the value of a joystick axis to:
@@ -245,16 +246,16 @@ public class RobotContainer {
    * Popualtes the list of robot positions in AutonConfigurationConstants to have usable field coordinates
    */
   public void configureAutonPoints() {
-    AutonConfigurationConstants.robotPositions.put("LeftNoteShootPose", new MirrablePose2d(new Pose2d(1.85, 7, Rotation2d.fromDegrees(35)), !AutonConfigurationConstants.kIsBlueAlliance));
-    AutonConfigurationConstants.robotPositions.put("CenterNoteShootPose", new MirrablePose2d(new Pose2d(2.2, 5.55, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
-    AutonConfigurationConstants.robotPositions.put("RightNoteShootPose", new MirrablePose2d(new Pose2d(2.00, 4.11,  Rotation2d.fromDegrees(-40)), !AutonConfigurationConstants.kIsBlueAlliance));
+    AutonConfigurationConstants.robotPositions.put("LeftNoteShootPose", new MirrablePose2d(new Pose2d(1.85, 7, Rotation2d.fromDegrees(35))));
+    AutonConfigurationConstants.robotPositions.put("CenterNoteShootPose", new MirrablePose2d(new Pose2d(2.2, 5.55, new Rotation2d(0))));
+    AutonConfigurationConstants.robotPositions.put("RightNoteShootPose", new MirrablePose2d(new Pose2d(2.00, 4.11,  Rotation2d.fromDegrees(-40))));
 
-    AutonConfigurationConstants.robotPositions.put("LeftNoteIntakePose", new MirrablePose2d(new Pose2d(2.5, 7.00, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
-    AutonConfigurationConstants.robotPositions.put("CenterNoteIntakePose", new MirrablePose2d(new Pose2d(2.5, 5.55, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
-    AutonConfigurationConstants.robotPositions.put("RightNoteIntakePose", new MirrablePose2d(new Pose2d(2.5, 4.11, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
+    AutonConfigurationConstants.robotPositions.put("LeftNoteIntakePose", new MirrablePose2d(new Pose2d(2.5, 7.00, new Rotation2d(0))));
+    AutonConfigurationConstants.robotPositions.put("CenterNoteIntakePose", new MirrablePose2d(new Pose2d(2.5, 5.55, new Rotation2d(0))));
+    AutonConfigurationConstants.robotPositions.put("RightNoteIntakePose", new MirrablePose2d(new Pose2d(2.5, 4.11, new Rotation2d(0))));
 
-    AutonConfigurationConstants.robotPositions.put("LeftNoteIntakeZero", new MirrablePose2d(new Pose2d(1.7, 7.00, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
-    AutonConfigurationConstants.robotPositions.put("RightNoteIntakeZero", new MirrablePose2d(new Pose2d(2, 4.11, new Rotation2d(0)), !AutonConfigurationConstants.kIsBlueAlliance));
+    AutonConfigurationConstants.robotPositions.put("LeftNoteIntakeZero", new MirrablePose2d(new Pose2d(1.7, 7.00, new Rotation2d(0))));
+    AutonConfigurationConstants.robotPositions.put("RightNoteIntakeZero", new MirrablePose2d(new Pose2d(2, 4.11, new Rotation2d(0))));
 
     //AutonConfigurationConstatns.robotPositions.put("LeftNoteLeavePose", new MirrablePose2d(new Pose2d(2.20, 7.00, new Rotation2d(0)), !AutonConfigurationConstatns.kIsBlueAlience));
     //AutonConfigurationConstatns.robotPositions.put("CenterNoteLeavePose", new MirrablePose2d(new Pose2d(2.20, 5.55, new Rotation2d(0)), !AutonConfigurationConstatns.kIsBlueAlience));
@@ -267,18 +268,18 @@ public class RobotContainer {
   public Command configureAutons(String autonName) {
     switch (autonName.split(":")[0]) {
       case "Left":
-          this.m_driveSubsystem.setRobotPose(new Pose2d(AutonConfigurationConstants.kLeftStartingPose.getX(),
-          AutonConfigurationConstants.kLeftStartingPose.getY(), AutonConfigurationConstants.kLeftStartingPose.getRotation()));
+        MirrablePose2d startingPoseLeft = AutonConfigurationConstants.kLeftStartingPose;
+        this.m_driveSubsystem.setRobotPose(startingPoseLeft.getPose(!AutonConfigurationConstants.kIsBlueAlliance));
         break;
       
       case "Center":
-          this.m_driveSubsystem.setRobotPose(new Pose2d(AutonConfigurationConstants.kCenterStartingPose.getX(),
-          AutonConfigurationConstants.kCenterStartingPose.getY(), AutonConfigurationConstants.kCenterStartingPose.getRotation()));
+          MirrablePose2d startingPoseCenter = AutonConfigurationConstants.kCenterStartingPose;
+          this.m_driveSubsystem.setRobotPose(startingPoseCenter.getPose(!AutonConfigurationConstants.kIsBlueAlliance));
         break;
       
       case "Right": 
-          this.m_driveSubsystem.setRobotPose(new Pose2d(AutonConfigurationConstants.kRightStartingPose.getX(),
-          AutonConfigurationConstants.kRightStartingPose.getY(), AutonConfigurationConstants.kRightStartingPose.getRotation()));
+          MirrablePose2d startingPoseRight = AutonConfigurationConstants.kRightStartingPose;
+          this.m_driveSubsystem.setRobotPose(startingPoseRight.getPose(!AutonConfigurationConstants.kIsBlueAlliance));
         break;
 
       default:
@@ -440,7 +441,7 @@ public class RobotContainer {
      m_intakeSensorSubsystem, this.m_ledSubsystem),
       new GoToPositionAfterTimeWithPIDS(
         new GoToPositionWithPIDSAuto(m_driveSubsystem, 
-        AutonConfigurationConstants.robotPositions.get(poseName)), waitTime));
+        AutonConfigurationConstants.robotPositions.get(poseName).getPose(!AutonConfigurationConstants.kIsBlueAlliance)), waitTime));
   }
 
   /*
@@ -448,7 +449,7 @@ public class RobotContainer {
    */
   public GoToPositionWithPIDSAuto createGoToPositionCommand(String poseName) {
     return new GoToPositionWithPIDSAuto(this.m_driveSubsystem,
-          AutonConfigurationConstants.robotPositions.get(poseName));
+          AutonConfigurationConstants.robotPositions.get(poseName).getPose(!AutonConfigurationConstants.kIsBlueAlliance));
   }
 
   /*
@@ -458,7 +459,7 @@ public class RobotContainer {
     return new GoToPoseAutonWhileShootingWithPIDs(
           this.m_driveSubsystem,
           new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem),
-          AutonConfigurationConstants.robotPositions.get(poseName),
+          AutonConfigurationConstants.robotPositions.get(poseName).getPose(!AutonConfigurationConstants.kIsBlueAlliance),
           percentToPose
     );    
   }

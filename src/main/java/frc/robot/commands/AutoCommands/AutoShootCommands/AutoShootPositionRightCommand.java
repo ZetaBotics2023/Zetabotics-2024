@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonConfigurationConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseitionWithPIDS;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
@@ -56,24 +57,17 @@ public class AutoShootPositionRightCommand extends Command{
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
 
-        MirrablePose2d shootingPose = new MirrablePose2d(new Pose2d(2.2, 4.5, Rotation2d.fromDegrees(-28)), !AutonConfigurationConstants.kIsBlueAlliance);
-        Pose2d shootingPosition = new Pose2d(shootingPose.getX(), shootingPose.getY(), shootingPose.getRotation());
-        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPosition);
+        MirrablePose2d shootingPose = AutonConfigurationConstants.kIsBlueAlliance ? ShooterConstants.kRightShootingPose : ShooterConstants.kLeftShootingPose;
+        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPose.getPose(!AutonConfigurationConstants.kIsBlueAlliance));
 
         goToPosition.schedule();
         rampShooterCommand.schedule();
-
-        SmartDashboard.putNumber("Auto Position Goal X", shootingPosition.getX()); 
-        SmartDashboard.putNumber("Auto Position Goal Y", shootingPosition.getY()); 
-        SmartDashboard.putNumber("Auto Position Goal Theta", shootingPosition.getRotation().getDegrees()); 
-        SmartDashboard.putString("Shooting Stage Pose", "Scheduled go to pose and ramp shooter");
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         if(!handOffToShooterCommand.isScheduled() && this.rampShooterCommand.isFinished() && this.goToPosition.isFinished()) {
-            SmartDashboard.putString("Shooting Stage Pose", "Hand Off To Shooter Scheduled");
             handOffToShooterCommand.schedule();
         }
     }
@@ -81,7 +75,6 @@ public class AutoShootPositionRightCommand extends Command{
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        SmartDashboard.putString("Shooting Stage Pose", "Done: Stopping Shooting");
         this.rampShooterCommand.cancel();
         this.handOffToShooterCommand.cancel();
         this.goToPosition.cancel();
