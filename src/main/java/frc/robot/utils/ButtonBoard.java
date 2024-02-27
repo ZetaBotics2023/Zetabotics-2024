@@ -79,19 +79,19 @@ public class ButtonBoard {
     public static void pollPOVButtons(ButtonBoard buttonBoard, Command... commands) {
         int pov = buttonBoard.getController().getPOV();
 
-        if (pov == 270) {
+        if (pov == 270 && !commands[0].isScheduled()) {
             commands[0].schedule();
         } else if(commands[0].isScheduled()) {
             commands[0].cancel();
         }
 
-        if (pov == 0) {
+        if (pov == 0 && !commands[1].isScheduled()) {
             commands[1].schedule();
         } else if(commands[1].isScheduled()){
             commands[1].cancel();
         }
 
-        if (pov == 90) {
+        if (pov == 90 && !commands[2].isScheduled() ) {
             commands[2].schedule();
         } else if(commands[2].isScheduled()){
             commands[2].cancel();
