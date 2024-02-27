@@ -55,7 +55,7 @@ public class AutoShootPositionLeftCommand extends Command{
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
         
-        Pose2d shootingPose = MirrablePose2d.mirrorPose2d(new Pose2d(2.1, 6.7, Rotation2d.fromDegrees(26)), !AutonConfigurationConstants.kIsBlueAlliance);
+        MirrablePose2d shootingPose = new MirrablePose2d(new Pose2d(2.1, 6.7, Rotation2d.fromDegrees(26)), !AutonConfigurationConstants.kIsBlueAlliance);
         Pose2d shootingPosition = new Pose2d(shootingPose.getX(), shootingPose.getY(), shootingPose.getRotation());
        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPosition);
 

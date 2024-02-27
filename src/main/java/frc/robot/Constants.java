@@ -247,7 +247,7 @@ public final class Constants {
 
     public static final HashMap<String, MirrablePose2d> robotPositions = new HashMap<String, MirrablePose2d>();
 
-    public static boolean kIsBlueAlliance = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;     
+    public static boolean kIsBlueAlliance = false;//DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;     
 
     public static final ArrayList<Command> kLeft_ShootPreloaded = new ArrayList<Command>();
     public static final ArrayList<Command> kLeft_ShootPreloadedLeft = new ArrayList<Command>();
