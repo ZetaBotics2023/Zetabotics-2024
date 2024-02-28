@@ -203,7 +203,7 @@ public final class Constants {
      new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPS, kMaxTranslationAcceleration);
 
     public static final double kMaxTranslationSpeedMPSAuto = 4.1;
-    public static final double kMaxTranslationAccelerationAuto = 2;
+    public static final double kMaxTranslationAccelerationAuto = 2;//4.1;
     public static final TrapezoidProfile.Constraints kTranslationAutoControllerConstraints =
      new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPSAuto, kMaxTranslationAccelerationAuto);
 
@@ -238,7 +238,7 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadiansPerSecondAuto = 360;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquaredAuto = 720;
     public static final TrapezoidProfile.Constraints kThetaControllerConstraintsAuto = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-    public static final double kAutoPositonToleranceAuto = .05;
+    public static final double kAutoPositonToleranceAuto = .075;
   }
 
   public static final class AutonConfigurationConstants {
@@ -300,8 +300,6 @@ public final class Constants {
     public static final MirrablePose2d kLeftShootingPose = new MirrablePose2d(new Pose2d(2.1, 6.7, Rotation2d.fromDegrees(26)));
     public static final MirrablePose2d kCenterShootingPose = new MirrablePose2d(new Pose2d(2.3, 5.55, new Rotation2d()));
     public static final MirrablePose2d kRightShootingPose = new MirrablePose2d(new Pose2d(2.2, 4.5, Rotation2d.fromDegrees(-28)));
-
-
   }
 
   public static final class ClimberConstants {
