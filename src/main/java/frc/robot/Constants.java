@@ -198,7 +198,7 @@ public final class Constants {
 
     // Translation Contraints
     public static final double kMaxTranslationSpeedMPS = 4.1;
-    public static final double kMaxTranslationAcceleration = 2;
+    public static final double kMaxTranslationAcceleration = 4.1;
     public static final TrapezoidProfile.Constraints kTranslationControllerConstraints =
      new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPS, kMaxTranslationAcceleration);
 
