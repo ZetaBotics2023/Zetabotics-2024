@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCenterCommand;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionLeftCommand;
@@ -65,6 +66,14 @@ public class ButtonBoard {
         joystickButton.onTrue(onTrue);
     }
 
+    public void bindToPOV(int slot, int POV, Command onTrue, Command onFalse) {
+        POVButton joystickButton = new POVButton(this.controller, POV);
+        BooleanSupplier slotBoolSupplier = () -> {return slot == buttonPreset;};
+        joystickButton.and(slotBoolSupplier);
+        joystickButton.onFalse(onFalse);
+        joystickButton.onTrue(onTrue);
+    }
+
     public int getPreset() {
         return this.buttonPreset;
     }
@@ -76,25 +85,5 @@ public class ButtonBoard {
         return controller;
     }
 
-    public static void pollPOVButtons(ButtonBoard buttonBoard, Command... commands) {
-        int pov = buttonBoard.getController().getPOV();
-
-        if (pov == 270) {
-            commands[0].schedule();
-        } else if(commands[0].isScheduled()) {
-            commands[0].cancel();
-        }
-
-        if (pov == 0) {
-            commands[1].schedule();
-        } else if(commands[1].isScheduled()){
-            commands[1].cancel();
-        }
-
-        if (pov == 90) {
-            commands[2].schedule();
-        } else if(commands[2].isScheduled()){
-            commands[2].cancel();
-        }
-    }
+    
 }

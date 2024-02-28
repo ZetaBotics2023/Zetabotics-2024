@@ -202,23 +202,18 @@ public class RobotContainer {
     //final JoystickButton rampShooter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
     //rampShooter.onTrue(this.shootAtDiffSpeedCommand);
     //rampShooter.onFalse(Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
+    this.m_buttonBoard.bindToPOV(0, 0, autoShootPositionLeftCommand, Commands.runOnce(autoShootPositionLeftCommand::cancel));
+
+    this.m_buttonBoard.bindToPOV(0, 90, autoShootPositionCenterCommand, Commands.runOnce(autoShootPositionCenterCommand::cancel));
+
+    this.m_buttonBoard.bindToPOV(0, 180, autoShootPositionRightCommand, Commands.runOnce(autoShootPositionRightCommand::cancel));
 
     // autoShootPositionCommand Center
+    
     final JoystickButton shootNoteAutoPoseCenter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kA.value);
     shootNoteAutoPoseCenter.onTrue(this.autoShootPositionCenterCommand);
     shootNoteAutoPoseCenter.onFalse(Commands.runOnce(this.autoShootPositionCenterCommand::cancel));
 
-  }
-
-  public void pollPOVButtons() {
-    ButtonBoard.pollPOVButtons(
-      this.m_buttonBoard, 
-        new AutoShootPositionLeftCommand(m_driveSubsystem,
-      m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem),
-        new AutoShootPositionCenterCommand(m_driveSubsystem,
-      m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem),
-        new AutoShootPositionRightCommand(m_driveSubsystem,
-      m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
   }
   
   /*
