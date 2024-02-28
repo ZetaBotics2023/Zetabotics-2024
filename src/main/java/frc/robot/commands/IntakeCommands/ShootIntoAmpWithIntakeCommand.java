@@ -4,17 +4,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 
+/**
+ * Sends a loaded note into our shooter
+ */
 public class ShootIntoAmpWithIntakeCommand extends Command {
     private IntakeSubsystem intakeSubsystem;
     private PivotSubsystem pivotSubsystem;
     private IntakeSensorSubsystem intakeSensorSubsystem;
-    private WaitCommand waitCommand;
+    private WaitCommand shootWaitTime = null;
+
     public ShootIntoAmpWithIntakeCommand(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem) {
-        
         this.intakeSubsystem = intakeSusbsystem;
         this.pivotSubsystem = pivotSubsystem;
         this.intakeSensorSubsystem = intakeSensorSubsystem;
@@ -24,36 +28,38 @@ public class ShootIntoAmpWithIntakeCommand extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
+        this.shootWaitTime = null;
         this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kShootInAmpPivotRotationDegrees);
+        this.intakeSubsystem.runAtRPM(IntakeConstants.kShootInAmpIntakeRPM);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if(this.pivotSubsystem.isMotorAtTargetRotation() && intakeSubsystem.getTargetRPM() == 0) {
-            this.intakeSubsystem.runAtRPM(IntakeConstants.kShootInAmpIntakeRPM);
-        }
+       
     }
 
-    // Called once the command ends or is interrupted.
+    /**
+     * When the command ends, stop the intake.
+     */
     @Override
     public void end(boolean interrupted) {
-        this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
         this.intakeSubsystem.runAtRPM(0);
     }
 
-    // Returns true when the command should end.
+    /**
+     * End the command if there's not a note in the intake AND the shooter time has elapsed
+     */
     @Override
     public boolean isFinished() {
-        if(!this.intakeSensorSubsystem.isNoteInIntake() && this.waitCommand == null) {
-            this.waitCommand = new WaitCommand(IntakeConstants.kShootInAmpIntakeTime);
-            this.waitCommand.schedule();
+        if(this.shootWaitTime == null && this.pivotSubsystem.isMotorAtTargetRotation()) {
+            this.shootWaitTime = new WaitCommand(ShooterConstants.kShootTime);
+            SmartDashboard.putString("HandOffState", "Started Timer");
+            this.shootWaitTime.schedule();
         } 
-        if(this.waitCommand != null) {
-            if(this.waitCommand.isFinished()) {
-                this.waitCommand = null;
-                return true;
-            }
+        if(this.shootWaitTime != null) {
+            SmartDashboard.putString("HandOffState", this.shootWaitTime.isFinished() ? "Ended Timer" : "Timer Still Going");
+            return this.shootWaitTime.isFinished();
         }
         return false;
     }
