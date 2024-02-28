@@ -50,8 +50,11 @@ public class PickupFromGroundCommand extends Command {
     public void end(boolean interrupted) {
         this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
         this.intakeSubsystem.runAtRPM(0);
-        this.m_ledSubsystem.setSolidColor(RGBColor.Green.color);
-        SmartDashboard.putBoolean("Go Up", interrupted);
+        if(this.intakeSensorSubsystem.isNoteInIntake()) {
+            this.m_ledSubsystem.setSolidColor(RGBColor.Green.color);
+        } else {
+            this.m_ledSubsystem.setSolidColor(RGBColor.Orange.color);
+        }
     }
 
     /**

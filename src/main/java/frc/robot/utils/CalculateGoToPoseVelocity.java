@@ -46,6 +46,4 @@ public class CalculateGoToPoseVelocity {
         return new Translation2d(robotVelocityX, robotVelocityY);
        
     }
-  
-   
 }

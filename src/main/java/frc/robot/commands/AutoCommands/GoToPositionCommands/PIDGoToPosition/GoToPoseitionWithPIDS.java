@@ -10,6 +10,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.subsystems.LEDSubsystem.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDSubsystem.RGBColor;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 
 
@@ -22,8 +24,9 @@ public class GoToPoseitionWithPIDS extends Command{
     private ProfiledPIDController translationXController;
     private ProfiledPIDController translationYController;
     private ProfiledPIDController headingPIDController;
-    
-    public GoToPoseitionWithPIDS(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose) {
+    private LEDSubsystem m_ledSubsystem;
+
+    public GoToPoseitionWithPIDS(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose, LEDSubsystem m_ledSubsystem) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;
 
@@ -44,6 +47,8 @@ public class GoToPoseitionWithPIDS extends Command{
         this.headingPIDController.setTolerance(AutoConstants.kHeadingPIDControllerTolerance);
         this.headingPIDController.setIntegratorRange(-0.3, 0.3);
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
+
+        this.m_ledSubsystem = m_ledSubsystem;
 
         addRequirements(m_driveSubsystem);
     }
@@ -67,6 +72,7 @@ public class GoToPoseitionWithPIDS extends Command{
 
     @Override
     public void end(boolean interrupted) {
+        this.m_ledSubsystem.setSolidColor(RGBColor.Yellow.color);
         this.m_driveSubsystem.stop();
     }
 

@@ -22,7 +22,7 @@ import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.MirrablePose2d;
 
 
-public class GoToPoseAutonWhileShootingWithPIDs extends Command{
+public class GoToPoseAutonWhileShootingWithPIDS extends Command{
     private DriveSubsystem m_driveSubsystem;
     private Pose2d goalEndPose;
     private HandOffToShooterAuton handOfftoShooterAuton;
@@ -35,7 +35,7 @@ public class GoToPoseAutonWhileShootingWithPIDs extends Command{
     private ProfiledPIDController headingPIDController;
 
 
-    public GoToPoseAutonWhileShootingWithPIDs(DriveSubsystem m_driveSubsystem, HandOffToShooterAuton handOffToShooterAuton,
+    public GoToPoseAutonWhileShootingWithPIDS(DriveSubsystem m_driveSubsystem, HandOffToShooterAuton handOffToShooterAuton,
      Pose2d goalEndPose, double percentToPose) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;

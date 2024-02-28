@@ -50,21 +50,19 @@ public class ClimberSubsystem extends SubsystemBase{
         this.m_rightClimber.setSoftLimit(SoftLimitDirection.kForward, ClimberConstants.kClimberMaxHeight);
         this.m_rightClimber.setSoftLimit(SoftLimitDirection.kReverse, ClimberConstants.kClimberMinHeight);
 
+        this.m_leftClimber.enableSoftLimit(SoftLimitDirection.kForward, true);
+        this.m_leftClimber.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
+        this.m_rightClimber.enableSoftLimit(SoftLimitDirection.kForward, true);
+        this.m_rightClimber.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
         this.m_leftClimber.burnFlash();
         this.m_rightClimber.burnFlash();
     }
 
     @Override
     public void periodic() {
-        /*
-        if(!shouldLeftMotorMove(this.desiredLeftMotorPercent)) {
-            setPercentOutput(0, this.desiredRightMotorPercent);
-        }
-
-        if(!shouldRightMotorMove(this.desiredRightMotorPercent)) {
-            setPercentOutput(this.desiredLeftMotorPercent, 0);
-        }
-         */
+        
     }
 
     /*
@@ -78,19 +76,7 @@ public class ClimberSubsystem extends SubsystemBase{
      * Runs both motors at the given percentages for each
      */
     public void setPercentOutput(double leftPercent, double rightPercent) {
-        /* 
-        if(shouldLeftMotorMove(leftPercent)) {
-            this.desiredLeftMotorPercent = leftPercent;
-        } else {
-            this.desiredLeftMotorPercent = 0;
-        }
-
-        if(shouldRightMotorMove(rightPercent)) {
-            this.desiredRightMotorPercent = rightPercent;
-        } else {
-            this.desiredRightMotorPercent = 0;
-        }
-        */
+      
         this.m_leftClimber.set(leftPercent);
         this.m_rightClimber.set(rightPercent);
     }

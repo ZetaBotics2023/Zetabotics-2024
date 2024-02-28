@@ -39,7 +39,10 @@ public class ButtonBoard {
         /** Back. */
         kBlackSelect(7),
         /** Start. */
-        kBlackStart(8);
+        kBlackStart(8),
+        
+        kTopLeftBlack(11),
+        kBottomLeftBlack(12);
     
         /** Button value. */
         public final int value;

@@ -17,6 +17,7 @@ import frc.robot.commands.ShooterCommands.StopShooterCommand;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.CalculateSpeakerShootingPosition;
@@ -36,8 +37,10 @@ public class AutoShootPositionRightCommand extends Command{
 
     private GoToPoseitionWithPIDS goToPosition;
 
+    private LEDSubsystem m_ledSubsystem;
+
     public AutoShootPositionRightCommand(DriveSubsystem m_driveSubsystem, ShooterSubsystem m_shooterSubsystem, 
-    IntakeSubsystem m_intakeSubsystem, PivotSubsystem m_pivotSubsystem, IntakeSensorSubsystem m_intakeSensorSubsystem) {
+    IntakeSubsystem m_intakeSubsystem, PivotSubsystem m_pivotSubsystem, IntakeSensorSubsystem m_intakeSensorSubsystem, LEDSubsystem m_ledSubsystem) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.m_shooterSubsystem = m_shooterSubsystem;
         this.m_intakeSubsystem = m_intakeSubsystem;
@@ -47,7 +50,9 @@ public class AutoShootPositionRightCommand extends Command{
         this.rampShooterCommand = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
-        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, new Pose2d(1000.0, 1000.0, new Rotation2d()));
+        
+        this.m_ledSubsystem = m_ledSubsystem;
+        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, new Pose2d(1000.0, 1000.0, new Rotation2d()), this.m_ledSubsystem);
     }
 
     // Called when the command is initially scheduled.
@@ -58,7 +63,7 @@ public class AutoShootPositionRightCommand extends Command{
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
 
         MirrablePose2d shootingPose = AutonConfigurationConstants.kIsBlueAlliance ? ShooterConstants.kRightShootingPose : ShooterConstants.kLeftShootingPose;
-        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPose.getPose(!AutonConfigurationConstants.kIsBlueAlliance));
+        this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPose.getPose(!AutonConfigurationConstants.kIsBlueAlliance), this.m_ledSubsystem);
 
         goToPosition.schedule();
         rampShooterCommand.schedule();

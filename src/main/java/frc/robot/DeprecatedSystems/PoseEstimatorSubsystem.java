@@ -266,5 +266,4 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     xValues.clear();
     yValues.clear();
   }
-
 }

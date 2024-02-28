@@ -16,14 +16,17 @@ import frc.robot.commands.LockSwerves;
 import frc.robot.commands.ParallelRaceGroupCommand;
 import frc.robot.commands.AutoCommands.WaitCommandWrapper;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCenterCommand;
-import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCommand;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionLeftCommand;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionRightCommand;
-import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseAutonWhileShootingWithPIDs;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseAutonWhileShootingWithPIDS;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionWithPIDSAuto;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionAfterTimeWithPIDS;
 import frc.robot.commands.ClimberCommands.ClimbDownDualCommand;
+import frc.robot.commands.ClimberCommands.ClimbDownLeftCommand;
+import frc.robot.commands.ClimberCommands.ClimbDownRightCommand;
 import frc.robot.commands.ClimberCommands.ClimbUpDualCommand;
+import frc.robot.commands.ClimberCommands.ClimbUpLeftCommand;
+import frc.robot.commands.ClimberCommands.ClimbUpRightCommand;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
 import frc.robot.commands.IntakeCommands.PickupFromGroundCommand;
 import frc.robot.commands.IntakeCommands.ShootIntoAmpWithIntakeCommand;
@@ -86,8 +89,14 @@ public class RobotContainer {
 
   private final ShootAtDiffSpeedCommand shootAtDiffSpeedCommand;
 
-  private final ClimbDownDualCommand climbDownDualCommand;
   private final ClimbUpDualCommand climbUpDualCommand;
+  private final ClimbDownDualCommand climbDownDualCommand;
+
+  private final ClimbUpLeftCommand climbUpLeftCommand;
+  private final ClimbDownLeftCommand climbDownLeftCommand;
+
+  private final ClimbUpRightCommand climbUpRightCommand;
+  private final ClimbDownRightCommand climbDownRightCommand;
 
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
   ButtonBoard m_buttonBoard = new ButtonBoard(OperatorConstants.kButtonBoardPort);
@@ -118,9 +127,8 @@ public class RobotContainer {
         this.m_climberSubsystem = new ClimberSubsystem(false, true);
         this.m_ledSubsystem = new LEDSubsystem();
 
-        this.m_ledSubsystem.setDefaultCommand(
-          Commands.runOnce(() -> {this.m_ledSubsystem.setSolidColor(RGBColor.Orange.color);
-          }, this.m_ledSubsystem));
+      Commands.runOnce(() -> {this.m_ledSubsystem.setSolidColor(RGBColor.Orange.color);
+        }, this.m_ledSubsystem).schedule();
 
     // Config Commands
     this.pickupFromGroundCommand = new PickupFromGroundCommand(
@@ -133,19 +141,24 @@ public class RobotContainer {
       this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
 
       this.autoShootPositionLeftCommand = new AutoShootPositionLeftCommand(m_driveSubsystem,
-     m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
+     m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem, this.m_ledSubsystem);
 
     this.autoShootPositionCenterCommand = new AutoShootPositionCenterCommand(m_driveSubsystem,
-     m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
+     m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem, this.m_ledSubsystem);
 
      this.autoShootPositionRightCommand = new AutoShootPositionRightCommand(m_driveSubsystem,
-     m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
+     m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem, this.m_ledSubsystem);
 
      this.shootAtDiffSpeedCommand = new ShootAtDiffSpeedCommand(m_shooterSubsystem, m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
 
     this.climbDownDualCommand = new ClimbDownDualCommand(m_climberSubsystem);
     this.climbUpDualCommand = new ClimbUpDualCommand(m_climberSubsystem);
 
+    this.climbUpLeftCommand = new ClimbUpLeftCommand(m_climberSubsystem);
+    this.climbDownLeftCommand = new ClimbDownLeftCommand(m_climberSubsystem);
+
+    this.climbUpRightCommand = new ClimbUpRightCommand(m_climberSubsystem);
+    this.climbDownRightCommand = new ClimbDownRightCommand(m_climberSubsystem);
 
     this.lockSwerves = new LockSwerves(m_driveSubsystem);
 
@@ -185,34 +198,58 @@ public class RobotContainer {
 
     // *** Button monkey controls begin here! ***
 
-    // pickupFromGroundCommand
-    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kBlue, this.pickupFromGroundCommand, Commands.runOnce(this.pickupFromGroundCommand::cancel));
-    final JoystickButton pickUpFromGround = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
-    pickUpFromGround.onTrue(this.pickupFromGroundCommand);
-    pickUpFromGround.onFalse(Commands.runOnce(this.pickupFromGroundCommand::cancel));
-
     // autoShootCommand
-    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kGreen, this.autoShootCommand, Commands.runOnce(this.autoShootCommand::cancel));
+    
+    // Ramp Shooter: Bottem Left Black
+    // Normal Shoot: Up D-Pad
+    // Left: D-Pad
+    // Center: D-Pad
+    // Right: D-Pad
+    // Intake Down: Top Left Black
+
+    // Shoot Into Amp: Top Right White
+    // Both Climb Up: Red
+    // Both Climb Down: Green
+    // Left Climb Up: Top Right Black
+    // Left Climb Down: Bottom Right Black
+    // Right Climb Up: Yellow 
+    // Left Climb Down: Blue
+
+    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kBottomLeftBlack, this.shootAtDiffSpeedCommand, Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
+    final JoystickButton rampShooter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kY.value);
+    rampShooter.onTrue(this.shootAtDiffSpeedCommand);
+    rampShooter.onFalse(Commands.runOnce(this.shootAtDiffSpeedCommand::cancel)); 
+
+    this.m_buttonBoard.bindToPOV(0, 0, autoShootPositionLeftCommand, Commands.runOnce(autoShootPositionLeftCommand::cancel));
     final JoystickButton shootNote = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kB.value);
     shootNote.onTrue(this.autoShootCommand);
     shootNote.onFalse(Commands.runOnce(this.autoShootCommand::cancel));
 
-    // run
-   // m_buttonBoard.bindToButton(0, ButtonBoard.Button.kRed, this.shootAtDiffSpeedCommand, Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
-    //final JoystickButton rampShooter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
-    //rampShooter.onTrue(this.shootAtDiffSpeedCommand);
-    //rampShooter.onFalse(Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
     this.m_buttonBoard.bindToPOV(0, 270, autoShootPositionLeftCommand, Commands.runOnce(autoShootPositionLeftCommand::cancel));
 
     this.m_buttonBoard.bindToPOV(0, 180, autoShootPositionCenterCommand, Commands.runOnce(autoShootPositionCenterCommand::cancel));
-
-    this.m_buttonBoard.bindToPOV(0, 90, autoShootPositionRightCommand, Commands.runOnce(autoShootPositionRightCommand::cancel));
-
-    // autoShootPositionCommand Center
-    
     final JoystickButton shootNoteAutoPoseCenter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kA.value);
     shootNoteAutoPoseCenter.onTrue(this.autoShootPositionLeftCommand);
     shootNoteAutoPoseCenter.onFalse(Commands.runOnce(this.autoShootPositionLeftCommand::cancel));
+
+    this.m_buttonBoard.bindToPOV(0, 90, autoShootPositionRightCommand, Commands.runOnce(autoShootPositionRightCommand::cancel));
+
+    // pickupFromGroundCommand
+    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kTopLeftBlack, this.pickupFromGroundCommand, Commands.runOnce(this.pickupFromGroundCommand::cancel));
+    final JoystickButton pickUpFromGround = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
+    pickUpFromGround.onTrue(this.pickupFromGroundCommand);
+    pickUpFromGround.onFalse(Commands.runOnce(this.pickupFromGroundCommand::cancel));
+
+    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kWhiteRight, this.shootIntoAmpWithIntakeCommand, Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
+
+    m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kRed, this.climbUpDualCommand, Commands.runOnce(this.climbUpDualCommand::cancel));
+    m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kGreen, this.climbDownDualCommand, Commands.runOnce(this.climbDownDualCommand::cancel));
+
+    m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kTopRightBlack, this.climbUpLeftCommand, Commands.runOnce(this.climbUpLeftCommand::cancel));
+    m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kBottomRightBlack, this.climbDownLeftCommand, Commands.runOnce(this.climbDownLeftCommand::cancel));
+
+    m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kYellow, this.climbUpRightCommand, Commands.runOnce(this.climbUpRightCommand::cancel));
+    m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kBlue, this.climbDownRightCommand, Commands.runOnce(this.climbDownRightCommand::cancel));
 
   }
   
@@ -456,8 +493,8 @@ public class RobotContainer {
   /*
    * Given the name of a target field position and a percentage at which to start shooting, create a command that moves to a position and shoots during transit
    */
-   public GoToPoseAutonWhileShootingWithPIDs createGoToPoseAutonWhileShooting(String poseName, double percentToPose) {
-    return new GoToPoseAutonWhileShootingWithPIDs(
+   public GoToPoseAutonWhileShootingWithPIDS createGoToPoseAutonWhileShooting(String poseName, double percentToPose) {
+    return new GoToPoseAutonWhileShootingWithPIDS(
           this.m_driveSubsystem,
           new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem),
           AutonConfigurationConstants.robotPositions.get(poseName).getPose(!AutonConfigurationConstants.kIsBlueAlliance),

@@ -13,6 +13,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.subsystems.LEDSubsystem.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDSubsystem.RGBColor;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.CalculateGoToPoseVelocity;
 
@@ -23,10 +25,10 @@ public class GoToPosition extends Command{
     private ProfiledPIDController headingPIDController;
     private final SlewRateLimiter translationXLimiter;
     private final SlewRateLimiter translationYLimiter;
+    private LEDSubsystem m_ledSubsystem;
 
     
-    
-    public GoToPosition(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose) {
+    public GoToPosition(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose, LEDSubsystem m_ledSubsystem) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;
         this.headingPIDController = new ProfiledPIDController(AutoConstants.kHeadingPIDControllerP, AutoConstants.kHeadingPIDControllerI,
@@ -36,6 +38,9 @@ public class GoToPosition extends Command{
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
         this.translationXLimiter = new SlewRateLimiter(20);
         this.translationYLimiter = new SlewRateLimiter(20);
+
+        this.m_ledSubsystem = m_ledSubsystem;
+
         addRequirements(m_driveSubsystem);
     }
 
@@ -62,6 +67,8 @@ public class GoToPosition extends Command{
     @Override
     public void end(boolean interrupted) {
         this.m_driveSubsystem.stop();
+        this.m_ledSubsystem.setSolidColor(RGBColor.Green.color);
+
     }
 
     // Returns true when the command should end.

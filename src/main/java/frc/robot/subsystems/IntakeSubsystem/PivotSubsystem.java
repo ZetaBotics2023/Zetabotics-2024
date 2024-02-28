@@ -106,10 +106,6 @@ public class PivotSubsystem extends SubsystemBase {
 
     public boolean isPivotAboveAutonPickupThreshold() {
         return rotationsToDegrees(this.m_pivotAbsEncoder.getPosition()) >= IntakeConstants.kGroundPickupMinimumPosition;
-    }
-
-    
-
-    
+    }    
 }
  
