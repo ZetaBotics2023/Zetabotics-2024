@@ -196,40 +196,21 @@ public final class Constants {
     public static final double kAutoSlowRateAuto = 1.9;
 
 
-    // Translation Contraints
-    public static final double kMaxTranslationSpeedMPS = 4.1;
-    public static final double kMaxTranslationAcceleration = 4.1;
-    public static final TrapezoidProfile.Constraints kTranslationControllerConstraints =
-     new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPS, kMaxTranslationAcceleration);
+    // Auto Constrants
 
     public static final double kMaxTranslationSpeedMPSAuto = 4.1;
     public static final double kMaxTranslationAccelerationAuto = 2;//4.1;
     public static final TrapezoidProfile.Constraints kTranslationAutoControllerConstraints =
      new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPSAuto, kMaxTranslationAccelerationAuto);
 
-    public static final double kTranslationPIDControllerVelocityTolerance = .1;
-    public static final double kTranslationPIDControllerPositionalTolerance = .1;
-
     public static final double kTranslationAutoPIDControllerVelocityTolerance = .1;
     public static final double kTranslationAutoPIDControllerPositionalTolerance = .05;
-
-    public static final double kTranslationPIDControllerP = 2;
-    public static final double kTranslationPIDControllerI = 0;
-    public static final double kTranslationPIDControllerD = 0;
 
     public static final double kTranslationAutoPIDControllerP = 2;
     public static final double kTranslationAutoPIDControllerI = 0;
     public static final double kTranslationAutoPIDControllerD = 0;
 
-    // Heading
-    public static final double kHeadingPIDControllerP = .035;
-    public static final double kHeadingPIDControllerI = .00005;
-    public static final double kHeadingPIDControllerD = 0;
-    public static final double kHeadingPIDControllerTolerance = 1;
-    public static final double kMaxAngularSpeedRadiansPerSecond = 360;
-    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 720;
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-    public static final double kAutoPositonTolerance = .2;
+    // Heading Auto
 
     public static final double kHeadingPIDControllerAutoP = .035;
     public static final double kHeadingPIDControllerAutoI = .00005;
@@ -237,8 +218,70 @@ public final class Constants {
     public static final double kHeadingPIDControllerToleranceAuto = 2;
     public static final double kMaxAngularSpeedRadiansPerSecondAuto = 360;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquaredAuto = 720;
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraintsAuto = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraintsAuto = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecondAuto, kMaxAngularAccelerationRadiansPerSecondSquaredAuto);
     public static final double kAutoPositonToleranceAuto = .075;
+
+    // To To Pose Teleop
+    public static final double kFirstBatteryPIDLimit = 12;
+    public static final double kSecondBatteryPIDLimit = 11.75;
+    public static final double kThirdBatteryPIDLimit = 11.5;
+
+    public static final double kMaxTranslationSpeedMPS = 4.1;
+    public static final double kMaxTranslationAcceleration = 4.1;
+    public static final TrapezoidProfile.Constraints kTranslationControllerConstraints =
+     new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPS, kMaxTranslationAcceleration);
+
+    public static final double kMaxTranslationSpeedMPSLowVoltage = 2;
+    public static final double kMaxTranslationAccelerationLowVoltage = 2;
+    public static final TrapezoidProfile.Constraints kTranslationControllerConstraintsLowVoltage  =
+     new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPSLowVoltage, kMaxTranslationAccelerationLowVoltage);
+
+    public static final double kTranslationPIDControllerP = 2;
+    public static final double kTranslationPIDControllerI = 0;
+    public static final double kTranslationPIDControllerD = 0;
+
+    public static final double kTranslationPIDControllerPFirstBatteryPIDLimit = 1.5;
+    public static final double kTranslationPIDControllerIFirstBatteryPIDLimit = 0;
+    public static final double kTranslationPIDControllerDFirstBatteryPIDLimit = 0;
+
+    public static final double kTranslationPIDControllerPSecondBatteryPIDLimit = 1;
+    public static final double kTranslationPIDControllerISecondBatteryPIDLimit = 0;
+    public static final double kTranslationPIDControllerDSecondBatteryPIDLimit = 0;
+
+    public static final double kTranslationPIDControllerPThirdBatteryPIDLimit = .75;
+    public static final double kTranslationPIDControllerIThirdBatteryPIDLimit = 0;
+    public static final double kTranslationPIDControllerDThirdBatteryPIDLimit = 0;
+
+     public static final double kTranslationPIDControllerVelocityTolerance = .1;
+    public static final double kTranslationPIDControllerPositionalTolerance = .1;
+
+    public static final double kHeadingPIDControllerP = .035;
+    public static final double kHeadingPIDControllerI = .00005;
+    public static final double kHeadingPIDControllerD = 0;
+
+    public static final double kHeadingPIDControllerPFirstBatteryPIDLimit = .035;
+    public static final double kHeadingPIDControllerIFirstBatteryPIDLimit = .00005;
+    public static final double kHeadingPIDControllerDFirstBatteryPIDLimit = 0;
+
+    public static final double kHeadingPIDControllerPSecondBatteryPIDLimit = .035;
+    public static final double kHeadingPIDControllerISecondBatteryPIDLimit = .00005;
+    public static final double kHeadingPIDControllerDSecondBatteryPIDLimit = 0;
+
+    public static final double kHeadingPIDControllerPThirdBatteryPIDLimit = .035;
+    public static final double kHeadingPIDControllerIThirdBatteryPIDLimit = .00005;
+    public static final double kHeadingPIDControllerDThirdBatteryPIDLimit = 0;
+    
+    public static final double kHeadingPIDControllerTolerance = 1;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 360;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 720;
+
+    public static final double kMaxAngularSpeedRadiansPerSecondLowVoltage = 270;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquaredLowVoltage = 360;
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraintsLowVoltage = 
+    new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecondLowVoltage, kMaxAngularAccelerationRadiansPerSecondSquaredLowVoltage);
+
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+    public static final double kAutoPositonTolerance = kTranslationPIDControllerPositionalTolerance;
   }
 
   public static final class AutonConfigurationConstants {
