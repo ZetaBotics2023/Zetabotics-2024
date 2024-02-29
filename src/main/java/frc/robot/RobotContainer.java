@@ -9,6 +9,7 @@ package frc.robot;
 
 import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldOrientedDriveCommand;
@@ -215,12 +216,12 @@ public class RobotContainer {
     // Right Climb Up: Yellow 
     // Left Climb Down: Blue
 
-    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kBottomLeftBlack, this.shootAtDiffSpeedCommand, Commands.runOnce(this.shootAtDiffSpeedCommand::cancel));
+    m_buttonBoard.bindToLeftTriggure(0, Commands.runOnce(() -> this.m_shooterSubsystem.runAtRPMAndRPMRatio(ShooterConstants.kShooterRPM)),  Commands.runOnce(() -> this.m_shooterSubsystem.runAtRPMAndRPMRatio(0)));
     final JoystickButton rampShooter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kY.value);
     rampShooter.onTrue(this.shootAtDiffSpeedCommand);
     rampShooter.onFalse(Commands.runOnce(this.shootAtDiffSpeedCommand::cancel)); 
 
-    this.m_buttonBoard.bindToPOV(0, 0, autoShootPositionLeftCommand, Commands.runOnce(autoShootPositionLeftCommand::cancel));
+    this.m_buttonBoard.bindToPOV(0, 0, autoShootCommand, Commands.runOnce(autoShootCommand::cancel));
     final JoystickButton shootNote = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kB.value);
     shootNote.onTrue(this.autoShootCommand);
     shootNote.onFalse(Commands.runOnce(this.autoShootCommand::cancel));
@@ -235,7 +236,7 @@ public class RobotContainer {
     this.m_buttonBoard.bindToPOV(0, 90, autoShootPositionRightCommand, Commands.runOnce(autoShootPositionRightCommand::cancel));
 
     // pickupFromGroundCommand
-    m_buttonBoard.bindToButton(0, ButtonBoard.Button.kTopLeftBlack, this.pickupFromGroundCommand, Commands.runOnce(this.pickupFromGroundCommand::cancel));
+    m_buttonBoard.bindToRightTriggure(0, this.pickupFromGroundCommand, Commands.runOnce(this.pickupFromGroundCommand::cancel));
     final JoystickButton pickUpFromGround = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
     pickUpFromGround.onTrue(this.pickupFromGroundCommand);
     pickUpFromGround.onFalse(Commands.runOnce(this.pickupFromGroundCommand::cancel));

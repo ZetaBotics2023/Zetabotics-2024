@@ -8,6 +8,7 @@ package frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.AutonConfigurationConstants;
@@ -60,13 +61,17 @@ public class GoToPoseitionWithPIDS extends Command{
     }
 
     public void initialize() {
+        this.firstLimitCrossed = false;
+        this.secondLimitCrossed = false;
+        this.thirdLimitCrossed = false;
+
         this.translationXController.reset(this.m_driveSubsystem.getRobotPose().getX());
         this.translationYController.reset(this.m_driveSubsystem.getRobotPose().getY());
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
     }
 
     public void execute() {
-        this.updateControllersForVoltage();
+       // this.updateControllersForVoltage();
         this.m_driveSubsystem.drive(
         ChassisSpeeds.fromFieldRelativeSpeeds(
             this.translationXController.calculate(this.m_driveSubsystem.getRobotPose().getX(), this.goalEndPose.getX()),
@@ -106,7 +111,9 @@ public class GoToPoseitionWithPIDS extends Command{
             this.headingPIDController.setI(AutoConstants.kHeadingPIDControllerIFirstBatteryPIDLimit);
             this.headingPIDController.setD(AutoConstants.kHeadingPIDControllerDFirstBatteryPIDLimit);
 
-        } else if(BatteryCharge.getAverageVoltage() < AutoConstants.kFirstBatteryPIDLimit && !this.secondLimitCrossed) {
+        } 
+
+        if (BatteryCharge.getAverageVoltage() < AutoConstants.kSecondBatteryPIDLimit && !this.secondLimitCrossed) {
             this.secondLimitCrossed = true;
 
             this.translationXController.setP(AutoConstants.kTranslationPIDControllerPSecondBatteryPIDLimit);
@@ -121,7 +128,8 @@ public class GoToPoseitionWithPIDS extends Command{
             this.headingPIDController.setI(AutoConstants.kHeadingPIDControllerISecondBatteryPIDLimit);
             this.headingPIDController.setD(AutoConstants.kHeadingPIDControllerDSecondBatteryPIDLimit);
 
-        } else if(BatteryCharge.getAverageVoltage() < AutoConstants.kThirdBatteryPIDLimit && !this.thirdLimitCrossed) {
+        }
+        if(BatteryCharge.getAverageVoltage() < AutoConstants.kThirdBatteryPIDLimit && !this.thirdLimitCrossed) {
             this.thirdLimitCrossed = true;
 
             this.translationXController.setP(AutoConstants.kTranslationPIDControllerPThirdBatteryPIDLimit);
@@ -140,5 +148,9 @@ public class GoToPoseitionWithPIDS extends Command{
             this.translationYController.setConstraints(AutoConstants.kTranslationControllerConstraintsLowVoltage);
             this.headingPIDController.setConstraints(AutoConstants.kThetaControllerConstraintsLowVoltage);
         }
+        SmartDashboard.putBoolean("First Limit", firstLimitCrossed);
+        SmartDashboard.putBoolean("Second Limit", secondLimitCrossed);
+        SmartDashboard.putBoolean("Thrid Limit", secondLimitCrossed);
+
     }
 }

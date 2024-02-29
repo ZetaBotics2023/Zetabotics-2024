@@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -77,6 +78,24 @@ public class ButtonBoard {
         joystickButton.onTrue(onTrue);
     }
 
+    public void bindToLeftTriggure(int slot, Command onTrue, Command onFalse) {
+        BooleanSupplier slotBoolSupplier = () -> {return slot == buttonPreset;};
+        BooleanSupplier triggureBooleanSupplier = () -> {return this.controller.getLeftTriggerAxis() >= .2;};
+        Trigger trigger = new Trigger(triggureBooleanSupplier);
+        trigger.and(slotBoolSupplier);
+        trigger.onTrue(onTrue);
+        trigger.onFalse(onFalse);
+    }
+
+    public void bindToRightTriggure(int slot, Command onTrue, Command onFalse) {
+        BooleanSupplier slotBoolSupplier = () -> {return slot == buttonPreset;};
+        BooleanSupplier triggureBooleanSupplier = () -> {return this.controller.getRightTriggerAxis() >= .2;};
+        Trigger trigger = new Trigger(triggureBooleanSupplier);
+        trigger.and(slotBoolSupplier);
+        trigger.onTrue(onTrue);
+        trigger.onFalse(onFalse);
+    }
+
     public int getPreset() {
         return this.buttonPreset;
     }
@@ -88,5 +107,5 @@ public class ButtonBoard {
         return controller;
     }
 
-    
+
 }
