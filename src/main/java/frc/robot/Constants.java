@@ -29,14 +29,14 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kButtonBoardPort = 1;
-    public static final int kButtonBoardAltPort = 0;
+    public static final int kButtonBoardAltPort = 2;
 
-    public static final double kDeadband = .1;
+    public static final double kDeadband = .05;
     public static String kLastAuto;
   }
 
   public static class SwerveDriveConstants {
-    
+    public static boolean driverController = true;
     public static final int kFrontLeftDriveMotorId = 24;
     public static final int kFrontRightDriveMotorId = 2;
     public static final int kBackLeftDriveMotorId = 3;
@@ -81,8 +81,8 @@ public final class Constants {
     public static final int kGyroId = 13;
     public static final boolean kGyroReversed = false;
 
-    public static final double kMaxSpeedMetersPerSecond = 4.6;
-    public static final double kMaxRotationAnglePerSecond = 6;
+    public static final double kMaxSpeedMetersPerSecond = 4.1;//4.6;
+    public static final double kMaxRotationAnglePerSecond = 50;
 
     public static final double kRadiusFromCenterToSwerves = 1.0;
 
@@ -112,8 +112,8 @@ public final class Constants {
     public static final double kMaxModuleAngularSpeedDegreesPerSecond =  30.0;
     public static final double kMaxModuleAngularAccelDegreesPerSecondSquared = 30.0;
 
-    public static final double kTranslationRateLimiter = 6;//9;
-    public static final double kRotationRateLimiter = 20;
+    public static final double kTranslationRateLimiter = 9;//9;
+    public static final double kRotationRateLimiter = 100;//20;
   }
 
   public static class SwerveModuleConstants {
@@ -123,7 +123,7 @@ public final class Constants {
     // Set to the last years values
     public static final double kPModuleDriveController = 0.0001;
     public static final double kIModuleDriveController =  .00000125;//.0000025;//.000002;
-    public static final double kDModuleDriveController = 0.0001;
+    public static final double kDModuleDriveController = 0;//0.0001;
     public static final double kFModuleDriveController = 0;
     public static final double kIZoneModuleDriveController = 0.0;
 
@@ -305,9 +305,13 @@ public final class Constants {
     public static final ArrayList<Command> kRight_ShootPreloadedRight = new ArrayList<Command>();
     public static final ArrayList<Command> kRight_ShootPreloadedRightCenter = new ArrayList<Command>();
 
+    public static final ArrayList<Command> kLeft_ShootPreloadedFarFarLeft = new ArrayList<Command>();
+
+
     public static final MirrablePose2d kLeftStartingPose = new MirrablePose2d(new Pose2d(1.5134, 7, new Rotation2d()));
     public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(1.5134, 5.55, new Rotation2d()));
     public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(1.5134, 4.11, new Rotation2d()));
+
 
     public static final double kLeftNoteIntakeDownTime = .7;
     public static final double kCenterNoteIntakeDownTime = 1.1;

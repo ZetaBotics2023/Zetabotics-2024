@@ -60,7 +60,6 @@ public class Robot extends TimedRobot {
     checkDriverStationUpdate();
     BatteryCharge.updateBatteryVoltage();
     SmartDashboard.putNumber("Batter Voltage", BatteryCharge.getAverageVoltage());
-
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

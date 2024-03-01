@@ -2,6 +2,7 @@ package frc.robot.subsystems.LEDSubsystem;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 
@@ -54,6 +55,8 @@ public class LEDSubsystem extends SubsystemBase{
     }
     public AddressableLED m_led;
     public AddressableLEDBuffer m_ledBuffer;
+    public int m_rainbowFirstPixelHue = 0;
+    private boolean playRainbow = true;
 
     public LEDSubsystem() {
         m_led = new AddressableLED(LEDConstants.kLEDPWMPort);
@@ -65,11 +68,18 @@ public class LEDSubsystem extends SubsystemBase{
         m_led.start();
     }
 
+    @Override
+    public void periodic() {
+    }
+
     /*
      * Sets every light on the strip to the same color
      */
     public void setSolidColor(int[] color) {
+        this.playRainbow = false;
+        SmartDashboard.putNumber("LED Color", color[0]);
         for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+            SmartDashboard.putNumber("LED Set", i);
             m_ledBuffer.setRGB(i, color[0], color[1], color[2]);
          }
          
@@ -80,6 +90,7 @@ public class LEDSubsystem extends SubsystemBase{
      * Sets every light on the strip to follow a pattern
      */
     public void setPattern(int[][] pattern) {
+        this.playRainbow = false;
         int colorIndex = 0;
         for (var i = 0; i < m_ledBuffer.getLength(); i++) {
             int[] color = pattern[colorIndex];
@@ -91,5 +102,30 @@ public class LEDSubsystem extends SubsystemBase{
          }
          
          m_led.setData(m_ledBuffer);
+    }
+
+    private void rainbow() {
+        if(this.playRainbow) {
+            // For every pixel
+            for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+                // Calculate the hue - hue is easier for rainbows because the color
+                // shape is a circle so only one value needs to precess
+                final var hue = (m_rainbowFirstPixelHue  + (i * 180 / m_ledBuffer.getLength())) % 180;
+                // Set the value
+                m_ledBuffer.setHSV(i, hue, 255, 128);
+            }
+            // Increase by to make the rainbow "move"
+            m_rainbowFirstPixelHue += 3;
+            // Check bounds
+            m_rainbowFirstPixelHue %= 180;
+            }
+      }
+
+    public void stopRainbow() {
+        this.playRainbow = false;
+    }
+
+    public void startRainbow() {
+        this.playRainbow = true;
     }
 }

@@ -51,9 +51,10 @@ public class PickupFromGroundCommand extends Command {
         this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
         this.intakeSubsystem.runAtRPM(0);
         if(this.intakeSensorSubsystem.isNoteInIntake()) {
+            this.m_ledSubsystem.stopRainbow();
             this.m_ledSubsystem.setSolidColor(RGBColor.Green.color);
         } else {
-            this.m_ledSubsystem.setSolidColor(RGBColor.Orange.color);
+            this.m_ledSubsystem.setSolidColor(RGBColor.Blue.color);
         }
     }
 

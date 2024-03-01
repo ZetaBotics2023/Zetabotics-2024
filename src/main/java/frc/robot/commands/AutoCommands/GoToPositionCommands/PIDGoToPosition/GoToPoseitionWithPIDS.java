@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.AutonConfigurationConstants;
+import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.subsystems.LEDSubsystem.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDSubsystem.RGBColor;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
@@ -57,10 +58,11 @@ public class GoToPoseitionWithPIDS extends Command{
 
         this.m_ledSubsystem = m_ledSubsystem;
 
-        addRequirements(m_driveSubsystem);
+        addRequirements(this.m_ledSubsystem);
     }
 
     public void initialize() {
+        SwerveDriveConstants.driverController = false;
         this.firstLimitCrossed = false;
         this.secondLimitCrossed = false;
         this.thirdLimitCrossed = false;
@@ -68,6 +70,8 @@ public class GoToPoseitionWithPIDS extends Command{
         this.translationXController.reset(this.m_driveSubsystem.getRobotPose().getX());
         this.translationYController.reset(this.m_driveSubsystem.getRobotPose().getY());
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
+        this.m_ledSubsystem.stopRainbow();
+        this.m_ledSubsystem.setSolidColor(RGBColor.Purple.color);
     }
 
     public void execute() {
@@ -84,8 +88,9 @@ public class GoToPoseitionWithPIDS extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        this.m_ledSubsystem.setSolidColor(RGBColor.Yellow.color);
+        this.m_ledSubsystem.setSolidColor(RGBColor.Orange.color);
         this.m_driveSubsystem.stop();
+        SwerveDriveConstants.driverController = true;
     }
 
     // Returns true when the command should end.

@@ -73,13 +73,14 @@ public class FieldOrientedDriveCommand extends Command {
     double translationX = this.translationXLimiter.calculate(this.translationXSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond);
     double translationY = this.translationYLimiter.calculate(this.translationYSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond);
     double rotation = this.rotationLimiter.calculate(this.rotationSupplier.getAsDouble() * SwerveDriveConstants.kMaxRotationAnglePerSecond);
-    
-    m_driveSubsystem.drive(
+    if(SwerveDriveConstants.driverController) {
+      m_driveSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
         translationX,
         translationY,
         rotation,
         this.m_driveSubsystem.getRobotPose().getRotation()));
+    }
   }
 
   @Override

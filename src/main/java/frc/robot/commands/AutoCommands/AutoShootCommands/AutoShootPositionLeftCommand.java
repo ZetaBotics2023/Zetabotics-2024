@@ -65,6 +65,7 @@ public class AutoShootPositionLeftCommand extends Command{
 
         goToPosition.schedule();
         rampShooterCommand.schedule();
+        addRequirements(this.m_driveSubsystem);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

@@ -50,6 +50,7 @@ public class AutoShootPositionCenterCommand extends Command{
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
         this.m_ledSubsystem = m_ledSubsystem;
         this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, new Pose2d(1000.0, 1000.0, new Rotation2d()), this.m_ledSubsystem);
+
     }
 
     // Called when the command is initially scheduled.
@@ -64,6 +65,8 @@ public class AutoShootPositionCenterCommand extends Command{
 
         goToPosition.schedule();
         rampShooterCommand.schedule();
+        addRequirements(this.m_driveSubsystem);
+
     }
 
     // Called every time the scheduler runs while the command is scheduled.
