@@ -10,9 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseitionWithPIDS;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
+import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommandCenter;
 import frc.robot.commands.ShooterCommands.StopShooterCommand;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
@@ -29,7 +31,7 @@ public class AutoShootPositionCenterCommand extends Command{
     private PivotSubsystem m_pivotSubsystem;
     private IntakeSensorSubsystem m_intakeSensorSubsystem;
 
-    private RampShooterAtDifforentSpeedCommand rampShooterCommand;
+    private RampShooterAtDifforentSpeedCommandCenter rampShooterCommand;
     private StopShooterCommand stopShooterCommmand;
     private HandOffToShooterCommand handOffToShooterCommand;
 
@@ -45,7 +47,7 @@ public class AutoShootPositionCenterCommand extends Command{
         this.m_pivotSubsystem = m_pivotSubsystem;
         this.m_intakeSensorSubsystem = m_intakeSensorSubsystem;
 
-        this.rampShooterCommand = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
+        this.rampShooterCommand = new RampShooterAtDifforentSpeedCommandCenter(this.m_shooterSubsystem);
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
         this.m_ledSubsystem = m_ledSubsystem;
@@ -56,13 +58,13 @@ public class AutoShootPositionCenterCommand extends Command{
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        this.rampShooterCommand = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
+        this.rampShooterCommand = new RampShooterAtDifforentSpeedCommandCenter(this.m_shooterSubsystem);
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
         
         MirrablePose2d shootingPose = ShooterConstants.kCenterShootingPose;
         this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPose.getPose(!AutonConfigurationConstants.kIsBlueAlliance), this.m_ledSubsystem);
-
+        VisionConstants.useVision = false;
         goToPosition.schedule();
         rampShooterCommand.schedule();
         addRequirements(this.m_driveSubsystem);
@@ -72,6 +74,10 @@ public class AutoShootPositionCenterCommand extends Command{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        // TODO: Maybe incrase shooter RPM tolorence in order to stop the pause
+        SmartDashboard.putBoolean("GO TO POSE FINSIHED", this.goToPosition.isFinished());
+        SmartDashboard.putBoolean("RAMP SHOOTER FINISHED", this.rampShooterCommand.isFinished());
+        SmartDashboard.putBoolean("HAND OFF TO SHOOTER SCHEDULED", handOffToShooterCommand.isScheduled());
         if(!handOffToShooterCommand.isScheduled() && this.rampShooterCommand.isFinished() && this.goToPosition.isFinished()) {
             handOffToShooterCommand.schedule();
         }
@@ -84,6 +90,7 @@ public class AutoShootPositionCenterCommand extends Command{
         this.handOffToShooterCommand.cancel();
         this.goToPosition.cancel();
         this.stopShooterCommmand.schedule();
+        VisionConstants.useVision = true;
     }
 
     // Returns true when the command should end.

@@ -66,16 +66,24 @@ public class ButtonBoard {
         JoystickButton joystickButton = new JoystickButton(this.controller, button.value);
         BooleanSupplier slotBoolSupplier = () -> {return slot == buttonPreset;};
         joystickButton.and(slotBoolSupplier);
-        joystickButton.onFalse(onFalse);
-        joystickButton.onTrue(onTrue);
+        if(onTrue != null) {
+            joystickButton.onTrue(onTrue);
+        }
+        if(onFalse != null) {
+            joystickButton.onFalse(onFalse);
+        }
     }
 
     public void bindToPOV(int slot, int POV, Command onTrue, Command onFalse) {
         POVButton joystickButton = new POVButton(this.controller, POV);
         BooleanSupplier slotBoolSupplier = () -> {return slot == buttonPreset;};
         joystickButton.and(slotBoolSupplier);
-        joystickButton.onFalse(onFalse);
-        joystickButton.onTrue(onTrue);
+        if(onTrue != null) {
+            joystickButton.onTrue(onTrue);
+        }
+        if(onFalse != null) {
+            joystickButton.onFalse(onFalse);
+        }
     }
 
     public void bindToLeftTriggure(int slot, Command onTrue, Command onFalse) {
@@ -83,8 +91,12 @@ public class ButtonBoard {
         BooleanSupplier triggureBooleanSupplier = () -> {return this.controller.getLeftTriggerAxis() >= .2;};
         Trigger trigger = new Trigger(triggureBooleanSupplier);
         trigger.and(slotBoolSupplier);
-        trigger.onTrue(onTrue);
-        trigger.onFalse(onFalse);
+        if(onTrue != null) {
+            trigger.onTrue(onTrue);
+        }
+        if(onFalse != null) {
+            trigger.onFalse(onFalse);
+        }
     }
 
     public void bindToRightTriggure(int slot, Command onTrue, Command onFalse) {
@@ -92,8 +104,12 @@ public class ButtonBoard {
         BooleanSupplier triggureBooleanSupplier = () -> {return this.controller.getRightTriggerAxis() >= .2;};
         Trigger trigger = new Trigger(triggureBooleanSupplier);
         trigger.and(slotBoolSupplier);
-        trigger.onTrue(onTrue);
-        trigger.onFalse(onFalse);
+        if(onTrue != null) {
+            trigger.onTrue(onTrue);
+        }
+        if(onFalse != null) {
+            trigger.onFalse(onFalse);
+        }
     }
 
     public int getPreset() {

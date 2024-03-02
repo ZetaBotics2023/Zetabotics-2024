@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseitionWithPIDS;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
@@ -65,13 +66,18 @@ public class AutoShootPositionLeftCommand extends Command{
 
         goToPosition.schedule();
         rampShooterCommand.schedule();
+
         addRequirements(this.m_driveSubsystem);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if(!handOffToShooterCommand.isScheduled() && this.rampShooterCommand.isFinished() && this.goToPosition.isFinished()) {
+        // TODO: Maybe incrase shooter RPM tolorence in order to stop the pause
+        SmartDashboard.putBoolean("GO TO POSE FINSIHED", this.goToPosition.isFinished());
+        SmartDashboard.putBoolean("RAMP SHOOTER FINISHED", this.rampShooterCommand.isFinished());
+        SmartDashboard.putBoolean("HAND OFF TO SHOOTER SCHEDULED", handOffToShooterCommand.isScheduled());
+        if(!handOffToShooterCommand.isScheduled() && this.rampShooterCommand.isFinished() && this.goToPosition.highTolorence) {
             handOffToShooterCommand.schedule();
         }
     }
@@ -83,6 +89,7 @@ public class AutoShootPositionLeftCommand extends Command{
         this.handOffToShooterCommand.cancel();
         this.goToPosition.cancel();
         this.stopShooterCommmand.schedule();
+
     }
 
     // Returns true when the command should end.

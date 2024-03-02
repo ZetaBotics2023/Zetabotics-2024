@@ -5,6 +5,8 @@
 
 package frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition;
 
+import javax.xml.namespace.QName;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -28,11 +30,14 @@ public class GoToPoseitionWithPIDS extends Command{
     private ProfiledPIDController translationXController;
     private ProfiledPIDController translationYController;
     private ProfiledPIDController headingPIDController;
+
     private LEDSubsystem m_ledSubsystem;
 
     private boolean firstLimitCrossed = false;
     private boolean secondLimitCrossed = false;
     private boolean thirdLimitCrossed = false;
+
+    public boolean highTolorence = false;
 
     public GoToPoseitionWithPIDS(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose, LEDSubsystem m_ledSubsystem) {
         this.m_driveSubsystem = m_driveSubsystem;
@@ -70,6 +75,7 @@ public class GoToPoseitionWithPIDS extends Command{
         this.translationXController.reset(this.m_driveSubsystem.getRobotPose().getX());
         this.translationYController.reset(this.m_driveSubsystem.getRobotPose().getY());
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
+
         this.m_ledSubsystem.stopRainbow();
         this.m_ledSubsystem.setSolidColor(RGBColor.Purple.color);
     }
@@ -83,7 +89,16 @@ public class GoToPoseitionWithPIDS extends Command{
             this.headingPIDController.calculate(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees(), this.goalEndPose.getRotation().getDegrees()),
             this.m_driveSubsystem.getRobotPose().getRotation()
         ));
-
+        
+            if(Math.abs(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees() - this.goalEndPose.getRotation().getDegrees()) 
+                <= AutoConstants.kHeadingPIDControllerToleranceHigh 
+                && Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX())
+                <= AutoConstants.kTranslationPIDControllerPositionalToleranceHigh &&
+                Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY())
+                <= AutoConstants.kTranslationPIDControllerPositionalToleranceHigh) {
+                    
+                this.highTolorence = true;
+            }
     }
 
     @Override
@@ -96,9 +111,10 @@ public class GoToPoseitionWithPIDS extends Command{
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.abs(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees() - this.goalEndPose.getRotation().getDegrees()) <= AutoConstants.kHeadingPIDControllerTolerance && Math.abs(this.m_driveSubsystem.getRobotPose().getX() - goalEndPose.getX()) <= AutoConstants.kAutoPositonToleranceAuto &&
-         Math.abs(this.m_driveSubsystem.getRobotPose().getY() - goalEndPose.getY()) <= AutoConstants.kAutoPositonToleranceAuto;
-    }
+        return this.translationXController.atGoal() && 
+            this.translationYController.atGoal() &&
+            this.headingPIDController.atGoal();        
+        }
 
     public void updateControllersForVoltage() {
         if(BatteryCharge.getAverageVoltage() < AutoConstants.kFirstBatteryPIDLimit && !this.firstLimitCrossed) {

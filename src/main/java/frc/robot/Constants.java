@@ -58,10 +58,10 @@ public final class Constants {
     public static final double kBackLeftTurnEncoderOffset = 0.688477;
     public static final double kBackRightTurnEncoderOffset = 0.837891;*/
 
-    public static final double kFrontLeftTurnEncoderOffset = 0.144531;//0.146240;
-    public static final double kFrontRightTurnEncoderOffset = 0.965820;//0.964111;
-    public static final double kBackLeftTurnEncoderOffset = 0.934326;//0.685547;
-    public static final double kBackRightTurnEncoderOffset = 0.837646;//0.837891;
+    public static final double kFrontLeftTurnEncoderOffset = 0.139648;//0.144531;
+    public static final double kFrontRightTurnEncoderOffset = 0.957031;//0.965820;
+    public static final double kBackLeftTurnEncoderOffset = 0.932373;//0.934326;
+    public static final double kBackRightTurnEncoderOffset = 0.834961;//0.837646;
 
     public static final double kFrontLeftTurnMagnetOffset = 0.629395;
     public static final double kFrontRightTurnMagnetOffset = 0.139160;
@@ -82,7 +82,7 @@ public final class Constants {
     public static final boolean kGyroReversed = false;
 
     public static final double kMaxSpeedMetersPerSecond = 4.1;//4.6;
-    public static final double kMaxRotationAnglePerSecond = 50;
+    public static final double kMaxRotationAnglePerSecond = 12;
 
     public static final double kRadiusFromCenterToSwerves = 1.0;
 
@@ -112,7 +112,7 @@ public final class Constants {
     public static final double kMaxModuleAngularSpeedDegreesPerSecond =  30.0;
     public static final double kMaxModuleAngularAccelDegreesPerSecondSquared = 30.0;
 
-    public static final double kTranslationRateLimiter = 9;//9;
+    public static final double kTranslationRateLimiter = 8;//9;
     public static final double kRotationRateLimiter = 100;//20;
   }
 
@@ -137,7 +137,7 @@ public final class Constants {
     public static final double kAbsoluteTurningEncoderCPR = 4096.0;
     public static final double kNeoEncoderCPR = 4096.0;
     public static final double kMaxRPM = 5676.0;
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.72);//0.1016;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.8688);//0.1016;
     public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);//6.75/1.0;
     public static final double kTurningGearRatio = 150.0/7.0; 
 
@@ -199,7 +199,7 @@ public final class Constants {
     // Auto Constrants
 
     public static final double kMaxTranslationSpeedMPSAuto = 4.1;
-    public static final double kMaxTranslationAccelerationAuto = 2;//4.1;
+    public static final double kMaxTranslationAccelerationAuto = 4.1;//2;//4.1;
     public static final TrapezoidProfile.Constraints kTranslationAutoControllerConstraints =
      new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPSAuto, kMaxTranslationAccelerationAuto);
 
@@ -219,6 +219,8 @@ public final class Constants {
     public static final double kMaxAngularAccelerationRadiansPerSecondSquaredAuto = 720;
     public static final TrapezoidProfile.Constraints kThetaControllerConstraintsAuto = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecondAuto, kMaxAngularAccelerationRadiansPerSecondSquaredAuto);
     public static final double kAutoPositonToleranceAuto = .075;
+    public static final double kAutoPositonToleranceAutoHigh = .15;
+
 
     // To To Pose Teleop
     public static final double kFirstBatteryPIDLimit = 11;
@@ -251,8 +253,10 @@ public final class Constants {
     public static final double kTranslationPIDControllerIThirdBatteryPIDLimit = 0;
     public static final double kTranslationPIDControllerDThirdBatteryPIDLimit = 0;
 
-     public static final double kTranslationPIDControllerVelocityTolerance = .25;
-    public static final double kTranslationPIDControllerPositionalTolerance = .25;
+    public static final double kTranslationPIDControllerVelocityToleranceHigh = 2;
+    public static final double kTranslationPIDControllerVelocityTolerance = .25;
+    public static final double kTranslationPIDControllerPositionalToleranceHigh = .5;
+    public static final double kTranslationPIDControllerPositionalTolerance = .05;
 
     public static final double kHeadingPIDControllerP = .035;
     public static final double kHeadingPIDControllerI = .00005;
@@ -271,6 +275,8 @@ public final class Constants {
     public static final double kHeadingPIDControllerDThirdBatteryPIDLimit = 0;
     
     public static final double kHeadingPIDControllerTolerance = 1.2;
+    public static final double kHeadingPIDControllerToleranceHigh = 4;
+
     public static final double kMaxAngularSpeedRadiansPerSecond = 360;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 720;
 
@@ -306,7 +312,7 @@ public final class Constants {
     public static final ArrayList<Command> kRight_ShootPreloadedRightCenter = new ArrayList<Command>();
 
     public static final ArrayList<Command> kLeft_ShootPreloadedFarFarLeft = new ArrayList<Command>();
-
+    public static final ArrayList<Command> kLeft_ShootPreloadedFarFarLeftFarLeft = new ArrayList<Command>();
 
     public static final MirrablePose2d kLeftStartingPose = new MirrablePose2d(new Pose2d(1.5134, 7, new Rotation2d()));
     public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(1.5134, 5.55, new Rotation2d()));
@@ -319,7 +325,8 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-
+    public static boolean kRampShooter = false;
+ 
     public static final int kLeftShooterMotorControllerID = 16;
     public static final int kRightShooterMotorControllerID = 17;
 
@@ -337,13 +344,13 @@ public final class Constants {
 
     public static final double kMinShootingDistanceFromWallMeters = Units.inchesToMeters(40);
 
-    public static final double kShooterPowerRatio = .75; // TODO: Also wrong
+    public static final double kShooterPowerRatio = 1;
     public static final double kShooterRPM = 2800;//SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
     public static final double kShootTime = 10;
     public static final double kShootTimeAuto = .4;
-    public static final double kShooterRPMTolerance = 75;
+    public static final double kShooterRPMTolerance = 100;
 
-    public static final MirrablePose2d kLeftShootingPose = new MirrablePose2d(new Pose2d(2.05, 6.7, Rotation2d.fromDegrees(26)));
+    public static final MirrablePose2d kLeftShootingPose = new MirrablePose2d(new Pose2d(2.1, 6.6, Rotation2d.fromDegrees(24)));
     public static final MirrablePose2d kCenterShootingPose = new MirrablePose2d(new Pose2d(2.3, 5.55, new Rotation2d()));
     public static final MirrablePose2d kRightShootingPose = new MirrablePose2d(new Pose2d(2.1, 4.6, Rotation2d.fromDegrees(-26)));
   }
@@ -352,17 +359,11 @@ public final class Constants {
     public static final int kLeftClimberMotorControllerID = 22;
     public static final int kRightClimberMotorControllerID = 23;
 
-    public static final double kLeftShooterGearRatio = 1.0;
-    public static final double kRightShooterGearRatio = 1.0;
-
-    public static final float kClimberMaxHeight = 300;
-    public static final float kClimberMinHeight = 25;
+    public static final float kClimberMaxHeight = 325;
+    public static final float kClimberMinHeight = 1;
 
     public static final double kClimbUpPercentOutput = 1;
     public static final double kClimbDownPercentOutput = -1;
-      
-    public static final double kPassIntoClimberPositionRotationDegrees = 0.0;
-    public static final double kClimerMinPose = 0;
   }
 
   public static final class IntakeConstants {
