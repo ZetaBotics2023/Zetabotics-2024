@@ -58,20 +58,20 @@ public final class Constants {
     public static final double kBackLeftTurnEncoderOffset = 0.688477;
     public static final double kBackRightTurnEncoderOffset = 0.837891;*/
 
-    public static final double kFrontLeftTurnEncoderOffset = 0.139648;//0.144531;
-    public static final double kFrontRightTurnEncoderOffset = 0.957031;//0.965820;
-    public static final double kBackLeftTurnEncoderOffset = 0.932373;//0.934326;
-    public static final double kBackRightTurnEncoderOffset = 0.834961;//0.837646;
+    public static final double kFrontLeftTurnEncoderOffset = 0.831299;//0.144531;
+    public static final double kFrontRightTurnEncoderOffset = 0.453369;//0.965820;
+    public static final double kBackLeftTurnEncoderOffset = 0.684570;//0.934326;
+    public static final double kBackRightTurnEncoderOffset = 0.144775;//0.837646;
 
     public static final double kFrontLeftTurnMagnetOffset = 0.629395;
     public static final double kFrontRightTurnMagnetOffset = 0.139160;
     public static final double kBackLeftTurnMagnetOffset = 0.326660;
     public static final double kBackRightTurnMagnetOffset = 0.567627;
 
-    public static final boolean kFrontLeftDriveMotorRev = false;
-    public static final boolean kFrontRightDriveMotorRev = false;
+    public static final boolean kFrontLeftDriveMotorRev = true;
+    public static final boolean kFrontRightDriveMotorRev = true;
     public static final boolean kBackLeftDriveMotorRev = false;
-    public static final boolean kBackRightDriveMotorRev = false;
+    public static final boolean kBackRightDriveMotorRev = true;
 
     public static final boolean kFrontLeftTurnMotorRev = true;
     public static final boolean kFrontRightTurnMotorRev = true;
@@ -137,7 +137,7 @@ public final class Constants {
     public static final double kAbsoluteTurningEncoderCPR = 4096.0;
     public static final double kNeoEncoderCPR = 4096.0;
     public static final double kMaxRPM = 5676.0;
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.8688);//0.1016;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.83931974);//0.1016;
     public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);//6.75/1.0;
     public static final double kTurningGearRatio = 150.0/7.0; 
 
@@ -206,7 +206,7 @@ public final class Constants {
     public static final double kTranslationAutoPIDControllerVelocityTolerance = .1;
     public static final double kTranslationAutoPIDControllerPositionalTolerance = .05;
 
-    public static final double kTranslationAutoPIDControllerP = 2;
+    public static final double kTranslationAutoPIDControllerP = 1.5;
     public static final double kTranslationAutoPIDControllerI = 0;
     public static final double kTranslationAutoPIDControllerD = 0;
 
@@ -318,6 +318,7 @@ public final class Constants {
     public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(1.5134, 5.55, new Rotation2d()));
     public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(1.5134, 4.11, new Rotation2d()));
 
+    public static final MirrablePose2d kLeftFarNoteStartingPose = new MirrablePose2d(new Pose2d(1.5134, 6.2, new Rotation2d(0)));
 
     public static final double kLeftNoteIntakeDownTime = .7;
     public static final double kCenterNoteIntakeDownTime = 1.1;

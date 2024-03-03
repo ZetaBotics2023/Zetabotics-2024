@@ -180,8 +180,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             && estimatedPoseX.getX() > 0.0 && estimatedPoseX.getX() <= FieldConstants.kLength
             && estimatedPoseY.getY() > 0.0 && estimatedPoseY.getY() <= FieldConstants.kWidth) {
           previousPipelineTimestamp = estimatedRobotPoseY.timestampSeconds;
-             
-            poseEstimator.addVisionMeasurement(new Pose2d(estimatedPoseX.toPose2d().getX() , estimatedPoseY.toPose2d().getY(), this.m_driveSubsystem.getHeadingInRotation2d()), (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
+            if(estimatedPoseX.toPose2d().getX() <= 3) {
+              poseEstimator.addVisionMeasurement(new Pose2d(estimatedPoseX.toPose2d().getX() , estimatedPoseY.toPose2d().getY(), this.m_driveSubsystem.getHeadingInRotation2d()), (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
+            }
         }
         });
       });
