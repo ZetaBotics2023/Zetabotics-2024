@@ -33,7 +33,11 @@ public class PickupFromGroundCommand extends Command {
     public void initialize() { 
         this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kGroundPickupPivotRotationDegrees);
         this.intakeSubsystem.runAtRPM(IntakeConstants.kGroundPickupIntakeRPM);
-        this.m_ledSubsystem.setSolidColor(RGBColor.Red.color);
+        if(this.intakeSensorSubsystem.isNoteInIntake()) {
+            this.m_ledSubsystem.setSolidColor(RGBColor.Green.color);
+        } else {
+            this.m_ledSubsystem.setSolidColor(RGBColor.Red.color);
+        }
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -51,7 +55,6 @@ public class PickupFromGroundCommand extends Command {
         this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kPassIntoShooterPivotRotationDegrees);
         this.intakeSubsystem.runAtRPM(0);
         if(this.intakeSensorSubsystem.isNoteInIntake()) {
-            this.m_ledSubsystem.stopRainbow();
             this.m_ledSubsystem.setSolidColor(RGBColor.Green.color);
         } else {
             this.m_ledSubsystem.setSolidColor(RGBColor.Blue.color);

@@ -16,6 +16,7 @@ import frc.robot.utils.BatteryCharge;
 import frc.robot.utils.ButtonBoard;
 import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.utils.InTeleop;
 
@@ -88,6 +89,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    ShooterConstants.kShooterRPMChange = 0;
     checkDriverStationUpdate();
     VisionConstants.useVision = true;
    // This makes sure that the autonomous stops running when

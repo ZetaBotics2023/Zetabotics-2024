@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.ShooterCommands.StopShooterCommand;
 
 /*
  * This subsystem allows us to ccontrol our shooter
@@ -25,6 +26,8 @@ public class ShooterSubsystem extends SubsystemBase{
     private final SparkPIDController leftShooterPID;
     private final SparkPIDController rightShooterPID; 
     private double targetVelocityRPM = 0;
+    private double lastShooterRPMChange = 0;
+
     private double finishedRunningTimestamp = 0;
 
 
@@ -95,7 +98,6 @@ public class ShooterSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Actully Shooter RPM Right", this.m_rightEncoder.getVelocity());
         SmartDashboard.putNumber("Actully Shooter RPM Left", this.m_leftEncoder.getVelocity());
     }
-
     /*
      * Runs both motors at the same speed for a given amount of time
      */
@@ -111,14 +113,27 @@ public class ShooterSubsystem extends SubsystemBase{
      * This achieves more stability by applying spin to our note, which makes it fly straighter.
      */
     public void runAtRPMAndRPMRatio(double rpm) {
+        this.targetVelocityRPM = rpm + ShooterConstants.kShooterRPMChange;
+        SmartDashboard.putNumber("Desired Shooter RPM", rpm);
+        if(rpm == 0) {
+            this.m_leftShooter.set(0);
+            this.m_rightShooter.set(0);
+        } else {
+            this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
+            this.rightShooterPID.setReference(this.targetVelocityRPM*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
+        }
+       
+    }
+
+    public void runAtRPMAndRPMRatioIgnoreRPMChange(double rpm) {
         this.targetVelocityRPM = rpm;
         SmartDashboard.putNumber("Desired Shooter RPM", rpm);
         if(rpm == 0) {
             this.m_leftShooter.set(0);
             this.m_rightShooter.set(0);
         } else {
-            this.leftShooterPID.setReference(rpm, ControlType.kVelocity);
-            this.rightShooterPID.setReference(rpm*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
+            this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
+            this.rightShooterPID.setReference(this.targetVelocityRPM*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
         }
        
     }

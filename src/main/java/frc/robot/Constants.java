@@ -203,10 +203,10 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kTranslationAutoControllerConstraints =
      new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPSAuto, kMaxTranslationAccelerationAuto);
 
-    public static final double kTranslationAutoPIDControllerVelocityTolerance = .1;
-    public static final double kTranslationAutoPIDControllerPositionalTolerance = .05;
+    public static final double kTranslationAutoPIDControllerVelocityTolerance = 1;
+    public static final double kTranslationAutoPIDControllerPositionalTolerance = .05;//.05;
 
-    public static final double kTranslationAutoPIDControllerP = 1.5;
+    public static final double kTranslationAutoPIDControllerP = 1.4;
     public static final double kTranslationAutoPIDControllerI = 0;
     public static final double kTranslationAutoPIDControllerD = 0;
 
@@ -237,7 +237,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kTranslationControllerConstraintsLowVoltage  =
      new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPSLowVoltage, kMaxTranslationAccelerationLowVoltage);
 
-    public static final double kTranslationPIDControllerP = 1.5;
+    public static final double kTranslationPIDControllerP = 1.5;//1.4;//1.5;
     public static final double kTranslationPIDControllerI = 0;
     public static final double kTranslationPIDControllerD = 0;
 
@@ -314,14 +314,14 @@ public final class Constants {
     public static final ArrayList<Command> kLeft_ShootPreloadedFarFarLeft = new ArrayList<Command>();
     public static final ArrayList<Command> kLeft_ShootPreloadedFarFarLeftFarLeft = new ArrayList<Command>();
 
-    public static final MirrablePose2d kLeftStartingPose = new MirrablePose2d(new Pose2d(1.5134, 7, new Rotation2d()));
-    public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(1.5134, 5.55, new Rotation2d()));
-    public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(1.5134, 4.11, new Rotation2d()));
+    public static final MirrablePose2d kLeftStartingPose = new MirrablePose2d(new Pose2d(1.5134 - Units.inchesToMeters(3), 7, new Rotation2d()));
+    public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(new Pose2d(1.5134 - Units.inchesToMeters(3), 5.55, new Rotation2d()));
+    public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(new Pose2d(1.5134 - Units.inchesToMeters(3), 4.11, new Rotation2d()));
 
     public static final MirrablePose2d kLeftFarNoteStartingPose = new MirrablePose2d(new Pose2d(1.5134, 6.2, new Rotation2d(0)));
 
-    public static final double kLeftNoteIntakeDownTime = .7;
-    public static final double kCenterNoteIntakeDownTime = 1.1;
+    public static final double kLeftNoteIntakeDownTime = .9;//.75;
+    public static final double kCenterNoteIntakeDownTime = 1.15;
     public static final double kRightNoteIntakeDownTime = 1;
   }
 
@@ -346,10 +346,12 @@ public final class Constants {
     public static final double kMinShootingDistanceFromWallMeters = Units.inchesToMeters(40);
 
     public static final double kShooterPowerRatio = 1;
-    public static final double kShooterRPM = 2800;//SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
+    public static double kShooterRPM = 2800;//SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
     public static final double kShootTime = 10;
     public static final double kShootTimeAuto = .4;
     public static final double kShooterRPMTolerance = 100;
+
+    public static double kShooterRPMChange = 0;
 
     public static final MirrablePose2d kLeftShootingPose = new MirrablePose2d(new Pose2d(2.1, 6.6, Rotation2d.fromDegrees(24)));
     public static final MirrablePose2d kCenterShootingPose = new MirrablePose2d(new Pose2d(2.3, 5.55, new Rotation2d()));
@@ -357,11 +359,11 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    public static final int kLeftClimberMotorControllerID = 22;
-    public static final int kRightClimberMotorControllerID = 23;
+    public static final int kLeftClimberMotorControllerID = 23;
+    public static final int kRightClimberMotorControllerID = 22;
 
-    public static final float kClimberMaxHeight = 325;
-    public static final float kClimberMinHeight = 1;
+    public static final float kClimberMaxHeight = 345;
+    public static final float kClimberMinHeight = 3.5f;
 
     public static final double kClimbUpPercentOutput = 1;
     public static final double kClimbDownPercentOutput = -1;
