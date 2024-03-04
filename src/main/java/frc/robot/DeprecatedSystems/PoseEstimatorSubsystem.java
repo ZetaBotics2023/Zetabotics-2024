@@ -10,6 +10,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.proto.Photon;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -49,7 +50,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
    * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians, then
    * meters.
    */
-  private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, 0.1);//gray matter has lower
+  private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, 0.1);// gray matter has lower
 
   /**
    * Standard deviations of the vision measurements. Increase these numbers to
@@ -65,7 +66,6 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private final PhotonPoseEstimator photonPoseEstimatorY;
   private final PhotonPoseEstimator photonPoseEstimatorX;
 
-
   private double previousPipelineTimestamp = 0;
   private OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;
 
@@ -77,22 +77,23 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   public PoseEstimatorSubsystem(PhotonCamera photonCamera, DriveSubsystem m_driveSubsystem) {
     this.m_driveSubsystem = m_driveSubsystem;
     this.photonCamera = photonCamera;
-    //try {
-      var layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-      layout.setOrigin(originPosition);
-      // The Pose Strategy may be incorrect
-      this.photonPoseEstimatorY = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
-          Constants.VisionConstants.robotToCam);
-      this.photonPoseEstimatorY.setMultiTagFallbackStrategy(PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR);
+    // try {
+    var layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+    layout.setOrigin(originPosition);
+    // The Pose Strategy may be incorrect
+    this.photonPoseEstimatorY = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
+        Constants.VisionConstants.robotToCam);
+    this.photonPoseEstimatorY.setMultiTagFallbackStrategy(PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR);
 
-      photonPoseEstimatorX = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, photonCamera,
-          Constants.VisionConstants.robotToCam);
-      photonPoseEstimatorX.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
+    photonPoseEstimatorX = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, photonCamera,
+        Constants.VisionConstants.robotToCam);
+    photonPoseEstimatorX.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
 
-    //} catch (IOException e) {
-      //DriverStation.reportError("Failed to load AprilTagFieldLayout", e.getStackTrace());
-      //photonPoseEstimator = null;
-    //}
+    // } catch (IOException e) {
+    // DriverStation.reportError("Failed to load AprilTagFieldLayout",
+    // e.getStackTrace());
+    // photonPoseEstimator = null;
+    // }
 
     ShuffleboardTab tab = Shuffleboard.getTab("Vision");
 
@@ -106,7 +107,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
     tab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
     tab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
-    }
+  }
 
   /**
    * Sets the alliance. This is used to configure the origin of the AprilTag map
@@ -148,9 +149,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Update pose estimator with drivetrain sensors
-   poseEstimator.update(
-       m_driveSubsystem.getHeadingInRotation2d(),
-       m_driveSubsystem.getModulePositions());
+    poseEstimator.update(
+        m_driveSubsystem.getHeadingInRotation2d(),
+        m_driveSubsystem.getModulePositions());
 
     // Conversion so robot appears where it actually is on field instead of always
     // on blue.
@@ -167,30 +168,59 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     // }
     // double RMS = Math.sqrt((1.0 / (double) xValues.size() * summation));
     // System.out.println("RMS: " + RMS);
-    // If the pose estimator exists, we have a frame, and it's a new frame, and we're in the field, use the measurement
+    // If the pose estimator exists, we have a frame, and it's a new frame, and
+    // we're in the field, use the measurement
     if (photonPoseEstimatorY != null) {
       // Update pose estimator with the best visible target
       photonPoseEstimatorY.update().ifPresent(estimatedRobotPoseY -> {
         photonPoseEstimatorX.update().ifPresent(estimatedRobotPoseX -> {
-        var estimatedPoseY = estimatedRobotPoseY.estimatedPose; // TODO: Change var to the real deal
-        var estimatedPoseX = estimatedRobotPoseX.estimatedPose; // TODO: Change var to the real deal
+          var estimatedPoseY = estimatedRobotPoseY.estimatedPose; // TODO: Change var to the real deal
+          var estimatedPoseX = estimatedRobotPoseX.estimatedPose; // TODO: Change var to the real deal
 
-        // Make sure we have a new measurement, and that it's on the field
-        if (estimatedRobotPoseY.timestampSeconds != previousPipelineTimestamp
-            && estimatedPoseX.getX() > 0.0 && estimatedPoseX.getX() <= FieldConstants.kLength
-            && estimatedPoseY.getY() > 0.0 && estimatedPoseY.getY() <= FieldConstants.kWidth) {
-          previousPipelineTimestamp = estimatedRobotPoseY.timestampSeconds;
-            if(AutonConfigurationConstants.kIsBlueAlliance) {
-                poseEstimator.addVisionMeasurement(new Pose2d(estimatedPoseX.toPose2d().getX() , estimatedPoseY.toPose2d().getY(), this.m_driveSubsystem.getHeadingInRotation2d()), (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
-            } else {
-                poseEstimator.addVisionMeasurement(new Pose2d(estimatedPoseX.toPose2d().getX() , estimatedPoseY.toPose2d().getY(), this.m_driveSubsystem.getHeadingInRotation2d()), (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
+          // Make sure we have a new measurement, and that it's on the field
+          if (estimatedRobotPoseY.timestampSeconds != previousPipelineTimestamp
+              && estimatedPoseX.getX() > 0.0 && estimatedPoseX.getX() <= FieldConstants.kLength
+              && estimatedPoseY.getY() > 0.0 && estimatedPoseY.getY() <= FieldConstants.kWidth) {
+            previousPipelineTimestamp = estimatedRobotPoseY.timestampSeconds;
+
+            boolean yTagsAmbiguityUseable = true;
+            boolean xTagsAmbiguityUseable = true;
+
+            PhotonPipelineResult cameraResults = this.photonCamera.getLatestResult();
+            for (int i = 0; i < cameraResults.getTargets().size(); i++) {
+              for (int j = 0; j < estimatedRobotPoseY.targetsUsed.size(); j++) {
+                if (this.photonCamera.getLatestResult().getTargets().get(i)
+                    .getFiducialId() == estimatedRobotPoseY.targetsUsed.get(j).getFiducialId()) {
+                  if (estimatedRobotPoseY.targetsUsed.get(j).getPoseAmbiguity() > .2) {
+                    yTagsAmbiguityUseable = false;
+                  }
+                }
+              }
+              for (int j = 0; j < estimatedRobotPoseX.targetsUsed.size(); j++) {
+                if (this.photonCamera.getLatestResult().getTargets().get(i)
+                    .getFiducialId() == estimatedRobotPoseX.targetsUsed.get(j).getFiducialId()) {
+                  if (estimatedRobotPoseX.targetsUsed.get(j).getPoseAmbiguity() > .2) {
+                    xTagsAmbiguityUseable = false;
+                  }
+                }
+              }
             }
-            
-        }
+            if (AutonConfigurationConstants.kIsBlueAlliance) {
+              poseEstimator.addVisionMeasurement(
+                  new Pose2d(estimatedPoseX.toPose2d().getX(), estimatedPoseY.toPose2d().getY(),
+                      this.m_driveSubsystem.getHeadingInRotation2d()),
+                  (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
+            } else {
+              poseEstimator.addVisionMeasurement(
+                  new Pose2d(estimatedPoseX.toPose2d().getX(), estimatedPoseY.toPose2d().getY(),
+                      this.m_driveSubsystem.getHeadingInRotation2d()),
+                  (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
+            }
+          }
         });
       });
     }
-    
+
     Pose2d dashboardPose = getCurrentPose();
     if (originPosition == OriginPosition.kRedAllianceWallRightSide) {
       // Flip the pose when red, since the dashboard field photo cannot be rotated
@@ -258,7 +288,6 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         new Translation2d(FieldConstants.kLength, FieldConstants.kWidth),
         new Rotation2d(Math.PI)));
   }
-
 
   /**
    * Resets the holonomic rotation of the robot (gyro last year)
