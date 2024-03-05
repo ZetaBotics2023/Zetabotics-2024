@@ -81,9 +81,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     var layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
     layout.setOrigin(originPosition);
     // The Pose Strategy may be incorrect
-    this.photonPoseEstimatorY = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
+    this.photonPoseEstimatorY = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_LAST_POSE, photonCamera,
         Constants.VisionConstants.robotToCam);
-    this.photonPoseEstimatorY.setMultiTagFallbackStrategy(PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR);
+    this.photonPoseEstimatorY.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
 
     photonPoseEstimatorX = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, photonCamera,
         Constants.VisionConstants.robotToCam);
@@ -171,12 +171,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     // If the pose estimator exists, we have a frame, and it's a new frame, and
     // we're in the field, use the measurement
     if (photonPoseEstimatorY != null) {
+        this.photonPoseEstimatorX.setLastPose(getCurrentPose());
+        this.photonPoseEstimatorY.setLastPose(getCurrentPose());
       // Update pose estimator with the best visible target
       photonPoseEstimatorY.update().ifPresent(estimatedRobotPoseY -> {
         photonPoseEstimatorX.update().ifPresent(estimatedRobotPoseX -> {
           var estimatedPoseY = estimatedRobotPoseY.estimatedPose; // TODO: Change var to the real deal
           var estimatedPoseX = estimatedRobotPoseX.estimatedPose; // TODO: Change var to the real deal
-
+          
           // Make sure we have a new measurement, and that it's on the field
           if (estimatedRobotPoseY.timestampSeconds != previousPipelineTimestamp
               && estimatedPoseX.getX() > 0.0 && estimatedPoseX.getX() <= FieldConstants.kLength
@@ -191,7 +193,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
               for (int j = 0; j < estimatedRobotPoseY.targetsUsed.size(); j++) {
                 if (this.photonCamera.getLatestResult().getTargets().get(i)
                     .getFiducialId() == estimatedRobotPoseY.targetsUsed.get(j).getFiducialId()) {
-                  if (estimatedRobotPoseY.targetsUsed.get(j).getPoseAmbiguity() > .2) {
+                  if (estimatedRobotPoseY.targetsUsed.get(j).getPoseAmbiguity() > .4) {
                     yTagsAmbiguityUseable = false;
                   }
                 }
@@ -199,22 +201,25 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
               for (int j = 0; j < estimatedRobotPoseX.targetsUsed.size(); j++) {
                 if (this.photonCamera.getLatestResult().getTargets().get(i)
                     .getFiducialId() == estimatedRobotPoseX.targetsUsed.get(j).getFiducialId()) {
-                  if (estimatedRobotPoseX.targetsUsed.get(j).getPoseAmbiguity() > .2) {
+                  if (estimatedRobotPoseX.targetsUsed.get(j).getPoseAmbiguity() > .4) {
                     xTagsAmbiguityUseable = false;
                   }
                 }
               }
             }
+            
             if (AutonConfigurationConstants.kIsBlueAlliance) {
               poseEstimator.addVisionMeasurement(
                   new Pose2d(estimatedPoseX.toPose2d().getX(), estimatedPoseY.toPose2d().getY(),
                       this.m_driveSubsystem.getHeadingInRotation2d()),
                   (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
             } else {
-              poseEstimator.addVisionMeasurement(
-                  new Pose2d(estimatedPoseX.toPose2d().getX(), estimatedPoseY.toPose2d().getY(),
+              if(xTagsAmbiguityUseable && yTagsAmbiguityUseable) {
+                poseEstimator.addVisionMeasurement(
+                  new Pose2d(estimatedPoseY.toPose2d().getX(), estimatedPoseY.toPose2d().getY(),
                       this.m_driveSubsystem.getHeadingInRotation2d()),
                   (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
+              }
             }
           }
         });

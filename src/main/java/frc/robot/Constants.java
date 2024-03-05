@@ -401,7 +401,7 @@ public final class Constants {
     public static final double kIZoneIntakePositionController = .5/360;
 
     // Rotation constants
-    public static final double kGroundPickupPivotRotationDegrees = 189;
+    public static final double kGroundPickupPivotRotationDegrees = 190;//189;
     public static final double kGroundPickupIntakeRPM = 1000;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
