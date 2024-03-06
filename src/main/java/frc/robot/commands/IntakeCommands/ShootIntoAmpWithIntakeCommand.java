@@ -16,7 +16,6 @@ public class ShootIntoAmpWithIntakeCommand extends Command {
     private IntakeSubsystem intakeSubsystem;
     private PivotSubsystem pivotSubsystem;
     private IntakeSensorSubsystem intakeSensorSubsystem;
-    private WaitCommand shootWaitTime = null;
 
     public ShootIntoAmpWithIntakeCommand(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem) {
         this.intakeSubsystem = intakeSusbsystem;
@@ -28,14 +27,15 @@ public class ShootIntoAmpWithIntakeCommand extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        this.shootWaitTime = null;
         this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kShootInAmpPivotRotationDegrees);
-        this.intakeSubsystem.runAtRPM(IntakeConstants.kShootInAmpIntakeRPM);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        if(this.pivotSubsystem.isMotorAtTargetRotationLarge()) {
+            this.intakeSubsystem.runAtRPM(IntakeConstants.kShootInAmpIntakeRPM);
+        }
        
     }
 
@@ -45,6 +45,7 @@ public class ShootIntoAmpWithIntakeCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         this.intakeSubsystem.runAtRPM(0);
+        this.pivotSubsystem.setTargetPositionDegrees(0);
     }
 
     /**
@@ -52,15 +53,6 @@ public class ShootIntoAmpWithIntakeCommand extends Command {
      */
     @Override
     public boolean isFinished() {
-        if(this.shootWaitTime == null && this.pivotSubsystem.isMotorAtTargetRotation()) {
-            this.shootWaitTime = new WaitCommand(ShooterConstants.kShootTime);
-            SmartDashboard.putString("HandOffState", "Started Timer");
-            this.shootWaitTime.schedule();
-        } 
-        if(this.shootWaitTime != null) {
-            SmartDashboard.putString("HandOffState", this.shootWaitTime.isFinished() ? "Ended Timer" : "Timer Still Going");
-            return this.shootWaitTime.isFinished();
-        }
         return false;
-    }
+    } 
 }

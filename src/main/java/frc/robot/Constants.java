@@ -58,20 +58,20 @@ public final class Constants {
     public static final double kBackLeftTurnEncoderOffset = 0.688477;
     public static final double kBackRightTurnEncoderOffset = 0.837891;*/
 
-    public static final double kFrontLeftTurnEncoderOffset = 0.831299;//0.144531;
-    public static final double kFrontRightTurnEncoderOffset = 0.453369;//0.965820;
-    public static final double kBackLeftTurnEncoderOffset = 0.684570;//0.934326;
-    public static final double kBackRightTurnEncoderOffset = 0.144775;//0.837646;
+    public static final double kFrontLeftTurnEncoderOffset = 0.330811;//0.144531;
+    public static final double kFrontRightTurnEncoderOffset = 0.964844;//0.965820;
+    public static final double kBackLeftTurnEncoderOffset = 0.688232;//0.934326;
+    public static final double kBackRightTurnEncoderOffset = 0.692139;//0.837646;
 
     public static final double kFrontLeftTurnMagnetOffset = 0.629395;
     public static final double kFrontRightTurnMagnetOffset = 0.139160;
     public static final double kBackLeftTurnMagnetOffset = 0.326660;
     public static final double kBackRightTurnMagnetOffset = 0.567627;
 
-    public static final boolean kFrontLeftDriveMotorRev = true;
-    public static final boolean kFrontRightDriveMotorRev = true;
+    public static final boolean kFrontLeftDriveMotorRev = false;
+    public static final boolean kFrontRightDriveMotorRev = false;
     public static final boolean kBackLeftDriveMotorRev = false;
-    public static final boolean kBackRightDriveMotorRev = true;
+    public static final boolean kBackRightDriveMotorRev = false;
 
     public static final boolean kFrontLeftTurnMotorRev = true;
     public static final boolean kFrontRightTurnMotorRev = true;
@@ -137,7 +137,7 @@ public final class Constants {
     public static final double kAbsoluteTurningEncoderCPR = 4096.0;
     public static final double kNeoEncoderCPR = 4096.0;
     public static final double kMaxRPM = 5676.0;
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.83931974);//0.1016;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.80945463);//3.83931974);//0.1016;
     public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);//6.75/1.0;
     public static final double kTurningGearRatio = 150.0/7.0; 
 
@@ -206,9 +206,10 @@ public final class Constants {
     public static final double kTranslationAutoPIDControllerVelocityTolerance = 1;
     public static final double kTranslationAutoPIDControllerPositionalTolerance = .05;//.05;
 
-    public static final double kTranslationAutoPIDControllerP = 1.4;
+    public static final double kTranslationAutoPIDControllerP = 1.8;
     public static final double kTranslationAutoPIDControllerI = 0;
     public static final double kTranslationAutoPIDControllerD = 0;
+
 
     // Heading Auto
     public static final double kHeadingPIDControllerAutoP = .035;
@@ -237,7 +238,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kTranslationControllerConstraintsLowVoltage  =
      new TrapezoidProfile.Constraints(kMaxTranslationSpeedMPSLowVoltage, kMaxTranslationAccelerationLowVoltage);
 
-    public static final double kTranslationPIDControllerP = 1.5;//1.4;//1.5;
+    public static final double kTranslationPIDControllerP = 1.8;//1.4;//1.5;
     public static final double kTranslationPIDControllerI = 0;
     public static final double kTranslationPIDControllerD = 0;
 
@@ -354,7 +355,7 @@ public final class Constants {
     public static double kShooterRPMChange = 0;
 
     public static final MirrablePose2d kLeftShootingPose = new MirrablePose2d(new Pose2d(2.1, 6.6, Rotation2d.fromDegrees(24)));
-    public static final MirrablePose2d kCenterShootingPose = new MirrablePose2d(new Pose2d(2.3, 5.55, new Rotation2d()));
+    public static final MirrablePose2d kCenterShootingPose = new MirrablePose2d(new Pose2d(2.3, 5.55, new Rotation2d()));//2.3
     public static final MirrablePose2d kRightShootingPose = new MirrablePose2d(new Pose2d(2.1, 4.6, Rotation2d.fromDegrees(-26)));
   }
 
@@ -401,7 +402,7 @@ public final class Constants {
     public static final double kIZoneIntakePositionController = .5/360;
 
     // Rotation constants
-    public static final double kGroundPickupPivotRotationDegrees = 190;//189;
+    public static final double kGroundPickupPivotRotationDegrees = 190.5;//189;
     public static final double kGroundPickupIntakeRPM = 1000;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;

@@ -209,10 +209,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             }
             
             if (AutonConfigurationConstants.kIsBlueAlliance) {
+              if(xTagsAmbiguityUseable && yTagsAmbiguityUseable) { 
               poseEstimator.addVisionMeasurement(
                   new Pose2d(estimatedPoseX.toPose2d().getX(), estimatedPoseY.toPose2d().getY(),
                       this.m_driveSubsystem.getHeadingInRotation2d()),
                   (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
+              }
             } else {
               if(xTagsAmbiguityUseable && yTagsAmbiguityUseable) {
                 poseEstimator.addVisionMeasurement(

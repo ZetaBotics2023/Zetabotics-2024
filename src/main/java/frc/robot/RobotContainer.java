@@ -506,7 +506,7 @@ public class RobotContainer {
 
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createIntakeCommand("LeftNoteIntakePose", AutonConfigurationConstants.kLeftNoteIntakeDownTime));
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createGoToPositionCommand("LeftNoteShootPose"));
-        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new WaitCommandWrapper(1/10));
+        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new WaitCommandWrapper(2/10));
 
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(enableVision());
         //AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createGoToPositionCommand("LeftNoteShootPoseInside"));
