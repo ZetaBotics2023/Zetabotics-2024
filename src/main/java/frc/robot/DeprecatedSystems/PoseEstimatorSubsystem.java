@@ -170,62 +170,67 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     // System.out.println("RMS: " + RMS);
     // If the pose estimator exists, we have a frame, and it's a new frame, and
     // we're in the field, use the measurement
-    if (photonPoseEstimatorY != null) {
-        this.photonPoseEstimatorX.setLastPose(getCurrentPose());
-        this.photonPoseEstimatorY.setLastPose(getCurrentPose());
-      // Update pose estimator with the best visible target
-      photonPoseEstimatorY.update().ifPresent(estimatedRobotPoseY -> {
-        photonPoseEstimatorX.update().ifPresent(estimatedRobotPoseX -> {
-          var estimatedPoseY = estimatedRobotPoseY.estimatedPose; // TODO: Change var to the real deal
-          var estimatedPoseX = estimatedRobotPoseX.estimatedPose; // TODO: Change var to the real deal
+    try {
           
-          // Make sure we have a new measurement, and that it's on the field
-          if (estimatedRobotPoseY.timestampSeconds != previousPipelineTimestamp
-              && estimatedPoseX.getX() > 0.0 && estimatedPoseX.getX() <= FieldConstants.kLength
-              && estimatedPoseY.getY() > 0.0 && estimatedPoseY.getY() <= FieldConstants.kWidth) {
-            previousPipelineTimestamp = estimatedRobotPoseY.timestampSeconds;
-
-            boolean yTagsAmbiguityUseable = true;
-            boolean xTagsAmbiguityUseable = true;
-
-            PhotonPipelineResult cameraResults = this.photonCamera.getLatestResult();
-            for (int i = 0; i < cameraResults.getTargets().size(); i++) {
-              for (int j = 0; j < estimatedRobotPoseY.targetsUsed.size(); j++) {
-                if (this.photonCamera.getLatestResult().getTargets().get(i)
-                    .getFiducialId() == estimatedRobotPoseY.targetsUsed.get(j).getFiducialId()) {
-                  if (estimatedRobotPoseY.targetsUsed.get(j).getPoseAmbiguity() > .4) {
-                    yTagsAmbiguityUseable = false;
-                  }
-                }
-              }
-              for (int j = 0; j < estimatedRobotPoseX.targetsUsed.size(); j++) {
-                if (this.photonCamera.getLatestResult().getTargets().get(i)
-                    .getFiducialId() == estimatedRobotPoseX.targetsUsed.get(j).getFiducialId()) {
-                  if (estimatedRobotPoseX.targetsUsed.get(j).getPoseAmbiguity() > .4) {
-                    xTagsAmbiguityUseable = false;
-                  }
-                }
-              }
-            }
+      if (photonPoseEstimatorY != null) {
+          this.photonPoseEstimatorX.setLastPose(getCurrentPose());
+          this.photonPoseEstimatorY.setLastPose(getCurrentPose());
+        // Update pose estimator with the best visible target
+        photonPoseEstimatorY.update().ifPresent(estimatedRobotPoseY -> {
+          photonPoseEstimatorX.update().ifPresent(estimatedRobotPoseX -> {
+            var estimatedPoseY = estimatedRobotPoseY.estimatedPose; // TODO: Change var to the real deal
+            var estimatedPoseX = estimatedRobotPoseX.estimatedPose; // TODO: Change var to the real deal
             
-            if (AutonConfigurationConstants.kIsBlueAlliance) {
-              if(xTagsAmbiguityUseable && yTagsAmbiguityUseable) { 
-              poseEstimator.addVisionMeasurement(
-                  new Pose2d(estimatedPoseX.toPose2d().getX(), estimatedPoseY.toPose2d().getY(),
-                      this.m_driveSubsystem.getHeadingInRotation2d()),
-                  (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
+            // Make sure we have a new measurement, and that it's on the field
+            if (estimatedRobotPoseY.timestampSeconds != previousPipelineTimestamp
+                && estimatedPoseX.getX() > 0.0 && estimatedPoseX.getX() <= FieldConstants.kLength
+                && estimatedPoseY.getY() > 0.0 && estimatedPoseY.getY() <= FieldConstants.kWidth) {
+              previousPipelineTimestamp = estimatedRobotPoseY.timestampSeconds;
+
+              boolean yTagsAmbiguityUseable = true;
+              boolean xTagsAmbiguityUseable = true;
+
+              PhotonPipelineResult cameraResults = this.photonCamera.getLatestResult();
+              for (int i = 0; i < cameraResults.getTargets().size(); i++) {
+                for (int j = 0; j < estimatedRobotPoseY.targetsUsed.size(); j++) {
+                  if (this.photonCamera.getLatestResult().getTargets().get(i)
+                      .getFiducialId() == estimatedRobotPoseY.targetsUsed.get(j).getFiducialId()) {
+                    if (estimatedRobotPoseY.targetsUsed.get(j).getPoseAmbiguity() > .4) {
+                      yTagsAmbiguityUseable = false;
+                    }
+                  }
+                }
+                for (int j = 0; j < estimatedRobotPoseX.targetsUsed.size(); j++) {
+                  if (this.photonCamera.getLatestResult().getTargets().get(i)
+                      .getFiducialId() == estimatedRobotPoseX.targetsUsed.get(j).getFiducialId()) {
+                    if (estimatedRobotPoseX.targetsUsed.get(j).getPoseAmbiguity() > .4) {
+                      xTagsAmbiguityUseable = false;
+                    }
+                  }
+                }
               }
-            } else {
-              if(xTagsAmbiguityUseable && yTagsAmbiguityUseable) {
+              
+              if (AutonConfigurationConstants.kIsBlueAlliance) {
+                if(xTagsAmbiguityUseable && yTagsAmbiguityUseable) { 
                 poseEstimator.addVisionMeasurement(
-                  new Pose2d(estimatedPoseY.toPose2d().getX(), estimatedPoseY.toPose2d().getY(),
-                      this.m_driveSubsystem.getHeadingInRotation2d()),
-                  (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
+                    new Pose2d(estimatedPoseX.toPose2d().getX(), estimatedPoseY.toPose2d().getY(),
+                        this.m_driveSubsystem.getHeadingInRotation2d()),
+                    (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
+                }
+              } else {
+                if(xTagsAmbiguityUseable && yTagsAmbiguityUseable) {
+                  poseEstimator.addVisionMeasurement(
+                    new Pose2d(estimatedPoseY.toPose2d().getX(), estimatedPoseY.toPose2d().getY(),
+                        this.m_driveSubsystem.getHeadingInRotation2d()),
+                    (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
+                }
               }
             }
-          }
+          });
         });
-      });
+      }
+    } catch(Exception e){
+      SmartDashboard.putBoolean("Failed Vision", true);
     }
 
     Pose2d dashboardPose = getCurrentPose();

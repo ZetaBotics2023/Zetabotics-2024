@@ -79,7 +79,7 @@ public class AutoShootPositionRightCommand extends Command{
         SmartDashboard.putBoolean("GO TO POSE FINSIHED", this.goToPosition.isFinished());
         SmartDashboard.putBoolean("RAMP SHOOTER FINISHED", this.rampShooterCommand.isFinished());
         SmartDashboard.putBoolean("HAND OFF TO SHOOTER SCHEDULED", handOffToShooterCommand.isScheduled());
-        if(!handOffToShooterCommand.isScheduled() && this.rampShooterCommand.isFinished() && this.goToPosition.isFinished()) {
+        if(!handOffToShooterCommand.isScheduled() && this.rampShooterCommand.isFinished() && this.goToPosition.highTolorence) {//this.goToPosition.isFinished()) {
             handOffToShooterCommand.schedule();
         }
     }

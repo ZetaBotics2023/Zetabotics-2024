@@ -58,10 +58,10 @@ public final class Constants {
     public static final double kBackLeftTurnEncoderOffset = 0.688477;
     public static final double kBackRightTurnEncoderOffset = 0.837891;*/
 
-    public static final double kFrontLeftTurnEncoderOffset = 0.330811;//0.144531;
-    public static final double kFrontRightTurnEncoderOffset = 0.964844;//0.965820;
-    public static final double kBackLeftTurnEncoderOffset = 0.688232;//0.934326;
-    public static final double kBackRightTurnEncoderOffset = 0.692139;//0.837646;
+    public static final double kFrontLeftTurnEncoderOffset = 0.712646;//0.144531;
+    public static final double kFrontRightTurnEncoderOffset = 0.433838;//0.965820;
+    public static final double kBackLeftTurnEncoderOffset = 0.894043;//0.934326;
+    public static final double kBackRightTurnEncoderOffset = 0.440674;//0.837646;
 
     public static final double kFrontLeftTurnMagnetOffset = 0.629395;
     public static final double kFrontRightTurnMagnetOffset = 0.139160;
@@ -81,8 +81,8 @@ public final class Constants {
     public static final int kGyroId = 13;
     public static final boolean kGyroReversed = false;
 
-    public static final double kMaxSpeedMetersPerSecond = 4.1;//4.6;
-    public static final double kMaxRotationAnglePerSecond = 12;
+    public static final double kMaxSpeedMetersPerSecond = 3.9;//4.6;
+    public static final double kMaxRotationAnglePerSecond = 11.4;//12;
 
     public static final double kRadiusFromCenterToSwerves = 1.0;
 
@@ -168,7 +168,7 @@ public final class Constants {
 
   public static final class FieldConstants {
     // Current length is the one pathplanner uses the one I caclulated is slightly larger at 16.59127999998984m if the red aleicne paths are undershootingss in the X axis maybe change it to the one I calculated
-    public static final double kLength = 16.45;//Units.feetToMeters(54.2708);//Units.feetToMeters(54);
+    public static final double kLength = 16.54;//16.45;//Units.feetToMeters(54.2708);//Units.feetToMeters(54);
     public static final double kWidth = Units.feetToMeters(26.9375);
     public static Optional<Alliance> alliance;
   }
@@ -256,7 +256,7 @@ public final class Constants {
 
     public static final double kTranslationPIDControllerVelocityToleranceHigh = 2;
     public static final double kTranslationPIDControllerVelocityTolerance = .25;
-    public static final double kTranslationPIDControllerPositionalToleranceHigh = .5;
+    public static final double kTranslationPIDControllerPositionalToleranceHigh = .2;
     public static final double kTranslationPIDControllerPositionalTolerance = .05;
 
     public static final double kHeadingPIDControllerP = .035;
@@ -321,7 +321,7 @@ public final class Constants {
 
     public static final MirrablePose2d kLeftFarNoteStartingPose = new MirrablePose2d(new Pose2d(1.5134, 6.2, new Rotation2d(0)));
 
-    public static final double kLeftNoteIntakeDownTime = .9;//.75;
+    public static final double kLeftNoteIntakeDownTime = 1;//.9;//.75;
     public static final double kCenterNoteIntakeDownTime = 1.15;
     public static final double kRightNoteIntakeDownTime = 1;
   }

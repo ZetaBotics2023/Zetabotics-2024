@@ -80,7 +80,12 @@ public class LEDSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("LED Color", color[0]);
         for (var i = 0; i < m_ledBuffer.getLength(); i++) {
             SmartDashboard.putNumber("LED Set", i);
-            m_ledBuffer.setRGB(i, color[0], color[1], color[2]);
+            if(i == 45 || i == 46 || i == 47 || i == 47 || i == 48 || i == 49 || i == 50 || i == 51 || i == 52 || i == 53 || i == 53 || i == 54 || i == 55)
+            {
+                
+            } else {
+                m_ledBuffer.setRGB(i, color[0], color[1], color[2]);
+            }
          }
          
          m_led.setData(m_ledBuffer);

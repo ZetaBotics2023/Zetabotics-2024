@@ -179,7 +179,7 @@ public class RobotContainer {
     this.autonSelector.addOption("Left:ShootPreloaded", "Left:ShootPreloaded");
     this.autonSelector.addOption("Left:ShootPreloadedLeft", "Left:ShootPreloadedLeft");
     this.autonSelector.addOption("Left:ShootPreloadedLeftCenter", "Left:ShootPreloadedLeftCenter");
-    this.autonSelector.addOption("Left:ShootPreloadedLeftCenterRight", "Left:ShootPreloadedLeftCenterRight");
+    //this.autonSelector.addOption("Left:ShootPreloadedLeftCenterRight", "Left:ShootPreloadedLeftCenterRight");
 
     this.autonSelector.addOption("Right:ShootPreloaded", "Right:ShootPreloaded");
     this.autonSelector.addOption("Right:ShootPreloadedRight", "Right:ShootPreloadedRight");
@@ -188,8 +188,7 @@ public class RobotContainer {
     this.autonSelector.addOption("Left:ShootPreloadedFarFarLeft", "Left:ShootPreloadedFarFarLeft");
     this.autonSelector.addOption("Left:ShootPreloadedFarFarLeftFarLeft", "Left:ShootPreloadedFarFarLeftFarLeft");
 
-    
-    this.autonSelector.setDefaultOption("Left:ShootPreloadedRightCenter", "Left:ShootPreloadedRightCenter");
+    this.autonSelector.setDefaultOption("Left:ShootPreloadedLeftCenter", "Left:ShootPreloadedLeftCenter");
     SmartDashboard.putData("Auto Selector", this.autonSelector);
   }
 
@@ -506,7 +505,7 @@ public class RobotContainer {
 
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createIntakeCommand("LeftNoteIntakePose", AutonConfigurationConstants.kLeftNoteIntakeDownTime));
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createGoToPositionCommand("LeftNoteShootPose"));
-        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new WaitCommandWrapper(2/10));
+        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new WaitCommandWrapper(.5));
 
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(enableVision());
         //AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createGoToPositionCommand("LeftNoteShootPoseInside"));

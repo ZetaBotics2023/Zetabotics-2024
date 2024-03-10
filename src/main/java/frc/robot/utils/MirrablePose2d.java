@@ -16,8 +16,8 @@ public class MirrablePose2d{
 
     public Pose2d getPose(boolean shouldMirror) {
         if(shouldMirror) {
-            return new Pose2d(this.pose2d.getX() - .1, (FieldConstants.kWidth + .2) - this.pose2d.getY(), Rotation2d.fromDegrees(this.pose2d.getRotation().getDegrees() * -1));
-        }
+            return new Pose2d(this.pose2d.getX() , (FieldConstants.kWidth) - this.pose2d.getY(), Rotation2d.fromDegrees(this.pose2d.getRotation().getDegrees() * -1));
+        } //- .1, +.2
         return this.pose2d;
 
     }

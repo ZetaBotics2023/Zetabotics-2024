@@ -62,7 +62,7 @@ public class AutoShootPositionCenterCommand extends Command{
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
         
-        MirrablePose2d shootingPose = ShooterConstants.kCenterShootingPose;
+        MirrablePose2d shootingPose = AutonConfigurationConstants.kIsBlueAlliance ? ShooterConstants.kCenterShootingPose : new MirrablePose2d(new Pose2d(2.3, 5.55, new Rotation2d()));
         this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPose.getPose(!AutonConfigurationConstants.kIsBlueAlliance), this.m_ledSubsystem);
         VisionConstants.useVision = false;
         goToPosition.schedule();
