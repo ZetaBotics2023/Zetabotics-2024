@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.DeprecatedSystems.PoseEstimatorSubsystem;
+import frc.robot.subsystems.Vision.PhotonVisionPoseEstimator;
 import frc.robot.utils.InTeleop;
 import frc.robot.utils.LimelightUtil;
 import frc.robot.utils.VisionPose;
@@ -62,7 +63,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private Matrix<N3, N1> visionMeasurementStdDevs = new Matrix<N3, N1>(Nat.N3(), Nat.N1(), new double[] {0.5, 0.5, 0.9});
 
-    private PoseEstimatorSubsystem m_poseEstimatorSubsystem;
+    private PhotonVisionPoseEstimator m_poseEstimatorSubsystem;
     public DriveSubsystem() {
         this.frontLeftSwerveModule =  new SwerveModule(
             SwerveDriveConstants.kFrontLeftDriveMotorId, SwerveDriveConstants.kFrontLeftTurnMotorId, SwerveDriveConstants.kFrontLeftTurnEncoderId,
@@ -89,7 +90,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight-zeta");
 
-        this.m_poseEstimatorSubsystem = new PoseEstimatorSubsystem(new PhotonCamera("Photon"), this);
+        this.m_poseEstimatorSubsystem = new PhotonVisionPoseEstimator(this);
         //ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
         //visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
         //visionTab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
@@ -347,7 +348,7 @@ public class DriveSubsystem extends SubsystemBase {
     //this.poseEstimator.resetPosition(newPose.getRotation(), getModulePositions(), newPose);
   }
 
-  public PoseEstimatorSubsystem getPoseEstimatorSubsystem() {
+  public PhotonVisionPoseEstimator getPoseEstimatorSubsystem() {
     return m_poseEstimatorSubsystem;
   }
 

@@ -180,7 +180,6 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
           photonPoseEstimatorX.update().ifPresent(estimatedRobotPoseX -> {
             var estimatedPoseY = estimatedRobotPoseY.estimatedPose; // TODO: Change var to the real deal
             var estimatedPoseX = estimatedRobotPoseX.estimatedPose; // TODO: Change var to the real deal
-            
             // Make sure we have a new measurement, and that it's on the field
             if (estimatedRobotPoseY.timestampSeconds != previousPipelineTimestamp
                 && estimatedPoseX.getX() > 0.0 && estimatedPoseX.getX() <= FieldConstants.kLength
