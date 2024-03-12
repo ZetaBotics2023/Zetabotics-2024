@@ -12,6 +12,7 @@ public class CTRELEDSubsystem extends SubsystemBase {
 
     public CTRELEDSubsystem() {
         candle = new CANdle(LEDConstants.kLEDCANID);
+
     }
 
     public void setSolidColor(int[] rgb) {
