@@ -34,7 +34,7 @@ public class PivotSubsystem extends SubsystemBase {
         this.m_pivotAbsEncoder = this.m_pivot.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
         this.pivotPID = this.m_pivot.getPIDController();
      
-        this.m_pivot.restoreFactoryDefaults();        
+        this.m_pivot.restoreFactoryDefaults();      
         this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
         this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
         this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
@@ -90,7 +90,6 @@ public class PivotSubsystem extends SubsystemBase {
      * @param desiredDegrees The desired position of the pivot
      */
     public void setTargetPositionDegrees(double desiredDegrees) {
-
         pivotPID.setReference(degreesToRotations(desiredDegrees + IntakeConstants.kPivotThroughBoreZeroOffset), CANSparkMax.ControlType.kPosition);
         this.targetPositionDegrees = desiredDegrees;
     }

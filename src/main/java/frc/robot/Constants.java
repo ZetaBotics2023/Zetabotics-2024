@@ -419,6 +419,13 @@ public final class Constants {
     public static final double kFPivotController = 0;
     public static final double kIZonePivotController = 0.5 / 360.0; // .5 degrees in rotations
 
+    public static final double kPPivotControllerProfiled = 3;
+    public static final double kIPivotControllerProfiled = 0;
+    public static final double kDPivotControllerProfiled = 0;
+    public static final double kPivotAngleTolorence = .5;
+    public static final TrapezoidProfile.Constraints kPivotContraints = new TrapezoidProfile.Constraints(
+      400, 1000);
+
     public static final double kPIntakeVelocityController = 0.0001;
     public static final double kIIntakeVelocityController = .0000001;
     public static final double kDIntakeVelocityController = 0.0;
