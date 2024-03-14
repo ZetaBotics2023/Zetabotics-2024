@@ -1,12 +1,19 @@
 package frc.robot.subsystems.IntakeSubsystem;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StrictFollower;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.ControlType;
@@ -36,19 +43,26 @@ public class CTREPivotSubsystem extends SubsystemBase {
 
     private TalonFXConfiguration m_leftConfig;
     private TalonFXConfiguration m_rightConfig;
+    private PositionVoltage positionalControl = new PositionVoltage(IntakeConstants.kPivotThroughBoreZeroOffset); 
+
+    private CANcoder pivotEncoder;
 
     private final Slot0Configs slot0Configs = new Slot0Configs();
-
-    private CANSparkMax pivotThroughBoreSpark;
-    private SparkAbsoluteEncoder pivotThroughBore;
-
-    private ProfiledPIDController pivotPID;
 
     private double targetPositionDegrees = 0;
 
     public CTREPivotSubsystem() {
-        this.m_leftPivot = new TalonFX(25);
-        this.m_rightPivot = new TalonFX(26);
+        this.m_leftPivot = new TalonFX(IntakeConstants.kLeftPivotID);
+        this.m_rightPivot = new TalonFX(IntakeConstants.kRightPivotID);
+                
+        this.pivotEncoder = new CANcoder(IntakeConstants.kPivotEncoderID);
+        CANcoderConfiguration pivotEncoderConfig = new CANcoderConfiguration();
+        MagnetSensorConfigs magnetConfigs = new MagnetSensorConfigs();
+        magnetConfigs.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+        magnetConfigs.MagnetOffset = 0.0f;
+        magnetConfigs.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        pivotEncoderConfig.MagnetSensor = magnetConfigs;
+        this.pivotEncoder.getConfigurator().apply(pivotEncoderConfig);
 
         this.m_leftConfig = new TalonFXConfiguration();
         this.m_rightConfig = new TalonFXConfiguration();
@@ -61,27 +75,28 @@ public class CTREPivotSubsystem extends SubsystemBase {
         this.m_rightConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         this.m_leftConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         this.m_rightConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
-        this.m_rightPivot.setControl(new StrictFollower(25));
+        this.m_leftConfig.Feedback.FeedbackRemoteSensorID = this.pivotEncoder.getDeviceID();
+        this.m_rightConfig.Feedback.FeedbackRemoteSensorID = this.pivotEncoder.getDeviceID();
+        this.m_leftConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        this.m_rightConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        this.m_leftConfig.Feedback.SensorToMechanismRatio = 1.0;
+        this.m_rightConfig.Feedback.SensorToMechanismRatio = 1.0;
+        this.m_leftConfig.Feedback.RotorToSensorRatio = IntakeConstants.kPivotGearRatio;
+        this.m_rightConfig.Feedback.RotorToSensorRatio = IntakeConstants.kPivotGearRatio;
 
         this.m_leftPivot.getConfigurator().apply(this.m_leftConfig);
         this.m_rightPivot.getConfigurator().apply(this.m_rightConfig);
         this.m_leftPivot.getConfigurator().apply(this.slot0Configs);
         this.m_rightPivot.getConfigurator().apply(this.slot0Configs);
-
-        this.pivotThroughBoreSpark = new CANSparkMax(IntakeConstants.kPivotMotorControllerID, MotorType.kBrushless);
-        this.pivotThroughBore = pivotThroughBoreSpark.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
-        
-        this.pivotPID = new ProfiledPIDController(IntakeConstants.kPPivotController, IntakeConstants.kIPivotController, 
-            IntakeConstants.kDPivotController, IntakeConstants.kPivotContraints);
-        this.pivotPID.setTolerance(IntakeConstants.kPivotAngleTolorence);
-        this.pivotPID.setIntegratorRange(1, 1);
-        this.pivotPID.reset(rotationsToDegrees(this.pivotThroughBore.getPosition()));
+        this.m_rightPivot.setControl(new StrictFollower(IntakeConstants.kLeftPivotID));
 
         Timer.delay(1);
     }
 
     public void periodic() {
+        this.positionalControl.Slot = 0;
+        this.m_leftPivot.setControl(this.positionalControl.withPosition(
+            degreesToRotations(targetPositionDegrees + IntakeConstants.kPivotThroughBoreZeroOffset)));
     }
 
     public void setTargetPositionDegrees(double desiredDegrees) {
@@ -105,5 +120,24 @@ public class CTREPivotSubsystem extends SubsystemBase {
     private double rotationsToDegrees(double rotations) {
         return (rotations * 360.0);
     }
+
+    /**
+     * Returns whether or not the PID has succeeded in bringing
+     * the pivot to the desired rotation within the PID's IZone.
+     * @return If the pivot's rotation is within the IZone of the desired rotation
+     */
+    /* 
+    public boolean isMotorAtTargetRotation() {
+        return Math.abs(rotationsToDegrees(this.m_leftPivot.get - this.targetPositionDegrees) <= IntakeConstants.kPivotRotationToleranceDegrees;
+    }
+
+    public boolean isMotorAtTargetRotationLarge() {
+        return Math.abs(rotationsToDegrees(this.m_pivotAbsEncoder.getPosition()) - this.targetPositionDegrees) <= 20;
+    }
+
+    public boolean isPivotAboveAutonPickupThreshold() {
+        return rotationsToDegrees(this.m_pivotAbsEncoder.getPosition()) >= IntakeConstants.kGroundPickupMinimumPosition;
+    } 
+    */   
 }   
  

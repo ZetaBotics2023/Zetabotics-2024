@@ -403,6 +403,9 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final int kPivotMotorControllerID = 14;
+    public static final int kLeftPivotID = 25;
+    public static final int kRightPivotID = 26;
+
     public static final int kIntakeMotorControllerID = 15;
     public static final int distenceSensorID = 0;
 
@@ -423,8 +426,9 @@ public final class Constants {
     public static final double kIPivotControllerProfiled = 0;
     public static final double kDPivotControllerProfiled = 0;
     public static final double kPivotAngleTolorence = .5;
+    public static final double maxPivotVelocity = 400;
     public static final TrapezoidProfile.Constraints kPivotContraints = new TrapezoidProfile.Constraints(
-      400, 1000);
+      maxPivotVelocity, 1000);
 
     public static final double kPIntakeVelocityController = 0.0001;
     public static final double kIIntakeVelocityController = .0000001;
@@ -454,6 +458,7 @@ public final class Constants {
     public static final double kPivotRotationToleranceDegrees = 5;
     public static final double kGroundPickupMinimumPosition = 100;
     public static final double kShootInAmpIntakeTime = 2;
+    public static final int kPivotEncoderID = 0;
   }
 
   public static final class LEDConstants {
