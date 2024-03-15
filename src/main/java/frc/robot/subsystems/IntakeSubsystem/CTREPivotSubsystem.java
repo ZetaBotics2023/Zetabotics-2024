@@ -94,6 +94,11 @@ public class CTREPivotSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
+        SmartDashboard.putNumber("Pivot Angle(no offset)", this.m_leftPivot.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Pivot Angle(offset)", this.m_leftPivot.getPosition().getValueAsDouble() + IntakeConstants.kPivotThroughBoreZeroOffset);
+        SmartDashboard.putNumber("Desired Pivot Angle", targetPositionDegrees);
+
+
         this.positionalControl.Slot = 0;
         this.m_leftPivot.setControl(this.positionalControl.withPosition(
             degreesToRotations(targetPositionDegrees + IntakeConstants.kPivotThroughBoreZeroOffset)));
@@ -126,18 +131,13 @@ public class CTREPivotSubsystem extends SubsystemBase {
      * the pivot to the desired rotation within the PID's IZone.
      * @return If the pivot's rotation is within the IZone of the desired rotation
      */
-    /* 
+    
     public boolean isMotorAtTargetRotation() {
-        return Math.abs(rotationsToDegrees(this.m_leftPivot.get - this.targetPositionDegrees) <= IntakeConstants.kPivotRotationToleranceDegrees;
+        return Math.abs(rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()) - (this.targetPositionDegrees + IntakeConstants.kPivotThroughBoreZeroOffset)) <= IntakeConstants.kPivotRotationToleranceDegrees;
     }
 
     public boolean isMotorAtTargetRotationLarge() {
-        return Math.abs(rotationsToDegrees(this.m_pivotAbsEncoder.getPosition()) - this.targetPositionDegrees) <= 20;
+        return Math.abs(rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()) - this.targetPositionDegrees + (IntakeConstants.kPivotThroughBoreZeroOffset)) <= 20;
     }
-
-    public boolean isPivotAboveAutonPickupThreshold() {
-        return rotationsToDegrees(this.m_pivotAbsEncoder.getPosition()) >= IntakeConstants.kGroundPickupMinimumPosition;
-    } 
-    */   
 }   
  
