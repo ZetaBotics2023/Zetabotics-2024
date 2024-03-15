@@ -464,6 +464,6 @@ public final class Constants {
   public static final class LEDConstants {
     public static final int kLEDPWMPort = 9;
     public static final int kLEDLength = 150;
-    public static final int kLEDCANID = 23; //TODO: Change this
+    public static final int kLEDCANID = 30; //TODO: Change this
   }
 }

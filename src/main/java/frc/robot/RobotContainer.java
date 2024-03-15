@@ -39,6 +39,7 @@ import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
+import frc.robot.subsystems.LEDSubsystem.CTRELEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDSubsystem.RGBColor;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
@@ -108,6 +109,7 @@ public class RobotContainer {
   private AutoShootPositionCenterCommand autoShootPositionCenterCommand;
   private AutoShootPositionRightCommand autoShootPositionRightCommand;
   private RampShooter rampShooter;
+  private CTRELEDSubsystem ctreledSubsystem;
 
   public RobotContainer() {
     /*
@@ -161,6 +163,7 @@ public class RobotContainer {
 
     this.climbUpRightCommand = new ClimbUpRightCommand(m_climberSubsystem);
     this.climbDownRightCommand = new ClimbDownRightCommand(m_climberSubsystem);
+    this.ctreledSubsystem = new CTRELEDSubsystem();
 
     this.lockSwerves = new LockSwerves(m_driveSubsystem);
 
@@ -190,6 +193,8 @@ public class RobotContainer {
 
     this.autonSelector.setDefaultOption("Left:ShootPreloadedLeftCenter", "Left:ShootPreloadedLeftCenter");
     SmartDashboard.putData("Auto Selector", this.autonSelector);
+
+    this.ctreledSubsystem.animate(null);///setSolidColor(new int[] {155, 155, 155});
   }
 
   private void configureBindings() {
