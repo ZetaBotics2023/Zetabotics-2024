@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.SwerveDriveConstants;
+import frc.robot.subsystems.LEDSubsystem.CTRELEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDSubsystem.RGBColor;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
@@ -31,7 +32,7 @@ public class GoToPoseitionWithPIDS extends Command{
     private ProfiledPIDController translationYController;
     private ProfiledPIDController headingPIDController;
 
-    private LEDSubsystem m_ledSubsystem;
+    private CTRELEDSubsystem m_ledSubsystem;
 
     private boolean firstLimitCrossed = false;
     private boolean secondLimitCrossed = false;
@@ -39,7 +40,7 @@ public class GoToPoseitionWithPIDS extends Command{
 
     public boolean highTolorence = false;
 
-    public GoToPoseitionWithPIDS(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose, LEDSubsystem m_ledSubsystem) {
+    public GoToPoseitionWithPIDS(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose, CTRELEDSubsystem m_ledSubsystem) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;
 
@@ -76,7 +77,6 @@ public class GoToPoseitionWithPIDS extends Command{
         this.translationYController.reset(this.m_driveSubsystem.getRobotPose().getY());
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
 
-        this.m_ledSubsystem.stopRainbow();
         this.m_ledSubsystem.setSolidColor(RGBColor.Purple.color);
     }
 

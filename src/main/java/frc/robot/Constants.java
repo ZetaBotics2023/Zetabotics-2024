@@ -196,7 +196,7 @@ public final class Constants {
     public static final double kDegreeOffset = 3.58;
 
     public static final Transform3d robotToCam = new Transform3d(-0.352425, 0, .51435, new Rotation3d(0, Math.toRadians(-22.5), (Math.toRadians(180))));
-    public static final Transform3d kLeftCameraToRobot = new Transform3d(0, 0, 0, new Rotation3d(0, Math.toRadians(0), (Math.toRadians(180))));
+    public static final Transform3d kLeftCameraToRobot = new Transform3d(-0.352425, 0, .51435, new Rotation3d(0, Math.toRadians(-22.5), (Math.toRadians(180))));
     public static final Transform3d kCenterCameraToRobot = new Transform3d(-0.352425, 0, .51435, new Rotation3d(0, Math.toRadians(-22.5), (Math.toRadians(180))));
     public static final Transform3d kRightCameraToRobot = new Transform3d(0, 0, 0, new Rotation3d(0, Math.toRadians(0), (Math.toRadians(180))));
 
@@ -208,7 +208,7 @@ public final class Constants {
     public static final double DISTANCE_WEIGHT = 7;
     public static final int TAG_PRESENCE_WEIGHT = 10;
     public static final Vector<N3> kStateStdDevs = VecBuilder.fill(0.1, 1, 0.1);
-    public static final Vector<N3> kVisionMeasurementStdDevs = VecBuilder.fill(1, 1, 1);
+    public static final Vector<N3> kVisionMeasurementStdDevs = VecBuilder.fill(.4, .4, 0);//(1, 1, 1);
     public static boolean useVision = true;
   };
 
@@ -413,7 +413,7 @@ public final class Constants {
 
     public static final double kFarthestNotePositionMillimeters = 480;
 
-    public static final double kPivotGearRatio = 125.0 / 1.0;
+    public static final double kPivotGearRatio = 60.0 / 1.0;
     public static final double kIntakeGearRatio = 3.0 / 1.0;
 
     public static final double kPPivotController = 3;
@@ -458,12 +458,16 @@ public final class Constants {
     public static final double kPivotRotationToleranceDegrees = 5;
     public static final double kGroundPickupMinimumPosition = 100;
     public static final double kShootInAmpIntakeTime = 2;
-    public static final int kPivotEncoderID = 0;
+    public static final int kPivotEncoderID = 41;
   }
 
   public static final class LEDConstants {
     public static final int kLEDPWMPort = 9;
     public static final int kLEDLength = 150;
-    public static final int kLEDCANID = 30; //TODO: Change this
+    public static final int kLEDCANID = 30;
+    public static int[] kDefultColor = new int[] {0, 255, 255};
+    public static int[] kIntakeDownColor = new int[] {255, 0, 0};
+
+
   }
 }

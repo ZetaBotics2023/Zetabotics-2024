@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.REVPivotSubsystem;
 
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;

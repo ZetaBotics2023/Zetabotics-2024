@@ -36,9 +36,10 @@ import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
 import frc.robot.commands.ShooterCommands.ShootAtDiffSpeedCommand;
 import frc.robot.commands.ShooterCommands.StopShooterCommand;
 import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
-import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.REVPivotSubsystem;
 import frc.robot.subsystems.LEDSubsystem.CTRELEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDSubsystem.RGBColor;
@@ -84,7 +85,7 @@ public class RobotContainer {
   private final PivotSubsystem m_pivotSubsystem;
   private final ShooterSubsystem m_shooterSubsystem;
   private final ClimberSubsystem m_climberSubsystem;
-  private final LEDSubsystem m_ledSubsystem;
+  private final CTRELEDSubsystem m_ledSubsystem;
 
   private final PickupFromGroundCommand pickupFromGroundCommand;
 
@@ -102,14 +103,13 @@ public class RobotContainer {
   private final ClimbUpRightCommand climbUpRightCommand;
   private final ClimbDownRightCommand climbDownRightCommand;
 
-  XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
-  ButtonBoard m_buttonBoard = new ButtonBoard(OperatorConstants.kButtonBoardPort);
-  XboxController m_buttonBoardAlternative = new XboxController(OperatorConstants.kButtonBoardAltPort); // In the case that our button board is unusable, we will use a backup controller
+  private XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
+  private ButtonBoard m_buttonBoard = new ButtonBoard(OperatorConstants.kButtonBoardPort);
+  private XboxController m_buttonBoardAlternative = new XboxController(OperatorConstants.kButtonBoardAltPort); // In the case that our button board is unusable, we will use a backup controller
   private AutoShootPositionLeftCommand autoShootPositionLeftCommand;
   private AutoShootPositionCenterCommand autoShootPositionCenterCommand;
   private AutoShootPositionRightCommand autoShootPositionRightCommand;
   private RampShooter rampShooter;
-  private CTRELEDSubsystem ctreledSubsystem;
 
   public RobotContainer() {
     /*
@@ -127,12 +127,12 @@ public class RobotContainer {
     
         this.m_driveSubsystem.setDefaultCommand(fieldOrientedDriveCommand);
         this.m_intakeSubsystem = new IntakeSubsystem(false);
-        this.m_pivotSubsystem = new PivotSubsystem(true);
+        this.m_pivotSubsystem = new PivotSubsystem();
         this.m_intakeSensorSubsystem = new IntakeSensorSubsystem();
         this.m_shooterSubsystem = new ShooterSubsystem(false, true);
         this.m_climberSubsystem = new ClimberSubsystem(true, false);
-        this.m_ledSubsystem = new LEDSubsystem();
-        this.m_ledSubsystem.setSolidColor(new int[] {0, 125, 200});
+        this.m_ledSubsystem = new CTRELEDSubsystem();
+        this.m_ledSubsystem.setSolidColor(new int[] {0, 255, 255});
     // Config Commands
     
     this.pickupFromGroundCommand = new PickupFromGroundCommand(
@@ -163,7 +163,6 @@ public class RobotContainer {
 
     this.climbUpRightCommand = new ClimbUpRightCommand(m_climberSubsystem);
     this.climbDownRightCommand = new ClimbDownRightCommand(m_climberSubsystem);
-    this.ctreledSubsystem = new CTRELEDSubsystem();
 
     this.lockSwerves = new LockSwerves(m_driveSubsystem);
 
@@ -194,7 +193,6 @@ public class RobotContainer {
     this.autonSelector.setDefaultOption("Left:ShootPreloadedLeftCenter", "Left:ShootPreloadedLeftCenter");
     SmartDashboard.putData("Auto Selector", this.autonSelector);
 
-    this.ctreledSubsystem.animate(null);///setSolidColor(new int[] {155, 155, 155});
   }
 
   private void configureBindings() {

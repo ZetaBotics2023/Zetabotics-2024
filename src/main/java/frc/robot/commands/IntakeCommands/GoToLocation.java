@@ -2,6 +2,7 @@ package frc.robot.commands.IntakeCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.REVPivotSubsystem;
 
 public class GoToLocation extends Command {
     private PivotSubsystem pivotSubsystem;

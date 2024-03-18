@@ -57,13 +57,13 @@ public class CTRELEDSubsystem extends SubsystemBase {
     }
 
     public void animate(Animation animation) {
-        candle.animate(new StrobeAnimation(0, 255, 0, 155, .5, 128));//new Animation() {
-            ;//FireAnimation(1, .5, 155, 128, 1));
+        candle.animate(new StrobeAnimation(0, 255, 0, 155, 1, 128));//new Animation() {
+            //FireAnimation(1, .5, 155, 128, 1));
         this.candle.animate(animation);
     }
 
     public void TwinkleAnimation(int[] rgbw) { 
-        this.candle.animate(new TwinkleAnimation(rgbw[0], rgbw[1], rgbw[2], rgbw[3], .5, this.LEDCount, TwinklePercent.Percent64));
+        this.candle.animate(new TwinkleAnimation(rgbw[0], rgbw[1], rgbw[2], rgbw[3], .98, this.LEDCount, TwinklePercent.Percent100));
     }
 
     public void FireAnimation() { 

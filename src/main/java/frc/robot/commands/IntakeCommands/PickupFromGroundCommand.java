@@ -7,6 +7,8 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.REVPivotSubsystem;
+import frc.robot.subsystems.LEDSubsystem.CTRELEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDSubsystem.RGBColor;
 
@@ -18,9 +20,9 @@ public class PickupFromGroundCommand extends Command {
     private IntakeSubsystem intakeSubsystem;
     private PivotSubsystem pivotSubsystem;
     private IntakeSensorSubsystem intakeSensorSubsystem;
-    private LEDSubsystem m_ledSubsystem;
+    private CTRELEDSubsystem m_ledSubsystem;
 
-    public PickupFromGroundCommand(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem, LEDSubsystem m_ledSubsystem) {
+    public PickupFromGroundCommand(IntakeSubsystem intakeSusbsystem, PivotSubsystem pivotSubsystem, IntakeSensorSubsystem intakeSensorSubsystem, CTRELEDSubsystem m_ledSubsystem) {
         this.intakeSubsystem = intakeSusbsystem;
         this.pivotSubsystem = pivotSubsystem;
         this.intakeSensorSubsystem = intakeSensorSubsystem;

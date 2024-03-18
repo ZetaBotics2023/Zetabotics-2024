@@ -12,6 +12,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.proto.Photon;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -22,6 +23,7 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -43,12 +45,12 @@ import frc.robot.Constants.FieldConstants;
 public class PhotonVisionPoseEstimator extends SubsystemBase {
     private final PhotonCamera leftCamera = new PhotonCamera("LeftCamera");
     private final PhotonCamera centerCamera = new PhotonCamera("CenterCamera");
-    private final PhotonCamera rightCamera = new PhotonCamera("RightCamera");
+    //private final PhotonCamera rightCamera = new PhotonCamera("RightCamera");
 
     private SwerveDrivePoseEstimator poseEstimator;
     private PhotonPoseEstimator leftEstimator;
     private PhotonPoseEstimator centerEstimator;
-    private PhotonPoseEstimator rightEstimator;
+    //private PhotonPoseEstimator rightEstimator;
 
     private OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;
 
@@ -64,12 +66,12 @@ public class PhotonVisionPoseEstimator extends SubsystemBase {
                 VisionConstants.kLeftCameraToRobot);
         this.centerEstimator = new PhotonPoseEstimator(aprilTagLayout, PoseStrategy.AVERAGE_BEST_TARGETS, this.centerCamera,
                 VisionConstants.kCenterCameraToRobot);
-        this.leftEstimator = new PhotonPoseEstimator(aprilTagLayout, PoseStrategy.AVERAGE_BEST_TARGETS, this.rightCamera,
-                VisionConstants.kRightCameraToRobot);
+        //this.rightEstimator = new PhotonPoseEstimator(aprilTagLayout, PoseStrategy.AVERAGE_BEST_TARGETS, this.rightCamera,
+         //       VisionConstants.kRightCameraToRobot);
 
         this.leftEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
         this.centerEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
-        this.rightEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
+        //this.rightEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
 
         poseEstimator = new SwerveDrivePoseEstimator(
                 SwerveDriveConstants.kDriveKinematics,
@@ -89,20 +91,26 @@ public class PhotonVisionPoseEstimator extends SubsystemBase {
         poseEstimator.update(
             m_driveSubsystem.getHeadingInRotation2d(),
             m_driveSubsystem.getModulePositions());
-
+        
         if(VisionConstants.useVision) {
             estimatorChecker(leftEstimator);
-            estimatorChecker(rightEstimator);
+            //estimatorChecker(rightEstimator);
             estimatorChecker(centerEstimator);
+
         }
-    }
+        Pose2d dashboardPose = getCurrentPose();
+        if (originPosition == OriginPosition.kRedAllianceWallRightSide) {
+          // Flip the pose when red, since the dashboard field photo cannot be rotated
+          dashboardPose = flipAlliance(dashboardPose);
+        }
+        field2d.setRobotPose(dashboardPose);    }
 
     private void estimatorChecker(PhotonPoseEstimator photonEstimator) {
         photonEstimator.update().ifPresent(robotPose -> {
             if (robotPose != null) {
                 // New pose from vision
                 Pose2d robotPose2d = robotPose.estimatedPose.toPose2d();
-                if (originPosition == OriginPosition.kBlueAllianceWallRightSide) {
+                if (originPosition == OriginPosition.kRedAllianceWallRightSide) {
                   robotPose2d = flipAlliance(robotPose2d);
                 }
                 poseEstimator.addVisionMeasurement(robotPose2d, robotPose.timestampSeconds,
@@ -113,12 +121,13 @@ public class PhotonVisionPoseEstimator extends SubsystemBase {
 
     private Matrix<N3, N1> confidenceCalculator(EstimatedRobotPose estimation) {
         double smallestDistance = Double.POSITIVE_INFINITY;
-        for (var target : estimation.targetsUsed) {
-        var t3d = target.getBestCameraToTarget();
-        var distance = Math.sqrt(Math.pow(t3d.getX(), 2) + Math.pow(t3d.getY(), 2) + Math.pow(t3d.getZ(), 2));
-        if (distance < smallestDistance)
-            smallestDistance = distance;
+        
+        for (PhotonTrackedTarget target : estimation.targetsUsed) {
+            Transform3d t3d = target.getBestCameraToTarget();
+            double distance = Math.sqrt(Math.pow(t3d.getX(), 2) + Math.pow(t3d.getY(), 2) + Math.pow(t3d.getZ(), 2));
+            if (distance < smallestDistance) smallestDistance = distance;
         }
+
         double poseAmbiguityFactor = estimation.targetsUsed.size() != 1
             ? 1
             : Math.max(

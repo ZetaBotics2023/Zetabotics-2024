@@ -18,6 +18,8 @@ import frc.robot.commands.ShooterCommands.StopShooterCommand;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.REVPivotSubsystem;
+import frc.robot.subsystems.LEDSubsystem.CTRELEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
@@ -36,10 +38,10 @@ public class AutoShootPositionLeftCommand extends Command{
 
     private GoToPoseitionWithPIDS goToPosition;
 
-    private LEDSubsystem m_ledSubsystem;
+    private CTRELEDSubsystem m_ledSubsystem;
 
     public AutoShootPositionLeftCommand(DriveSubsystem m_driveSubsystem, ShooterSubsystem m_shooterSubsystem, 
-    IntakeSubsystem m_intakeSubsystem, PivotSubsystem m_pivotSubsystem, IntakeSensorSubsystem m_intakeSensorSubsystem, LEDSubsystem m_ledSubsystem) {
+    IntakeSubsystem m_intakeSubsystem, PivotSubsystem m_pivotSubsystem, IntakeSensorSubsystem m_intakeSensorSubsystem, CTRELEDSubsystem m_ledSubsystem) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.m_shooterSubsystem = m_shooterSubsystem;
         this.m_intakeSubsystem = m_intakeSubsystem;
