@@ -11,6 +11,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -50,6 +51,8 @@ public class PivotSubsystem extends SubsystemBase {
     private final Slot0Configs slot0Configs = new Slot0Configs();
 
     private double targetPositionDegrees = 0;
+    private double pivotPose = 0;
+    private boolean hasReachedSetPoint = false;
 
     public PivotSubsystem() {
         this.m_leftPivot = new TalonFX(IntakeConstants.kLeftPivotID);
@@ -67,10 +70,11 @@ public class PivotSubsystem extends SubsystemBase {
 
         this.m_leftConfig = new TalonFXConfiguration();
         this.m_rightConfig = new TalonFXConfiguration();
-
-        this.slot0Configs.kP = 100;//IntakeConstants.kPPivotController;
-        this.slot0Configs.kI = IntakeConstants.kIPivotController;
+        this.slot0Configs.kP = 17;//IntakeConstants.kPPivotController;
+        this.slot0Configs.kI = //.00000000001;//.0000000000001;//IntakeConstants.kIPivotController;
         this.slot0Configs.kD = IntakeConstants.kDPivotController;
+        this.slot0Configs.kG = 0;
+        //this.slot0Configs.GravityType = GravityTypeValue.Arm_Cosine;
 
         this.m_leftConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         this.m_rightConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -84,6 +88,7 @@ public class PivotSubsystem extends SubsystemBase {
         this.m_rightConfig.Feedback.SensorToMechanismRatio = 1.0;
         this.m_leftConfig.Feedback.RotorToSensorRatio = IntakeConstants.kPivotGearRatio;
         this.m_rightConfig.Feedback.RotorToSensorRatio = IntakeConstants.kPivotGearRatio;
+       // this.m_leftConfig.Feedback.FeedbackRotorOffset = -0.628906;
 
         this.m_leftPivot.getConfigurator().apply(this.m_leftConfig);
         this.m_rightPivot.getConfigurator().apply(this.m_rightConfig);
@@ -91,24 +96,51 @@ public class PivotSubsystem extends SubsystemBase {
         this.m_rightPivot.getConfigurator().apply(this.slot0Configs);
         this.m_rightPivot.setControl(new StrictFollower(IntakeConstants.kLeftPivotID));
 
+        this.pivotPose = rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) + IntakeConstants.kPivotThroughBoreZeroOffset;
+
         Timer.delay(1);
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("Pivot Angle(no offset)", rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));
-        SmartDashboard.putNumber("Pivot Angle(offset)", rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()));// + IntakeConstants.kPivotThroughBoreZeroOffset);
+        this.pivotPose = rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) - IntakeConstants.kPivotThroughBoreZeroOffset;
+
+        SmartDashboard.putNumber("Pivot Angle(no offset)", this.pivotPose);// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));
+        SmartDashboard.putNumber("Pivot Angle(offset)", rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) - IntakeConstants.kPivotThroughBoreZeroOffset);// + IntakeConstants.kPivotThroughBoreZeroOffset);
         SmartDashboard.putNumber("Desired Pivot Angle", targetPositionDegrees);
-
-
-        this.positionalControl.Slot = 0;
-       
-        //targetPositionDegrees)); //IntakeConstants.kPivotThroughBoreZeroOffset));
-        this.m_leftPivot.setControl(this.positionalControl.withPosition(
-            degreesToRotations(targetPositionDegrees)));
+        double directionOfMovement = Math.abs(this.targetPositionDegrees - this.pivotPose) > 3 ? Math.signum(this.targetPositionDegrees - this.pivotPose) : 0;
+        this.hasReachedSetPoint = Math.abs(this.targetPositionDegrees - this.pivotPose) < 10;
+        SmartDashboard.putBoolean("Should Pivot", this.hasReachedSetPoint);
+        SmartDashboard.putNumber("dir of move", directionOfMovement);
+        double distenceFromGoal = Math.abs(this.targetPositionDegrees - pivotPose);
+        if(directionOfMovement == 1) {
+            if(hasReachedSetPoint) {
+                this.m_leftPivot.setControl(this.positionalControl.withPosition(
+                    degreesToRotations(targetPositionDegrees + IntakeConstants.kPivotThroughBoreZeroOffset)));
+            } else if(distenceFromGoal < 24) {
+                this.m_leftPivot.set(0 * directionOfMovement);
+            } else {
+                this.m_leftPivot.set( .7* directionOfMovement);
+            }
+        } else if(directionOfMovement == -1) {
+            if(hasReachedSetPoint) {
+            this.m_leftPivot.setControl(this.positionalControl.withPosition(
+                degreesToRotations(targetPositionDegrees + IntakeConstants.kPivotThroughBoreZeroOffset)));
+            } else if(distenceFromGoal < 35) {
+                this.m_leftPivot.set(0 * directionOfMovement);
+            } else {
+                this.m_leftPivot.set( .7* directionOfMovement);
+            }
+        } else {
+            this.m_leftPivot.set(0);
+        }
     }
 
     public void setTargetPositionDegrees(double desiredDegrees) {
         this.targetPositionDegrees = desiredDegrees;
+        this.positionalControl.Slot = 0;
+        
+       // this.m_leftPivot.setControl(this.positionalControl.withPosition(
+         //   degreesToRotations(targetPositionDegrees + IntakeConstants.kPivotThroughBoreZeroOffset)));
     }
 
     /**

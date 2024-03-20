@@ -45,12 +45,12 @@ import frc.robot.Constants.FieldConstants;
 public class PhotonVisionPoseEstimator extends SubsystemBase {
     private final PhotonCamera leftCamera = new PhotonCamera("LeftCamera");
     private final PhotonCamera centerCamera = new PhotonCamera("CenterCamera");
-    //private final PhotonCamera rightCamera = new PhotonCamera("RightCamera");
+    private final PhotonCamera rightCamera = new PhotonCamera("RightCamera");
 
     private SwerveDrivePoseEstimator poseEstimator;
     private PhotonPoseEstimator leftEstimator;
     private PhotonPoseEstimator centerEstimator;
-    //private PhotonPoseEstimator rightEstimator;
+    private PhotonPoseEstimator rightEstimator;
 
     private OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;
 
@@ -66,12 +66,12 @@ public class PhotonVisionPoseEstimator extends SubsystemBase {
                 VisionConstants.kLeftCameraToRobot);
         this.centerEstimator = new PhotonPoseEstimator(aprilTagLayout, PoseStrategy.AVERAGE_BEST_TARGETS, this.centerCamera,
                 VisionConstants.kCenterCameraToRobot);
-        //this.rightEstimator = new PhotonPoseEstimator(aprilTagLayout, PoseStrategy.AVERAGE_BEST_TARGETS, this.rightCamera,
-         //       VisionConstants.kRightCameraToRobot);
+        this.rightEstimator = new PhotonPoseEstimator(aprilTagLayout, PoseStrategy.AVERAGE_BEST_TARGETS, this.rightCamera,
+                VisionConstants.kRightCameraToRobot);
 
         this.leftEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
         this.centerEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
-        //this.rightEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
+        this.rightEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
 
         poseEstimator = new SwerveDrivePoseEstimator(
                 SwerveDriveConstants.kDriveKinematics,
@@ -94,8 +94,8 @@ public class PhotonVisionPoseEstimator extends SubsystemBase {
         
         if(VisionConstants.useVision) {
             estimatorChecker(leftEstimator);
-            //estimatorChecker(rightEstimator);
-            estimatorChecker(centerEstimator);
+            estimatorChecker(rightEstimator);
+            //estimatorChecker(centerEstimator);
 
         }
         Pose2d dashboardPose = getCurrentPose();
@@ -113,7 +113,7 @@ public class PhotonVisionPoseEstimator extends SubsystemBase {
                 if (originPosition == OriginPosition.kRedAllianceWallRightSide) {
                   robotPose2d = flipAlliance(robotPose2d);
                 }
-                poseEstimator.addVisionMeasurement(robotPose2d, robotPose.timestampSeconds,
+                poseEstimator.addVisionMeasurement(new Pose2d(robotPose2d.getTranslation(), this.m_driveSubsystem.getHeadingInRotation2d()), robotPose.timestampSeconds,
                     confidenceCalculator(robotPose));
             }
         });

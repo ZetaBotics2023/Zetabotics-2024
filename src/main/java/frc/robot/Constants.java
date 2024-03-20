@@ -179,7 +179,7 @@ public final class Constants {
     // Current length is the one pathplanner uses the one I caclulated is slightly
     // larger at 16.59127999998984m if the red aleicne paths are undershootingss in
     // the X axis maybe change it to the one I calculated
-    public static final double kLength = 16.54;// 16.45;//Units.feetToMeters(54.2708);//Units.feetToMeters(54);
+    public static final double kLength = 16.541749;// 16.45;//Units.feetToMeters(54.2708);//Units.feetToMeters(54);
     public static final double kWidth = Units.feetToMeters(26.9375);
     public static Optional<Alliance> alliance;
   }
@@ -194,11 +194,15 @@ public final class Constants {
     public static final Pose2d kBlueAllianceShooterAprilTagPosition = new Pose2d(new Translation2d(-0.0381, 5.547868),
         Rotation2d.fromDegrees(0));
     public static final double kDegreeOffset = 3.58;
-
-    public static final Transform3d robotToCam = new Transform3d(-0.352425, 0, .51435, new Rotation3d(0, Math.toRadians(-22.5), (Math.toRadians(180))));
-    public static final Transform3d kLeftCameraToRobot = new Transform3d(-0.352425, 0, .51435, new Rotation3d(0, Math.toRadians(-22.5), (Math.toRadians(180))));
+// 20 yaw, 20 pitch, -1cm from ll, 1.5cm lower, cm apart
+// 7.2cm away from ll on left
+// 
+    public static final Transform3d kLeftCameraToRobot = new Transform3d(-0.342425, .072, .49935, new Rotation3d(0, Math.toRadians(-20), (Math.toRadians(180))));
     public static final Transform3d kCenterCameraToRobot = new Transform3d(-0.352425, 0, .51435, new Rotation3d(0, Math.toRadians(-22.5), (Math.toRadians(180))));
-    public static final Transform3d kRightCameraToRobot = new Transform3d(0, 0, 0, new Rotation3d(0, Math.toRadians(0), (Math.toRadians(180))));
+    public static final Transform3d kRightCameraToRobot = new Transform3d(-0.342425, -.072, .49935, new Rotation3d(0, Math.toRadians(-20), (Math.toRadians(160))));
+
+
+        public static final Transform3d robotToCam = new Transform3d(-0.352425, 0, .51435 - 1.5, new Rotation3d(0, Math.toRadians(20), (Math.toRadians(200))));
 
     /** Minimum target ambiguity. Targets with higher ambiguity will be discarded */
     public static final double APRILTAG_AMBIGUITY_THRESHOLD = 0.2;
@@ -409,9 +413,9 @@ public final class Constants {
     public static final int kIntakeMotorControllerID = 15;
     public static final int distenceSensorID = 0;
 
-    public static final double kPivotThroughBoreZeroOffset = 93.75;
+    public static final double kPivotThroughBoreZeroOffset = 0.096680 * 360;//93.75;
 
-    public static final double kFarthestNotePositionMillimeters = 480;
+    public static final double kFarthestNotePositionMillimeters = 420;//480;
 
     public static final double kPivotGearRatio = 60.0 / 1.0;
     public static final double kIntakeGearRatio = 3.0 / 1.0;
@@ -443,7 +447,7 @@ public final class Constants {
     public static final double kIZoneIntakePositionController = .5 / 360;
 
     // Rotation constants
-    public static final double kGroundPickupPivotRotationDegrees = 190.5;// 189;
+    public static final double kGroundPickupPivotRotationDegrees = 191.5;//190.5;// 189;
     public static final double kGroundPickupIntakeRPM = 1000;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
