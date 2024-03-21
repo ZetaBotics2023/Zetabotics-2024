@@ -96,6 +96,14 @@ public class PivotSubsystem extends SubsystemBase {
         this.m_rightPivot.getConfigurator().apply(this.slot0Configs);
         this.m_rightPivot.setControl(new StrictFollower(IntakeConstants.kLeftPivotID));
 
+        this.m_leftPivot.getVelocity().setUpdateFrequency(4);
+        this.m_rightPivot.getVelocity().setUpdateFrequency(4);
+        this.m_leftPivot.getTorqueCurrent().setUpdateFrequency(50);
+        this.m_rightPivot.getTorqueCurrent().setUpdateFrequency(50);
+
+
+
+
         this.pivotPose = rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) + IntakeConstants.kPivotThroughBoreZeroOffset;
 
         Timer.delay(1);
@@ -108,7 +116,7 @@ public class PivotSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Pivot Angle(offset)", rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) - IntakeConstants.kPivotThroughBoreZeroOffset);// + IntakeConstants.kPivotThroughBoreZeroOffset);
         SmartDashboard.putNumber("Desired Pivot Angle", targetPositionDegrees);
         double directionOfMovement = Math.abs(this.targetPositionDegrees - this.pivotPose) > 3 ? Math.signum(this.targetPositionDegrees - this.pivotPose) : 0;
-        this.hasReachedSetPoint = Math.abs(this.targetPositionDegrees - this.pivotPose) < 10;
+        this.hasReachedSetPoint = Math.abs(this.targetPositionDegrees - this.pivotPose) < 5;
         SmartDashboard.putBoolean("Should Pivot", this.hasReachedSetPoint);
         SmartDashboard.putNumber("dir of move", directionOfMovement);
         double distenceFromGoal = Math.abs(this.targetPositionDegrees - pivotPose);

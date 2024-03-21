@@ -353,7 +353,7 @@ public final class Constants {
     public static final MirrablePose2d kLeftFarNoteStartingPose = new MirrablePose2d(
         new Pose2d(1.5134, 6.2, new Rotation2d(0)));
 
-    public static final double kLeftNoteIntakeDownTime = 1;// .9;//.75;
+    public static final double kLeftNoteIntakeDownTime = .4;//1;// .9;//.75;
     public static final double kCenterNoteIntakeDownTime = 1.15;
     public static final double kRightNoteIntakeDownTime = 1;
   }
@@ -434,8 +434,8 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kPivotContraints = new TrapezoidProfile.Constraints(
       maxPivotVelocity, 1000);
 
-    public static final double kPIntakeVelocityController = 0.0001;
-    public static final double kIIntakeVelocityController = .0000001;
+    public static final double kPIntakeVelocityController = 0.0004;
+    public static final double kIIntakeVelocityController = .0000005;
     public static final double kDIntakeVelocityController = 0.0;
     public static final double kFIntakeVelocityController = 0.0;
     public static final double kIZoneIntakeVelocityController = 0.0;
@@ -447,14 +447,15 @@ public final class Constants {
     public static final double kIZoneIntakePositionController = .5 / 360;
 
     // Rotation constants
-    public static final double kGroundPickupPivotRotationDegrees = 191.5;//190.5;// 189;
-    public static final double kGroundPickupIntakeRPM = 1000;
+    public static final double kGroundPickupPivotRotationDegrees = 191;//190.5;// 189;
+    public static final double kGroundPickupIntakeRPM = 1500;//5200;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
     public static final double kHumanPlayerPickupIntakeRPM = 0.0;
 
     public static final double kShootInAmpPivotRotationDegrees = 120;
     public static final double kShootInAmpIntakeRPM = -1000;
+
 
     public static final double kPassIntoShooterPivotRotationDegrees = 0;
     public static final double kPassIntoShooterIntakeRPM = -3000;

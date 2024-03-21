@@ -31,23 +31,18 @@ public class CTRELEDSubsystem extends SubsystemBase {
 
     public CTRELEDSubsystem() {
         candle = new CANdle(LEDConstants.kLEDCANID);
-        this.config = new CANdleConfiguration();
-        this.config.brightnessScalar = 1;
-        this.config.statusLedOffWhenActive = true;
-        this.config.v5Enabled = false;
-        this.config.stripType = LEDStripType.RGB; 
-        SmartDashboard.putBoolean("Set LED Color", true);
-       
-    }
-
-    @Override
-    public void periodic() {
-        this.configuration = new CANdleConfiguration();
+       this.configuration = new CANdleConfiguration();
         this.configuration.statusLedOffWhenActive = false;
         this.configuration.disableWhenLOS = false;
         this.configuration.stripType = LEDStripType.RGB;
         this.configuration.vBatOutputMode = VBatOutputMode.Modulated;
         this.candle.configAllSettings(configuration);
+       
+    }
+
+    @Override
+    public void periodic() {
+        
     }
 
     public void setSolidColor(int[] rgb) {
