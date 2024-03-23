@@ -127,7 +127,7 @@ public class PivotSubsystem extends SubsystemBase {
             } else if(distenceFromGoal < 24) {
                 this.m_leftPivot.set(0 * directionOfMovement);
             } else {
-                this.m_leftPivot.set( .7* directionOfMovement);
+                this.m_leftPivot.set( .7 * directionOfMovement);
             }
         } else if(directionOfMovement == -1) {
             if(hasReachedSetPoint) {
@@ -180,7 +180,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public boolean isMotorAtTargetRotationLarge() {
-        return Math.abs(rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()) - this.targetPositionDegrees + (IntakeConstants.kPivotThroughBoreZeroOffset)) <= 20;
+        return Math.abs(rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()) - this.targetPositionDegrees + (IntakeConstants.kPivotThroughBoreZeroOffset)) <= 50;
     }
 }   
  

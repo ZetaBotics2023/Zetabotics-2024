@@ -1,8 +1,14 @@
 package frc.robot.subsystems.SwerveDrive;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.photonvision.PhotonCamera;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
@@ -15,13 +21,22 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.Constants.WPILIBTrajectoryConstants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.DeprecatedSystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.Vision.PhotonVisionPoseEstimator;
@@ -94,7 +109,23 @@ public class DriveSubsystem extends SubsystemBase {
         //ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
         //visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
         //visionTab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
- 
+        AutoBuilder.configureHolonomic(
+                this.poseEstimator::getEstimatedPosition, // Robot pose supplier
+                this::setRobotPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                        AutoConstants.kTranslationAutoPID, // Translation PID constants
+                        AutoConstants.kRotationAutoPID, // Rotation PID constants
+                        AutoConstants.kMaxAutonSpeedInMetersPerSecond , // Max module speed, in m/s
+                        SwerveDriveConstants.kRadiusFromCenterToFarthestSwerveModule, // Drive base radius in meters. Distance from robot center to furthest module.
+                        new ReplanningConfig(false, false) // Default path replanning config. See the API for the options here
+                ),
+                () -> {
+                    return false;
+                },
+                this // Reference to this subsystem to set requirements
+        );
         SmartDashboard.updateValues(); 
     }
 
@@ -357,5 +388,33 @@ public class DriveSubsystem extends SubsystemBase {
   public void resetRobotHeading() {
     Pose2d estimatedPose = this.poseEstimator.getEstimatedPosition();
     this.poseEstimator.resetPosition(m_gyro.getRotation2d(), getModulePositions(), new Pose2d(estimatedPose.getX(), estimatedPose.getY(), new Rotation2d()));
+  }
+
+  public SequentialCommandGroup generateOnTheFlyPath(Pose2d endPose) {
+        // Generate trajectory
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+                getRobotPose(),
+                List.of(),
+                endPose,
+                WPILIBTrajectoryConstants.trajectoryConfig);
+
+      
+        // Should not need this our odometry is -64 bit to +64bit
+        //thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+        // Construct command to follow trajectory
+        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+                trajectory,
+                this::getRobotPose,
+                SwerveDriveConstants.kDriveKinematics,
+                WPILIBTrajectoryConstants.kXController,
+                WPILIBTrajectoryConstants.kYController,
+                WPILIBTrajectoryConstants.kThetaController,
+                this::setModuleStates,
+                this);
+
+      return new SequentialCommandGroup(
+                swerveControllerCommand,
+                new InstantCommand(() -> stop()));
   }
 }

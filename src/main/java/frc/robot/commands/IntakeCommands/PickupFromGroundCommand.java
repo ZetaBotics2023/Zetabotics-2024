@@ -33,13 +33,17 @@ public class PickupFromGroundCommand extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kGroundPickupPivotRotationDegrees);
-        this.intakeSubsystem.runAtRPM(IntakeConstants.kGroundPickupIntakeRPM);
-        if(this.intakeSensorSubsystem.isNoteInIntake()) {
-            this.m_ledSubsystem.setSolidColor(RGBColor.Green.color);
-        } else {
-            this.m_ledSubsystem.setSolidColor(RGBColor.Red.color);
+        if(!this.intakeSensorSubsystem.isNoteInIntake()) {
+            this.pivotSubsystem.setTargetPositionDegrees(IntakeConstants.kGroundPickupPivotRotationDegrees);
+            if(this.intakeSensorSubsystem.isNoteInIntake()) {
+                this.m_ledSubsystem.setSolidColor(RGBColor.Green.color);
+            } else {
+                this.m_ledSubsystem.setSolidColor(RGBColor.Red.color);
+            }
         }
+        this.intakeSubsystem.runAtRPM(IntakeConstants.kGroundPickupIntakeRPM);
+
+        
     }
 
     // Called every time the scheduler runs while the command is scheduled.

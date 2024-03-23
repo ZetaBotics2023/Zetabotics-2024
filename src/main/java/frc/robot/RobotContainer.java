@@ -12,9 +12,12 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.AutoShootCommand;
+import frc.robot.commands.EndUponConditionCommand;
 import frc.robot.commands.FieldOrientedDriveCommand;
 import frc.robot.commands.LockSwerves;
 import frc.robot.commands.ParallelRaceGroupCommand;
+import frc.robot.commands.RunCommandUtillConditionCommand;
+import frc.robot.commands.SequentialGroupCommand;
 import frc.robot.commands.AutoCommands.WaitCommandWrapper;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCenterCommand;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionLeftCommand;
@@ -29,6 +32,7 @@ import frc.robot.commands.ClimberCommands.ClimbUpDualCommand;
 import frc.robot.commands.ClimberCommands.ClimbUpLeftCommand;
 import frc.robot.commands.ClimberCommands.ClimbUpRightCommand;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
+import frc.robot.commands.IntakeCommands.IntakeSpin;
 import frc.robot.commands.IntakeCommands.PickupFromGroundCommand;
 import frc.robot.commands.IntakeCommands.ShootIntoAmpWithIntakeCommand;
 import frc.robot.commands.ShooterCommands.RampShooter;
@@ -62,6 +66,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -102,10 +108,11 @@ public class RobotContainer {
 
   private final ClimbUpRightCommand climbUpRightCommand;
   private final ClimbDownRightCommand climbDownRightCommand;
+  private final IntakeSpin intakeSpin;
 
   private XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
   private ButtonBoard m_buttonBoard = new ButtonBoard(OperatorConstants.kButtonBoardPort);
-  private XboxController m_buttonBoardAlternative = new XboxController(OperatorConstants.kButtonBoardAltPort); // In the case that our button board is unusable, we will use a backup controller
+ // private XboxController m_buttonBoardAlternative = new XboxController(OperatorConstants.kButtonBoardAltPort); // In the case that our button board is unusable, we will use a backup controller
   private AutoShootPositionLeftCommand autoShootPositionLeftCommand;
   private AutoShootPositionCenterCommand autoShootPositionCenterCommand;
   private AutoShootPositionRightCommand autoShootPositionRightCommand;
@@ -167,6 +174,7 @@ public class RobotContainer {
     this.lockSwerves = new LockSwerves(m_driveSubsystem);
 
     this.rampShooter = new RampShooter(m_shooterSubsystem);
+    this.intakeSpin = new IntakeSpin(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem);
 
     // End Command Config
     
@@ -226,29 +234,29 @@ public class RobotContainer {
     // Left Climb Down: Blue
 
     m_buttonBoard.bindToLeftTriggure(0, this.rampShooter, null);
-    final JoystickButton rampShooter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kY.value);
-    rampShooter.onTrue(this.shootAtDiffSpeedCommand);
-    rampShooter.onFalse(Commands.runOnce(this.shootAtDiffSpeedCommand::cancel)); 
+    //final JoystickButton rampShooter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kY.value);
+    //rampShooter.onTrue(this.shootAtDiffSpeedCommand);
+    //rampShooter.onFalse(Commands.runOnce(this.shootAtDiffSpeedCommand::cancel)); 
 
     this.m_buttonBoard.bindToPOV(0, 0, autoShootCommand, Commands.runOnce(autoShootCommand::cancel));
-    final JoystickButton shootNote = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kB.value);
-    shootNote.onTrue(this.autoShootCommand);
-    shootNote.onFalse(Commands.runOnce(this.autoShootCommand::cancel));
+    //final JoystickButton shootNote = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kB.value);
+    //shootNote.onTrue(this.autoShootCommand);
+    //shootNote.onFalse(Commands.runOnce(this.autoShootCommand::cancel));
 
     this.m_buttonBoard.bindToPOV(0, 270, autoShootPositionLeftCommand, Commands.runOnce(autoShootPositionLeftCommand::cancel));
 
     this.m_buttonBoard.bindToPOV(0, 180, autoShootPositionCenterCommand, Commands.runOnce(autoShootPositionCenterCommand::cancel));
-    final JoystickButton shootNoteAutoPoseCenter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kA.value);
-    shootNoteAutoPoseCenter.onTrue(this.autoShootPositionLeftCommand);
-    shootNoteAutoPoseCenter.onFalse(Commands.runOnce(this.autoShootPositionLeftCommand::cancel));
+    //final JoystickButton shootNoteAutoPoseCenter = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kA.value);
+    //shootNoteAutoPoseCenter.onTrue(this.autoShootPositionLeftCommand);
+    //shootNoteAutoPoseCenter.onFalse(Commands.runOnce(this.autoShootPositionLeftCommand::cancel));
 
     this.m_buttonBoard.bindToPOV(0, 90, autoShootPositionRightCommand, Commands.runOnce(autoShootPositionRightCommand::cancel));
 
     // pickupFromGroundCommand
     m_buttonBoard.bindToRightTriggure(0, this.pickupFromGroundCommand, Commands.runOnce(this.pickupFromGroundCommand::cancel));
-    final JoystickButton pickUpFromGround = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
-    pickUpFromGround.onTrue(this.pickupFromGroundCommand);
-    pickUpFromGround.onFalse(Commands.runOnce(this.pickupFromGroundCommand::cancel));
+    //final JoystickButton pickUpFromGround = new JoystickButton(m_buttonBoardAlternative, XboxController.Button.kLeftBumper.value);
+    //pickUpFromGround.onTrue(this.pickupFromGroundCommand);
+    //pickUpFromGround.onFalse(Commands.runOnce(this.pickupFromGroundCommand::cancel));
 
     m_buttonBoard.bindToButton(0, ButtonBoard.Button.kBlackStart, this.shootIntoAmpWithIntakeCommand, Commands.runOnce(this.shootIntoAmpWithIntakeCommand::cancel));
 
@@ -261,9 +269,10 @@ public class RobotContainer {
     m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kYellow, this.climbUpRightCommand, Commands.runOnce(this.climbUpRightCommand::cancel));
     m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kBlue, this.climbDownRightCommand, Commands.runOnce(this.climbDownRightCommand::cancel));
     
-    m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kWhiteLeft, Commands.runOnce(() -> {ShooterConstants.kShooterRPMChange -= 50;}), null);
-    m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kWhiteRight, Commands.runOnce(() -> {ShooterConstants.kShooterRPMChange += 50;}), null);
-    m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kBlackSelect, Commands.runOnce(() -> {ShooterConstants.kShooterRPMChange = 0;}), null);
+    
+    m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kWhiteLeft, this.intakeSpin, Commands.runOnce(this.intakeSpin::cancel));
+    //m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kWhiteRight, Commands.runOnce(() -> {ShooterConstants.kShooterRPMChange += 50;}), null);
+    //m_buttonBoard.bindToButton(0,  ButtonBoard.Button.kBlackSelect, Commands.runOnce(() -> {ShooterConstants.kShooterRPMChange = 0;}), null);
 
   }
   
@@ -515,9 +524,9 @@ public class RobotContainer {
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(disableVision());
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createIntakeCommand("FarFarLeftNoteIntakePose", 0));
-        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createGoToPositionCommand("LeftNoteShootPose"));
+        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new ParallelRaceGroupCommand(createGoToPositionCommand("LeftNoteShootPose"),
+          new EndUponConditionCommand(this::isRobotCloserThanPoint)));
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(enableVision());
-        //AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createGoToPositionCommand("LeftNoteShootPoseInside"));       
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new StopShooterCommand(m_shooterSubsystem));
 
@@ -525,6 +534,27 @@ public class RobotContainer {
       }
 
     return null;
+
+  }
+
+
+  private Command stop() {
+    return Commands.runOnce(this::stopUpChain);
+  }
+
+  private boolean stopUpChain() {
+      return AutonConfigurationConstants.kSTOP = isRobotCloserThanPoint() ? true : false;
+  }
+
+  private boolean isRobotCloserThanPoint() {
+    return this.m_driveSubsystem.getRobotPose().getTranslation().getX() < 3;
+  }
+  private Command createGoToPoseUntillCloseThanReschedule() {
+          return new SequentialGroupCommand(
+            new Command[] {new RunCommandUtillConditionCommand(createGoToPositionCommand("LeftNoteShootPose"), this::isRobotCloserThanPoint),
+            createGoToPositionCommand("LeftNoteShootPose")
+        });
+
   }
 
   /*

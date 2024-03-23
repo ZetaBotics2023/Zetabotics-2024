@@ -27,7 +27,7 @@ public class IntakeSpin extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        this.intakeSubsystem.runAtRPM(IntakeConstants.kGroundPickupIntakeRPM);
+        this.intakeSubsystem.runAtRPMNorm(IntakeConstants.kGroundPickupIntakeRPM);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -41,7 +41,7 @@ public class IntakeSpin extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        this.intakeSubsystem.runAtRPM(0);
+        this.intakeSubsystem.runAtRPMNorm(0);
     }
 
     /**

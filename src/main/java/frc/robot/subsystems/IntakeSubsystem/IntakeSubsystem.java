@@ -66,10 +66,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override 
     public void periodic() {
-        if(this.waitForSwichToPose != null &&this.waitForSwichToPose.isFinished()) {
-            this.waitForSwichToPose = null;
-            setTargetPoseitionRotations(this.m_intakeEncoder.getPosition() + 2000);
-            this.intakePID.setReference(this.targetRPM * IntakeConstants.kIntakeGearRatio, ControlType.kVelocity, 0);
+        if(this.waitForSwichToPose != null && this.waitForSwichToPose.isFinished()) {
+            this.m_intake.set(0);
         }
         SmartDashboard.putNumber("Desired Intake Speed", targetRPM);
         SmartDashboard.putNumber("Actully Intake speed", this.m_intakeEncoder.getVelocity() / IntakeConstants.kIntakeGearRatio);
@@ -89,12 +87,25 @@ public class IntakeSubsystem extends SubsystemBase {
         this.numberOfVelocitySets++;        
         this.targetRPM = rpm;
         if(rpm == 0) {
+            this.m_intake.stopMotor();
+            this.m_intake.set(-.1);
             this.waitForSwichToPose = new WaitCommand(1);
             this.waitForSwichToPose.schedule();
         } else {
             this.intakePID.setReference(rpm * IntakeConstants.kIntakeGearRatio, ControlType.kVelocity, 0);
         } 
     }
+
+    public void runAtRPMNorm(double rpm) {   
+        if(rpm == 0) {
+            this.m_intake.stopMotor();
+            this.m_intake.set(0);
+        } else {
+            this.intakePID.setReference(rpm * IntakeConstants.kIntakeGearRatio, ControlType.kVelocity, 0);
+        }
+    }
+
+
 
     public void runAtPower(double percent) {
         this.numberOfPowerSets++;
