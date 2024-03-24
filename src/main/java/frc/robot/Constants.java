@@ -232,24 +232,24 @@ public final class Constants {
 
     // Auto Constrants
 
-    public static final double kMaxTranslationSpeedMPSAuto = 4.1;
-    public static final double kMaxTranslationAccelerationAuto = 4.1;// 2;//4.1;
+    public static final double kMaxTranslationSpeedMPSAuto = 4.3;
+    public static final double kMaxTranslationAccelerationAuto = 10;//4.1;// 2;//4.1;
     public static final TrapezoidProfile.Constraints kTranslationAutoControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxTranslationSpeedMPSAuto, kMaxTranslationAccelerationAuto);
 
     public static final double kTranslationAutoPIDControllerVelocityTolerance = 1;
     public static final double kTranslationAutoPIDControllerPositionalTolerance = .05;// .05;
 
-    public static final double kTranslationAutoPIDControllerP = 1.8;
+    public static final double kTranslationAutoPIDControllerP = .9265;//1.8;
     public static final double kTranslationAutoPIDControllerI = 0;
     public static final double kTranslationAutoPIDControllerD = 0;
 
     // Heading Auto
-    public static final double kHeadingPIDControllerAutoP = .035;
-    public static final double kHeadingPIDControllerAutoI = .00005;
+    public static final double kHeadingPIDControllerAutoP = .0585;//.06;//.035;
+    public static final double kHeadingPIDControllerAutoI = 0.0;//.00005;
     public static final double kHeadingPIDControllerAutoD = 0;
     public static final double kHeadingPIDControllerToleranceAuto = 2;
-    public static final double kMaxAngularSpeedRadiansPerSecondAuto = 360;
+    public static final double kMaxAngularSpeedRadiansPerSecondAuto = 180;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquaredAuto = 720;
     public static final TrapezoidProfile.Constraints kThetaControllerConstraintsAuto = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecondAuto, kMaxAngularAccelerationRadiansPerSecondSquaredAuto);
@@ -261,8 +261,8 @@ public final class Constants {
     public static final double kSecondBatteryPIDLimit = 10;
     public static final double kThirdBatteryPIDLimit = 9;
 
-    public static final double kMaxTranslationSpeedMPS = 4.1;
-    public static final double kMaxTranslationAcceleration = 4.1;
+    public static final double kMaxTranslationSpeedMPS = 4.3;
+    public static final double kMaxTranslationAcceleration = 10;
     public static final TrapezoidProfile.Constraints kTranslationControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxTranslationSpeedMPS, kMaxTranslationAcceleration);
 
@@ -271,7 +271,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kTranslationControllerConstraintsLowVoltage = new TrapezoidProfile.Constraints(
         kMaxTranslationSpeedMPSLowVoltage, kMaxTranslationAccelerationLowVoltage);
 
-    public static final double kTranslationPIDControllerP = 1.8;// 1.4;//1.5;
+    public static final double kTranslationPIDControllerP = .9265;//1.8// 1.4;//1.5;
     public static final double kTranslationPIDControllerI = 0;
     public static final double kTranslationPIDControllerD = 0;
 
@@ -292,8 +292,8 @@ public final class Constants {
     public static final double kTranslationPIDControllerPositionalToleranceHigh = .2;
     public static final double kTranslationPIDControllerPositionalTolerance = .05;
 
-    public static final double kHeadingPIDControllerP = .035;
-    public static final double kHeadingPIDControllerI = .00005;
+    public static final double kHeadingPIDControllerP = .0585;//.035;
+    public static final double kHeadingPIDControllerI = 0;//.00005;
     public static final double kHeadingPIDControllerD = 0;
 
     public static final double kHeadingPIDControllerPFirstBatteryPIDLimit = .035;
@@ -404,7 +404,7 @@ public final class Constants {
     public static final double kMinShootingDistanceFromWallMeters = Units.inchesToMeters(40);
 
     public static final double kShooterPowerRatio = 1;
-    public static double kShooterRPM = 2800;// SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
+    public static double kShooterRPM = 2800;//2800;// SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
     public static final double kShootTime = 10;
     public static final double kShootTimeAuto = .4;
     public static final double kShooterRPMTolerance = 100;
@@ -443,7 +443,7 @@ public final class Constants {
     public static final double kFarthestNotePositionMillimeters = 480;//480;
 
     public static final double kPivotGearRatio = 60.0 / 1.0;
-    public static final double kIntakeGearRatio = 3.0 / 1.0;
+    public static final double kIntakeGearRatio = 4.0 / 1.0;
 
     public static final double kPPivotController = 3;
     public static final double kIPivotController = 0;
@@ -473,7 +473,7 @@ public final class Constants {
 
     // Rotation constants
     public static final double kGroundPickupPivotRotationDegrees = 194.16;//190.5;// 189;
-    public static final double kGroundPickupIntakeRPM = 1200;//5200;
+    public static final double kGroundPickupIntakeRPM = 3000;//5200;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
     public static final double kHumanPlayerPickupIntakeRPM = 0.0;

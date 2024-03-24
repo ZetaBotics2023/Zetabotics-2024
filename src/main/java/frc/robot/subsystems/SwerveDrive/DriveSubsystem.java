@@ -127,6 +127,8 @@ public class DriveSubsystem extends SubsystemBase {
                 this // Reference to this subsystem to set requirements
         );
         SmartDashboard.updateValues(); 
+        //this.m_gyro.getYaw().setUpdateFrequency(100);
+        //this.m_gyro.optimizeBusUtilization();
     }
 
   @Override

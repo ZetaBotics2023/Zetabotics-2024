@@ -31,10 +31,16 @@ public class ClimberSubsystem extends SubsystemBase{
         this.m_rightClimber.restoreFactoryDefaults();
         this.m_leftClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         this.m_rightClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-        this.m_leftClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-        this.m_rightClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-        this.m_leftClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
-        this.m_rightClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+        this.m_leftClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50000);
+        this.m_rightClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50000);
+        this.m_leftClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 50000);
+        this.m_rightClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 50000);
+        //this.m_leftClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 50000);
+        //this.m_rightClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 50000);
+        //this.m_leftClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 50000);
+        //this.m_rightClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 50000);
+        //this.m_leftClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50000);
+        //this.m_rightClimber.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50000);
 
         this.m_leftClimber.setIdleMode(IdleMode.kBrake);
         this.m_rightClimber.setIdleMode(IdleMode.kBrake);

@@ -106,7 +106,8 @@ public class SwerveModule{
     turningAbsoluteEncoderConfig.MagnetSensor = magnetConfigs;
     this.turningAbsoluteEncoder.getConfigurator().apply(turningAbsoluteEncoderConfig);
 
-    this.turningAbsoluteEncoder.getPosition().setUpdateFrequency(100);
+    //this.turningAbsoluteEncoder.getPosition().setUpdateFrequency(100);
+    //this.turningAbsoluteEncoder.getAbsolutePosition().setUpdateFrequency(100);
 
     Timer.delay(1);
 

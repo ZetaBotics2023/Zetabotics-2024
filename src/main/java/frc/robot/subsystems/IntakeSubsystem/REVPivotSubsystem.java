@@ -35,9 +35,9 @@ public class REVPivotSubsystem extends SubsystemBase {
         this.pivotPID = this.m_pivot.getPIDController();
      
         this.m_pivot.restoreFactoryDefaults();      
-        this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+        this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 50000);
         this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
-        this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+        this.m_pivot.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 50000);
         
         this.m_pivot.setIdleMode(IdleMode.kBrake);
         this.m_pivot.setInverted(pivotMotorRev);

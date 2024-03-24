@@ -56,10 +56,18 @@ public class ShooterSubsystem extends SubsystemBase{
 
         this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-        this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-        this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
-        this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
-        this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 500);
+        this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50000);
+        this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50000);
+        this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 50000);
+        this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 50000);
+        /* 
+        this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 50000);
+        this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 50000);
+        this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 50000);
+        this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 50000);
+        this.m_leftShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50000);
+        this.m_rightShooter.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50000);
+        */
 
         this.m_leftShooter.setIdleMode(IdleMode.kCoast);
         this.m_rightShooter.setIdleMode(IdleMode.kCoast);
@@ -70,8 +78,8 @@ public class ShooterSubsystem extends SubsystemBase{
         this.m_rightShooter.setSmartCurrentLimit(40);
 
         //TODO: Check if this helps consistency
-        this.m_leftShooter.enableVoltageCompensation(12);
-        this.m_rightShooter.enableVoltageCompensation(12);
+        //this.m_leftShooter.enableVoltageCompensation(10);
+        //this.m_rightShooter.enableVoltageCompensation(10);
            
         this.m_leftShooter.burnFlash();
         this.m_rightShooter.burnFlash();
@@ -84,8 +92,8 @@ public class ShooterSubsystem extends SubsystemBase{
                 this.m_leftShooter.set(0);
                 this.m_rightShooter.set(0);
             } else {
-                this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
-                this.rightShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
+                this.m_leftShooter.setVoltage(10);//this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
+                this.m_rightShooter.setVoltage(10);//this.rightShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
             }
         
     }
@@ -119,8 +127,8 @@ public class ShooterSubsystem extends SubsystemBase{
             this.m_leftShooter.set(0);
             this.m_rightShooter.set(0);
         } else {
-            this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
-            this.rightShooterPID.setReference(this.targetVelocityRPM*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
+            this.m_leftShooter.setVoltage(6.08);  //this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
+            this.m_rightShooter.setVoltage(6);//this.rightShooterPID.setReference(this.targetVelocityRPM*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
         }
        
     }

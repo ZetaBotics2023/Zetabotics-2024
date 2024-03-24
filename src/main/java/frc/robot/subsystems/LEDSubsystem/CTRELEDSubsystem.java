@@ -27,17 +27,15 @@ public class CTRELEDSubsystem extends SubsystemBase {
     private CANdleConfiguration configuration;
     private int LEDCount = 128;
     
-    private CANdleConfiguration config;
 
     public CTRELEDSubsystem() {
         candle = new CANdle(LEDConstants.kLEDCANID);
-       this.configuration = new CANdleConfiguration();
+        this.configuration = new CANdleConfiguration();
         this.configuration.statusLedOffWhenActive = false;
         this.configuration.disableWhenLOS = false;
         this.configuration.stripType = LEDStripType.RGB;
         this.configuration.vBatOutputMode = VBatOutputMode.Modulated;
         this.candle.configAllSettings(configuration);
-       
     }
 
     @Override

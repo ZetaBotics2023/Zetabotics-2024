@@ -43,8 +43,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
         this.m_intake.restoreFactoryDefaults();
         this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-        this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
-        this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 20);
+        this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 50000);
+        this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 50000);
+        //this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 50000);
+        //this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 50000);
+        //this.m_intake.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 50000);
+
     
         this.m_intake.setIdleMode(IdleMode.kBrake);
         this.m_intake.setInverted(intakeMotorRev);
@@ -67,6 +71,7 @@ public class IntakeSubsystem extends SubsystemBase {
     @Override 
     public void periodic() {
         if(this.waitForSwichToPose != null && this.waitForSwichToPose.isFinished()) {
+            this.waitForSwichToPose = null;
             this.m_intake.set(0);
         }
         SmartDashboard.putNumber("Desired Intake Speed", targetRPM);
@@ -83,13 +88,13 @@ public class IntakeSubsystem extends SubsystemBase {
      * @param rpm The target RPM of the rollers.
      * @apiNote USE FOR TELEOP
      */
-    public void runAtRPM(double rpm) {     
+    public void runAtRPM(double rpm) {   
         this.numberOfVelocitySets++;        
         this.targetRPM = rpm;
         if(rpm == 0) {
             this.m_intake.stopMotor();
-            this.m_intake.set(-.1);
-            this.waitForSwichToPose = new WaitCommand(1);
+            this.m_intake.set(.2);
+            this.waitForSwichToPose = new WaitCommand(.5);
             this.waitForSwichToPose.schedule();
         } else {
             this.intakePID.setReference(rpm * IntakeConstants.kIntakeGearRatio, ControlType.kVelocity, 0);

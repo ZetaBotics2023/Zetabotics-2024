@@ -96,10 +96,15 @@ public class PivotSubsystem extends SubsystemBase {
         this.m_rightPivot.getConfigurator().apply(this.slot0Configs);
         this.m_rightPivot.setControl(new StrictFollower(IntakeConstants.kLeftPivotID));
 
-        this.m_leftPivot.getVelocity().setUpdateFrequency(4);
-        this.m_rightPivot.getVelocity().setUpdateFrequency(4);
         this.m_leftPivot.getTorqueCurrent().setUpdateFrequency(50);
         this.m_rightPivot.getTorqueCurrent().setUpdateFrequency(50);
+        this.pivotEncoder.getAbsolutePosition().setUpdateFrequency(50);
+        this.pivotEncoder.getPosition().setUpdateFrequency(50);
+        //this.m_leftPivot.getPosition().setUpdateFrequency(100);
+        //this.m_rightPivot.getPosition().setUpdateFrequency(100);
+        this.m_leftPivot.optimizeBusUtilization();
+        this.m_rightPivot.optimizeBusUtilization();
+        this.pivotEncoder.optimizeBusUtilization();
 
 
 
