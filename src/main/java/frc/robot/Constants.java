@@ -361,6 +361,8 @@ public final class Constants {
     public static final ArrayList<Command> kCenter_ShootPreloadedCenter = new ArrayList<Command>();
     public static final ArrayList<Command> kCenter_ShootPreloadedCenterLeft = new ArrayList<Command>();
     public static final ArrayList<Command> kCenter_ShootPreloadedCenterRight = new ArrayList<Command>();
+    public static final ArrayList<Command> kCenter_ShootPreloadedCenterFarFarLeft = new ArrayList<Command>();
+
 
     public static final ArrayList<Command> kRight_ShootPreloaded = new ArrayList<Command>();;
     public static final ArrayList<Command> kRight_ShootPreloadedRight = new ArrayList<Command>();
@@ -407,6 +409,10 @@ public final class Constants {
 
     public static final double kShooterPowerRatio = 1;
     public static double kShooterRPM = 2800;//2800;//2800;//2800;// //SmartDashBoard.getNumber("Shooter RPM", 4200);//4200;//4500;
+    public static double kShooterVoltage = 6;
+    public static double kLeftFarShootingPoseRPM = 2500;
+    public static double kLeftFarShootingPoseVoltage = 5;
+
     public static final double kShootTime = 10;
     public static final double kShootTimeAuto = .3;
     public static final double kShooterRPMTolerance = 100;

@@ -120,15 +120,15 @@ public class ShooterSubsystem extends SubsystemBase{
      * Method that runs the left motor at a given RPM and right at that RPM scaled by our power ratio.
      * This achieves more stability by applying spin to our note, which makes it fly straighter.
      */
-    public void runAtRPMAndRPMRatio(double rpm) {
+    public void runAtVoltage(double rpm, double voltage) {
         this.targetVelocityRPM = rpm + ShooterConstants.kShooterRPMChange;
         //SmartDashBoard.putNumber("Desired Shooter RPM", rpm);
         if(rpm == 0) {
             this.m_leftShooter.set(0);
             this.m_rightShooter.set(0);
         } else {
-            this.m_leftShooter.setVoltage(6.08);//5.58);//6.08);  //this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
-            this.m_rightShooter.setVoltage(6);//thih.rightShooterPID.setReference(this.targetVelocityRPM*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
+            this.m_leftShooter.setVoltage(voltage + .08);//5.58);//6.08);  //this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
+            this.m_rightShooter.setVoltage(voltage);//thih.rightShooterPID.setReference(this.targetVelocityRPM*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
         }
        
     }

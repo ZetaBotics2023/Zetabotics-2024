@@ -17,7 +17,7 @@ public class RampShooterAtDifforentSpeedCommandCenter extends Command {
     public void initialize(){
         //SmartDashBoard.putNumber("Shooter RPM", //SmartDashBoard.getNumber("Shooter RPM", 4200));
         //ShooterConstants.kShooterRPM = //SmartDashBoard.getNumber("Shooter RPM", 4200);
-        this.shooterSubsystem.runAtRPMAndRPMRatio(2800);
+        this.shooterSubsystem.runAtVoltage(2800, 6);
     }
 
     @Override

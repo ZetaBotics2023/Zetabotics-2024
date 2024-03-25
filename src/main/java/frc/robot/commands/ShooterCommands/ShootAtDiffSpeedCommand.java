@@ -27,7 +27,7 @@ public class ShootAtDiffSpeedCommand extends Command {
 
     @Override
     public void initialize(){
-        this.shooterSubsystem.runAtRPMAndRPMRatio(ShooterConstants.kShooterRPM);        
+        this.shooterSubsystem.runAtVoltage(ShooterConstants.kShooterRPM, 6);        
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ShootAtDiffSpeedCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        this.shooterSubsystem.runAtRPMAndRPMRatio(0);
+        this.shooterSubsystem.runAtVoltage(0, 0);
         this.handOffToShooterCommand.end(interrupted);
         this.isFirstRun = true;
     }

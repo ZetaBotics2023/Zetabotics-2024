@@ -17,9 +17,9 @@ public class RampShooter extends Command{
         ShooterConstants.kRampShooter = !ShooterConstants.kRampShooter;
         this.inited = true;
         if(ShooterConstants.kRampShooter) {
-            this.m_shooterSubsystem.runAtRPMAndRPMRatio(ShooterConstants.kShooterRPM);
+            this.m_shooterSubsystem.runAtVoltage(ShooterConstants.kShooterRPM, 6);
         } else {
-            this.m_shooterSubsystem.runAtRPMAndRPMRatio(0);
+            this.m_shooterSubsystem.runAtVoltage(0, 0);
         }
     } 
 

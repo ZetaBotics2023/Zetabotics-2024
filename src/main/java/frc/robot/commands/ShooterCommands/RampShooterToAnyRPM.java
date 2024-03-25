@@ -6,11 +6,14 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 
 
-public class RampShooterAtDifforentSpeedCommand extends Command {
+public class RampShooterToAnyRPM extends Command {
     private ShooterSubsystem shooterSubsystem;
-
-    public RampShooterAtDifforentSpeedCommand(ShooterSubsystem shooterSubsystem){
+    private double desiredRPM;
+    private double voltage;
+    public RampShooterToAnyRPM(ShooterSubsystem shooterSubsystem, double desiredRPM, double voltage){
         this.shooterSubsystem = shooterSubsystem;
+        this.desiredRPM = desiredRPM;
+        this.voltage = voltage;
         addRequirements(shooterSubsystem);
     }
 
@@ -18,7 +21,7 @@ public class RampShooterAtDifforentSpeedCommand extends Command {
     public void initialize(){
         //SmartDashBoard.putNumber("Shooter RPM", //SmartDashBoard.getNumber("Shooter RPM", 4200));
         //ShooterConstants.kShooterRPM = //SmartDashBoard.getNumber("Shooter RPM", 4200);
-        this.shooterSubsystem.runAtVoltage(ShooterConstants.kShooterRPM, 6);
+        this.shooterSubsystem.runAtVoltage(this.desiredRPM, this.voltage);
     }
 
     @Override
@@ -32,6 +35,6 @@ public class RampShooterAtDifforentSpeedCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return this.shooterSubsystem.isLeftMotorAtTargetVelocity() && this.shooterSubsystem.isRightMotorAtTargetRatioVelocity();
+        return true;//this.shooterSubsystem.isLeftMotorAtTargetVelocity() && this.shooterSubsystem.isRightMotorAtTargetRatioVelocity();
     }
 }
