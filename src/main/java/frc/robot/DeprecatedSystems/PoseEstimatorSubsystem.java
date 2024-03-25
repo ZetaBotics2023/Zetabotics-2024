@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//SmartDashBoard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveDriveConstants;
@@ -229,7 +229,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         });
       }
     } catch(Exception e){
-      SmartDashboard.putBoolean("Failed Vision", true);
+      //SmartDashBoard.putBoolean("Failed Vision", true);
     }
 
     Pose2d dashboardPose = getCurrentPose();
@@ -238,8 +238,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
       dashboardPose = flipAlliance(dashboardPose);
     }
     field2d.setRobotPose(dashboardPose);
-    SmartDashboard.putNumber("Robot X", this.poseEstimator.getEstimatedPosition().getX());
-    SmartDashboard.putNumber("Robot Y", this.poseEstimator.getEstimatedPosition().getY());
+    //SmartDashBoard.putNumber("Robot X", this.poseEstimator.getEstimatedPosition().getX());
+    //SmartDashBoard.putNumber("Robot Y", this.poseEstimator.getEstimatedPosition().getY());
 
   }
 

@@ -1,6 +1,6 @@
 package frc.robot.commands.ShooterCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
@@ -16,8 +16,8 @@ public class RampShooterAtDifforentSpeedCommand extends Command {
 
     @Override
     public void initialize(){
-        SmartDashboard.putNumber("Shooter RPM", SmartDashboard.getNumber("Shooter RPM", 4200));
-        //ShooterConstants.kShooterRPM = SmartDashboard.getNumber("Shooter RPM", 4200);
+        //SmartDashBoard.putNumber("Shooter RPM", //SmartDashBoard.getNumber("Shooter RPM", 4200));
+        //ShooterConstants.kShooterRPM = //SmartDashBoard.getNumber("Shooter RPM", 4200);
         this.shooterSubsystem.runAtRPMAndRPMRatio(ShooterConstants.kShooterRPM);
     }
 

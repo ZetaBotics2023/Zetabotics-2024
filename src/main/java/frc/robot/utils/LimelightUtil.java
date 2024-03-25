@@ -3,7 +3,6 @@ package frc.robot.utils;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.LimelightHelpers;
 import frc.robot.Constants.VisionConstants;
 
@@ -43,7 +42,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
         // Retrieve whether the Limelight sees a valid target
         boolean validTarget = (getNumberOfApriltags() > 1);
-        SmartDashboard.putNumber("Number of tags", getNumberOfApriltags());
+        //SmartDashBoard.putNumber("Number of tags", getNumberOfApriltags());
         // Calculate the system time so we know when we read our current value
         double timeStamp = Timer.getFPGATimestamp() - (piplineLatency/1000.0) - (capturePiplineLatency/1000.0);
 
@@ -51,7 +50,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
         Pose2d position = new Pose2d(
             new Translation2d(botpose[0], botpose[1]),
             Rotation2d.fromDegrees(botpose[5] - VisionConstants.kDegreeOffset));
-        SmartDashboard.putNumber("Lime Light angle,", Units.degreesToRadians(botpose[5]));
+        //SmartDashBoard.putNumber("Lime Light angle,", Units.degreesToRadians(botpose[5]));
 
         // Return a new Vision Pose
         return new VisionPose(position, timeStamp, validTarget);

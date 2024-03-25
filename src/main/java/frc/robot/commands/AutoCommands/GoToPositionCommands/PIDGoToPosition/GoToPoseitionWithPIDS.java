@@ -10,7 +10,7 @@ import javax.xml.namespace.QName;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.AutonConfigurationConstants;
@@ -99,6 +99,7 @@ public class GoToPoseitionWithPIDS extends Command{
                     
                 this.highTolorence = true;
             }
+        //SmartDashBoard.putBoolean("High Tolorence", this.highTolorence);
     }
 
     @Override
@@ -169,9 +170,9 @@ public class GoToPoseitionWithPIDS extends Command{
             this.translationYController.setConstraints(AutoConstants.kTranslationControllerConstraintsLowVoltage);
             this.headingPIDController.setConstraints(AutoConstants.kThetaControllerConstraintsLowVoltage);
         }
-        SmartDashboard.putBoolean("First Limit", firstLimitCrossed);
-        SmartDashboard.putBoolean("Second Limit", secondLimitCrossed);
-        SmartDashboard.putBoolean("Thrid Limit", secondLimitCrossed);
+        //SmartDashBoard.putBoolean("First Limit", firstLimitCrossed);
+        //SmartDashBoard.putBoolean("Second Limit", secondLimitCrossed);
+        //SmartDashBoard.putBoolean("Thrid Limit", secondLimitCrossed);
 
     }
 }

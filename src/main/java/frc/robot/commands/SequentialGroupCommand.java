@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class SequentialGroupCommand extends Command {
@@ -16,7 +16,7 @@ public class SequentialGroupCommand extends Command {
 
     @Override
     public void execute() {
-        SmartDashboard.putNumber("Auton Step:", currentRunningIndex);
+        //SmartDashBoard.putNumber("Auton Step:", currentRunningIndex);
 
         if (currentRunningIndex >= this.commands.length) {
                 return;

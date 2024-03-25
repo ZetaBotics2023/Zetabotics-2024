@@ -12,7 +12,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -97,8 +97,8 @@ public class GoToPoseAutonWhileShootingWithPIDS extends Command{
             this.translationYController.calculate(this.m_driveSubsystem.getRobotPose().getY(), this.goalEndPose.getY())
         );
 
-        SmartDashboard.putNumber("Goal X Vel S", robotTransformVelocity.getX());
-        SmartDashboard.putNumber("Goal Y Vel S", robotTransformVelocity.getY());
+        //SmartDashBoard.putNumber("Goal X Vel S", robotTransformVelocity.getX());
+        //SmartDashBoard.putNumber("Goal Y Vel S", robotTransformVelocity.getY());
 
         // We need to predict what our position relative to the AprilTag will be in the time it takes to shoot
         // To get a halfway-decent estimate, we can use the distance formula d=v/t
@@ -117,7 +117,7 @@ public class GoToPoseAutonWhileShootingWithPIDS extends Command{
             targetAngle = Units.radiansToDegrees(Math.asin(distanceToAprilTagAfterShootTimeY/distanceToAprilTagAfterShootTime));
         }
 
-        SmartDashboard.putNumber("Auton Goal Theta S", targetAngle);
+        //SmartDashBoard.putNumber("Auton Goal Theta S", targetAngle);
 
 
         this.m_driveSubsystem.drive(

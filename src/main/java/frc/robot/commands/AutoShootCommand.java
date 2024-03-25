@@ -5,7 +5,7 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.IntakeCommands.HandOffToShooterCommand;
 import frc.robot.commands.ShooterCommands.RampShooterAtDifforentSpeedCommand;
@@ -41,7 +41,7 @@ public class AutoShootCommand extends Command{
     // Called when the command is initially scheduled.
     @Override
     public void initialize() { 
-        SmartDashboard.putString("Shooting Stage", "Scheduled Ramp Shooter Command");
+        //SmartDashBoard.putString("Shooting Stage", "Scheduled Ramp Shooter Command");
         this.rampShooterCommand = new RampShooterAtDifforentSpeedCommand(this.m_shooterSubsystem);
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
@@ -51,10 +51,10 @@ public class AutoShootCommand extends Command{
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        SmartDashboard.putBoolean("Shooting Hand Off Finished", this.handOffToShooterCommand.isFinished());
+        //SmartDashBoard.putBoolean("Shooting Hand Off Finished", this.handOffToShooterCommand.isFinished());
 
         if(!handOffToShooterCommand.isScheduled() && this.rampShooterCommand.isFinished()) {
-            SmartDashboard.putString("Shooting Stage", "Scheduled Hand Off to Shooter Command");
+            //SmartDashBoard.putString("Shooting Stage", "Scheduled Hand Off to Shooter Command");
 
             handOffToShooterCommand.schedule();
         }
@@ -63,7 +63,7 @@ public class AutoShootCommand extends Command{
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        SmartDashboard.putString("Shooting Stage", "Scheduled Stop Shooter Command");
+        //SmartDashBoard.putString("Shooting Stage", "Scheduled Stop Shooter Command");
 
         this.rampShooterCommand.cancel();
         this.handOffToShooterCommand.cancel();

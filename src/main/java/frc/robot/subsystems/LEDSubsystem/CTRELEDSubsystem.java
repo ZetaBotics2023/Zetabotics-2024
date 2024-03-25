@@ -1,6 +1,5 @@
 package frc.robot.subsystems.LEDSubsystem;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 
@@ -45,7 +44,7 @@ public class CTRELEDSubsystem extends SubsystemBase {
 
     public void setSolidColor(int[] rgb) {
         this.candle.setLEDs(rgb[0], rgb[1], rgb[2]);
-        SmartDashboard.putBoolean("Set LED Color", true);
+        //SmartDashBoard.putBoolean("Set LED Color", true);
         candle.setLEDs(rgb[0], rgb[1], rgb[2]);
     }
 

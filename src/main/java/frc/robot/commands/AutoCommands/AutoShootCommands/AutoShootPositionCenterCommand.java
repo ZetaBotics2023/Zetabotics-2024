@@ -6,7 +6,7 @@ package frc.robot.commands.AutoCommands.AutoShootCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -77,9 +77,9 @@ public class AutoShootPositionCenterCommand extends Command{
     @Override
     public void execute() {
         // TODO: Maybe incrase shooter RPM tolorence in order to stop the pause
-        SmartDashboard.putBoolean("GO TO POSE FINSIHED", this.goToPosition.isFinished());
-        SmartDashboard.putBoolean("RAMP SHOOTER FINISHED", this.rampShooterCommand.isFinished());
-        SmartDashboard.putBoolean("HAND OFF TO SHOOTER SCHEDULED", handOffToShooterCommand.isScheduled());
+        //SmartDashBoard.putBoolean("GO TO POSE FINSIHED", this.goToPosition.isFinished());
+        //SmartDashBoard.putBoolean("RAMP SHOOTER FINISHED", this.rampShooterCommand.isFinished());
+        //SmartDashBoard.putBoolean("HAND OFF TO SHOOTER SCHEDULED", handOffToShooterCommand.isScheduled());
         if(!handOffToShooterCommand.isScheduled() && this.rampShooterCommand.isFinished() && this.goToPosition.highTolorence) {
             handOffToShooterCommand.schedule();
         }

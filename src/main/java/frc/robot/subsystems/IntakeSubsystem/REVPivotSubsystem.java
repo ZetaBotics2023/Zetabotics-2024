@@ -10,7 +10,6 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
@@ -58,13 +57,13 @@ public class REVPivotSubsystem extends SubsystemBase {
     }
 
     /**
-     * Periodic to output helpful values to SmartDashboard
+     * Periodic to output helpful values to //SmartDashBoard
      */
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Desired pivot angle", targetPositionDegrees);
-        SmartDashboard.putNumber("Actully ABS pivot position degrees", rotationsToDegrees(this.m_pivotAbsEncoder.getPosition()) - IntakeConstants.kPivotThroughBoreZeroOffset);
-        //SmartDashboard.putNumber("Actully rel pivot pos degrees", rotationsToDegrees(this.m_pivotRelativeEncoder.getPosition()) / IntakeConstants.kPivotGearRatio);
+        //SmartDashBoard.putNumber("Desired pivot angle", targetPositionDegrees);
+        //SmartDashBoard.putNumber("Actully ABS pivot position degrees", rotationsToDegrees(this.m_pivotAbsEncoder.getPosition()) - IntakeConstants.kPivotThroughBoreZeroOffset);
+        ////SmartDashBoard.putNumber("Actully rel pivot pos degrees", rotationsToDegrees(this.m_pivotRelativeEncoder.getPosition()) / IntakeConstants.kPivotGearRatio);
     }
 
     /**

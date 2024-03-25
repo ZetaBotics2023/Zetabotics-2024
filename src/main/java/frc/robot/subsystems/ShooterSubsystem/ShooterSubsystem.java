@@ -86,7 +86,7 @@ public class ShooterSubsystem extends SubsystemBase{
         }  
 
         public void setTargetVelocityRPM(double rpm) {
-            SmartDashboard.putNumber("Desired Shooter RPM", rpm);
+            //SmartDashBoard.putNumber("Desired Shooter RPM", rpm);
             this.targetVelocityRPM = rpm;
             if(rpm == 0) {
                 this.m_leftShooter.set(0);
@@ -99,7 +99,7 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
     /*
-     * Periodic just outputs our shooter velocities to SmartDashboard
+     * Periodic just outputs our shooter velocities to //SmartDashBoard
      */
     @Override
     public void periodic() {
@@ -122,20 +122,20 @@ public class ShooterSubsystem extends SubsystemBase{
      */
     public void runAtRPMAndRPMRatio(double rpm) {
         this.targetVelocityRPM = rpm + ShooterConstants.kShooterRPMChange;
-        SmartDashboard.putNumber("Desired Shooter RPM", rpm);
+        //SmartDashBoard.putNumber("Desired Shooter RPM", rpm);
         if(rpm == 0) {
             this.m_leftShooter.set(0);
             this.m_rightShooter.set(0);
         } else {
-            this.m_leftShooter.setVoltage(6.08);  //this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
-            this.m_rightShooter.setVoltage(6);//this.rightShooterPID.setReference(this.targetVelocityRPM*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
+            this.m_leftShooter.setVoltage(6.08);//5.58);//6.08);  //this.leftShooterPID.setReference(this.targetVelocityRPM, ControlType.kVelocity);
+            this.m_rightShooter.setVoltage(6);//thih.rightShooterPID.setReference(this.targetVelocityRPM*Constants.ShooterConstants.kShooterPowerRatio, ControlType.kVelocity);
         }
        
     }
 
     public void runAtRPMAndRPMRatioIgnoreRPMChange(double rpm) {
         this.targetVelocityRPM = rpm;
-        SmartDashboard.putNumber("Desired Shooter RPM", rpm);
+        //SmartDashBoard.putNumber("Desired Shooter RPM", rpm);
         if(rpm == 0) {
             this.m_leftShooter.set(0);
             this.m_rightShooter.set(0);

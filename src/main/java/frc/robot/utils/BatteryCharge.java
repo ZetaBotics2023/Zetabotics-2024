@@ -3,7 +3,6 @@ package frc.robot.utils;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoCommands.WaitCommandWrapper;
 
 public class BatteryCharge {
@@ -15,7 +14,7 @@ public class BatteryCharge {
     private static double nextPoleTime = Timer.getFPGATimestamp();
 
     public static void updateBatteryVoltage() {  
-        SmartDashboard.putBoolean("Pole Time", nextPoleTime <= Timer.getFPGATimestamp());
+        //SmartDashBoard.putBoolean("Pole Time", nextPoleTime <= Timer.getFPGATimestamp());
         if(nextPoleTime <= Timer.getFPGATimestamp()) {
             nextPoleTime = Timer.getFPGATimestamp() + poleTimeSeconds;
             if(nextUpdateIndex > batteryVoltages.length-1) {

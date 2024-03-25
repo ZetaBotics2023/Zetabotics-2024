@@ -1,6 +1,6 @@
 package frc.robot.commands.IntakeCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
@@ -55,11 +55,11 @@ public class HandOffToShooterAuton extends Command {
     public boolean isFinished() {
         if(this.shootWaitTime == null && !this.intakeSensorSubsystem.isNoteInIntake()) {
             this.shootWaitTime = new WaitCommand(ShooterConstants.kShootTimeAuto);
-            SmartDashboard.putString("HandOffState", "Started Timer");
+            //SmartDashBoard.putString("HandOffState", "Started Timer");
             this.shootWaitTime.schedule();
         } 
         if(this.shootWaitTime != null) {
-            SmartDashboard.putString("HandOffState", this.shootWaitTime.isFinished() ? "Ended Timer" : "Timer Still Going");
+            //SmartDashBoard.putString("HandOffState", this.shootWaitTime.isFinished() ? "Ended Timer" : "Timer Still Going");
             return this.shootWaitTime.isFinished();
         }
         return false;

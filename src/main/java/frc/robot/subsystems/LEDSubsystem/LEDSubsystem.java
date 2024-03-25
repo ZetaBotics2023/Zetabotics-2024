@@ -2,7 +2,6 @@ package frc.robot.subsystems.LEDSubsystem;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 
@@ -77,9 +76,9 @@ public class LEDSubsystem extends SubsystemBase{
      */
     public void setSolidColor(int[] color) {
         this.playRainbow = false;
-        SmartDashboard.putNumber("LED Color", color[0]);
+        //SmartDashBoard.putNumber("LED Color", color[0]);
         for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-            SmartDashboard.putNumber("LED Set", i);
+            //SmartDashBoard.putNumber("LED Set", i);
             if(i == 45 || i == 46 || i == 47 || i == 47 || i == 48 || i == 49 || i == 50 || i == 51 || i == 52 || i == 53 || i == 53 || i == 54 || i == 55)
             {
                 

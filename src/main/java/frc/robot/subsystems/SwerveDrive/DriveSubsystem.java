@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//SmartDashBoard.Field2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -126,7 +126,7 @@ public class DriveSubsystem extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
         );
-        SmartDashboard.updateValues(); 
+        //SmartDashBoard.updateValues(); 
         //this.m_gyro.getYaw().setUpdateFrequency(100);
         //this.m_gyro.optimizeBusUtilization();
     }
@@ -176,29 +176,29 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /*
-   * Posts helpful debugging info to SmartDashboard
+   * Posts helpful debugging info to //SmartDashBoard
    */
   private void updateDashboard() {
     if(_updateCount++ >= 0)
     {
       _updateCount = 0;
 
-      SmartDashboard.putNumber("FL MPS", Math.abs(this.frontLeftSwerveModule.getDriveMotorSpeedInMetersPerSecond()));
-      SmartDashboard.putNumber("FL Angle", this.frontLeftSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
-      SmartDashboard.putNumber("FL Angle From Swerve Module Position", this.frontLeftSwerveModule.getPosition().angle.getDegrees());
-      SmartDashboard.putNumber("FL Distence", this.frontLeftSwerveModule.getDistance());
-      SmartDashboard.putNumber("FL Distence In Meters From SwerveModule Position", this.frontLeftSwerveModule.getPosition().distanceMeters);
+      //SmartDashBoard.putNumber("FL MPS", Math.abs(this.frontLeftSwerveModule.getDriveMotorSpeedInMetersPerSecond()));
+      //SmartDashBoard.putNumber("FL Angle", this.frontLeftSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
+      //SmartDashBoard.putNumber("FL Angle From Swerve Module Position", this.frontLeftSwerveModule.getPosition().angle.getDegrees());
+      //SmartDashBoard.putNumber("FL Distence", this.frontLeftSwerveModule.getDistance());
+      //SmartDashBoard.putNumber("FL Distence In Meters From SwerveModule Position", this.frontLeftSwerveModule.getPosition().distanceMeters);
 
-      SmartDashboard.putNumber("FR MPS", this.frontRightSwerveModule.getDriveMotorSpeedInMetersPerSecond());
-      SmartDashboard.putNumber("FR Angle", this.frontRightSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
+      //SmartDashBoard.putNumber("FR MPS", this.frontRightSwerveModule.getDriveMotorSpeedInMetersPerSecond());
+      //SmartDashBoard.putNumber("FR Angle", this.frontRightSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
 
-      SmartDashboard.putNumber("BL MPS", this.backLeftSwerveModule.getDriveMotorSpeedInMetersPerSecond());
-      SmartDashboard.putNumber("BL Angle", this.backLeftSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
+      //SmartDashBoard.putNumber("BL MPS", this.backLeftSwerveModule.getDriveMotorSpeedInMetersPerSecond());
+      //SmartDashBoard.putNumber("BL Angle", this.backLeftSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
 
-      SmartDashboard.putNumber("BR MPS", this.backRightSwerveModule.getDriveMotorSpeedInMetersPerSecond());
-      SmartDashboard.putNumber("BR Angle", this.backRightSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
+      //SmartDashBoard.putNumber("BR MPS", this.backRightSwerveModule.getDriveMotorSpeedInMetersPerSecond());
+      //SmartDashBoard.putNumber("BR Angle", this.backRightSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
 
-      SmartDashboard.putNumber("Robot Heading in Degrees", this.m_gyro.getAngle()); 
+      //SmartDashBoard.putNumber("Robot Heading in Degrees", this.m_gyro.getAngle()); 
       }
     }
 
@@ -243,19 +243,19 @@ public class DriveSubsystem extends SubsystemBase {
     this.backLeftSwerveModule.setDesiredState(desiredStates[2]);
     this.backRightSwerveModule.setDesiredState(desiredStates[3]); 
 
-    SmartDashboard.putNumber("FL Desired MPS", desiredStates[0].speedMetersPerSecond);
+    //SmartDashBoard.putNumber("FL Desired MPS", desiredStates[0].speedMetersPerSecond);
     /* 
-    SmartDashboard.putNumber("FL Desired Angle", desiredStates[0].angle.getDegrees());
+    //SmartDashBoard.putNumber("FL Desired Angle", desiredStates[0].angle.getDegrees());
 
     
-    SmartDashboard.putNumber("FR Desired MPS", desiredStates[1].speedMetersPerSecond);
-    SmartDashboard.putNumber("FR Desired Angle", desiredStates[1].angle.getDegrees());
+    //SmartDashBoard.putNumber("FR Desired MPS", desiredStates[1].speedMetersPerSecond);
+    //SmartDashBoard.putNumber("FR Desired Angle", desiredStates[1].angle.getDegrees());
 
-    SmartDashboard.putNumber("BL Desired MPS", desiredStates[2].speedMetersPerSecond);
-    SmartDashboard.putNumber("BL Desired Angle", desiredStates[2].angle.getDegrees());
+    //SmartDashBoard.putNumber("BL Desired MPS", desiredStates[2].speedMetersPerSecond);
+    //SmartDashBoard.putNumber("BL Desired Angle", desiredStates[2].angle.getDegrees());
 
-    SmartDashboard.putNumber("BR Desired MPS", desiredStates[3].speedMetersPerSecond);
-    SmartDashboard.putNumber("BR Desired Angle", desiredStates[3].angle.getDegrees());
+    //SmartDashBoard.putNumber("BR Desired MPS", desiredStates[3].speedMetersPerSecond);
+    //SmartDashBoard.putNumber("BR Desired Angle", desiredStates[3].angle.getDegrees());
     */
   }
 

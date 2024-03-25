@@ -28,7 +28,6 @@ import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
@@ -98,6 +97,10 @@ public class PivotSubsystem extends SubsystemBase {
 
         this.m_leftPivot.getTorqueCurrent().setUpdateFrequency(50);
         this.m_rightPivot.getTorqueCurrent().setUpdateFrequency(50);
+        this.m_leftPivot.getPosition().setUpdateFrequency(50);
+        this.m_rightPivot.getPosition().setUpdateFrequency(50);
+
+
         this.pivotEncoder.getAbsolutePosition().setUpdateFrequency(50);
         this.pivotEncoder.getPosition().setUpdateFrequency(50);
         //this.m_leftPivot.getPosition().setUpdateFrequency(100);
@@ -117,13 +120,13 @@ public class PivotSubsystem extends SubsystemBase {
     public void periodic() {
         this.pivotPose = rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) - IntakeConstants.kPivotThroughBoreZeroOffset;
 
-        SmartDashboard.putNumber("Pivot Angle(no offset)", this.pivotPose);// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));
-        SmartDashboard.putNumber("Pivot Angle(offset)", rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) - IntakeConstants.kPivotThroughBoreZeroOffset);// + IntakeConstants.kPivotThroughBoreZeroOffset);
-        SmartDashboard.putNumber("Desired Pivot Angle", targetPositionDegrees);
+        //SmartDashBoard.putNumber("Pivot Angle(no offset)", this.pivotPose);// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));
+        //SmartDashBoard.putNumber("Pivot Angle(offset)", rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) - IntakeConstants.kPivotThroughBoreZeroOffset);// + IntakeConstants.kPivotThroughBoreZeroOffset);
+        //SmartDashBoard.putNumber("Desired Pivot Angle", targetPositionDegrees);
         double directionOfMovement = Math.abs(this.targetPositionDegrees - this.pivotPose) > 3 ? Math.signum(this.targetPositionDegrees - this.pivotPose) : 0;
         this.hasReachedSetPoint = Math.abs(this.targetPositionDegrees - this.pivotPose) < 5;
-        SmartDashboard.putBoolean("Should Pivot", this.hasReachedSetPoint);
-        SmartDashboard.putNumber("dir of move", directionOfMovement);
+        //SmartDashBoard.putBoolean("Should Pivot", this.hasReachedSetPoint);
+        //SmartDashBoard.putNumber("dir of move", directionOfMovement);
         double distenceFromGoal = Math.abs(this.targetPositionDegrees - pivotPose);
         if(directionOfMovement == 1) {
             if(hasReachedSetPoint) {

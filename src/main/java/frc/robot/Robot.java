@@ -10,7 +10,6 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utils.BatteryCharge;
@@ -51,7 +50,7 @@ public class Robot extends TimedRobot {
    * that you want ran during disabled, autonomous, teleoperated and test.
    *
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
+   * //SmartDashBoard integrated updating.
    */
   @Override
   public void robotPeriodic() {
@@ -62,7 +61,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     checkDriverStationUpdate();
     BatteryCharge.updateBatteryVoltage();
-    SmartDashboard.putNumber("Batter Voltage", BatteryCharge.getAverageVoltage());
+    //SmartDashBoard.putNumber("Batter Voltage", BatteryCharge.getAverageVoltage());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

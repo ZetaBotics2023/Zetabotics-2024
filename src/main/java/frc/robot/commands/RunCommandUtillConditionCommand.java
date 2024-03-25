@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 /*
@@ -33,7 +33,7 @@ public class RunCommandUtillConditionCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        SmartDashboard.putBoolean("ENDED Command", true);
+        //SmartDashBoard.putBoolean("ENDED Command", true);
     }
 
     @Override

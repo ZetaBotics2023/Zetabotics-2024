@@ -10,7 +10,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
@@ -46,10 +46,10 @@ public class GoToPositionAuton extends Command{
     }
 
     public void execute() {
-        SmartDashboard.putNumber("Auton Goal Thata", this.goalEndPose.getRotation().getDegrees());
+        //SmartDashBoard.putNumber("Auton Goal Thata", this.goalEndPose.getRotation().getDegrees());
         Translation2d robotTransformVelocity = CalculateGoToPoseVelocityAuton.calculateGoToPoseVelocity(m_driveSubsystem.getRobotPose(), this.goalEndPose);
-        SmartDashboard.putNumber("Goal X Vel", robotTransformVelocity.getX());
-        SmartDashboard.putNumber("Goal Y Vel", robotTransformVelocity.getY());
+        //SmartDashBoard.putNumber("Goal X Vel", robotTransformVelocity.getX());
+        //SmartDashBoard.putNumber("Goal Y Vel", robotTransformVelocity.getY());
         this.m_driveSubsystem.drive(
         ChassisSpeeds.fromFieldRelativeSpeeds(
         this.translationXLimiter.calculate(robotTransformVelocity.getX()),

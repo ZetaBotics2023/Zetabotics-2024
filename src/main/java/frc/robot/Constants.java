@@ -240,16 +240,18 @@ public final class Constants {
     public static final double kTranslationAutoPIDControllerVelocityTolerance = 1;
     public static final double kTranslationAutoPIDControllerPositionalTolerance = .05;// .05;
 
-    public static final double kTranslationAutoPIDControllerP = .9265;//1.8;
+
+    public static final double kTranslationAutoPIDControllerP = .927
+    ;//.93;//65;//1.5;//.9265;//1.8;
     public static final double kTranslationAutoPIDControllerI = 0;
     public static final double kTranslationAutoPIDControllerD = 0;
 
     // Heading Auto
-    public static final double kHeadingPIDControllerAutoP = .0585;//.06;//.035;
-    public static final double kHeadingPIDControllerAutoI = 0.0;//.00005;
+    public static final double kHeadingPIDControllerAutoP = .0585;//.0375;//.0586;//.06;//.035;
+    public static final double kHeadingPIDControllerAutoI = 0;//.00005;
     public static final double kHeadingPIDControllerAutoD = 0;
     public static final double kHeadingPIDControllerToleranceAuto = 2;
-    public static final double kMaxAngularSpeedRadiansPerSecondAuto = 180;
+    public static final double kMaxAngularSpeedRadiansPerSecondAuto = 360;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquaredAuto = 720;
     public static final TrapezoidProfile.Constraints kThetaControllerConstraintsAuto = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecondAuto, kMaxAngularAccelerationRadiansPerSecondSquaredAuto);
@@ -290,7 +292,7 @@ public final class Constants {
     public static final double kTranslationPIDControllerVelocityToleranceHigh = 2;
     public static final double kTranslationPIDControllerVelocityTolerance = .25;
     public static final double kTranslationPIDControllerPositionalToleranceHigh = .2;
-    public static final double kTranslationPIDControllerPositionalTolerance = .05;
+    public static final double kTranslationPIDControllerPositionalTolerance = .07;
 
     public static final double kHeadingPIDControllerP = .0585;//.035;
     public static final double kHeadingPIDControllerI = 0;//.00005;
@@ -378,7 +380,7 @@ public final class Constants {
         new Pose2d(1.5134, 6.2, new Rotation2d(0)));
 
     public static final double kLeftNoteIntakeDownTime = .4;//1;// .9;//.75;
-    public static final double kCenterNoteIntakeDownTime = 1.15;
+    public static final double kCenterNoteIntakeDownTime = .5;
     public static final double kRightNoteIntakeDownTime = 1;
     public static boolean kSTOP = false;
   }
@@ -404,9 +406,9 @@ public final class Constants {
     public static final double kMinShootingDistanceFromWallMeters = Units.inchesToMeters(40);
 
     public static final double kShooterPowerRatio = 1;
-    public static double kShooterRPM = 2800;//2800;// SmartDashboard.getNumber("Shooter RPM", 4200);//4200;//4500;
+    public static double kShooterRPM = 2800;//2800;//2800;//2800;// //SmartDashBoard.getNumber("Shooter RPM", 4200);//4200;//4500;
     public static final double kShootTime = 10;
-    public static final double kShootTimeAuto = .4;
+    public static final double kShootTimeAuto = .3;
     public static final double kShooterRPMTolerance = 100;
 
     public static double kShooterRPMChange = 0;
