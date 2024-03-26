@@ -18,13 +18,17 @@ import frc.robot.commands.LockSwerves;
 import frc.robot.commands.ParallelRaceGroupCommand;
 import frc.robot.commands.RunCommandUtillConditionCommand;
 import frc.robot.commands.SequentialGroupCommand;
+import frc.robot.commands.AutoCommands.DriveBackToPose;
+import frc.robot.commands.AutoCommands.GoToPose;
 import frc.robot.commands.AutoCommands.WaitCommandWrapper;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCenterCommand;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionLeftCommand;
 import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionRightCommand;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPoseAutonWhileShootingWithPIDS;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionWithPIDSAuto;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionWithPIDSAutoClose;
 import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionAfterTimeWithPIDS;
+import frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition.GoToPositionAfterTimeWithPIDSClose;
 import frc.robot.commands.ClimberCommands.ClimbDownDualCommand;
 import frc.robot.commands.ClimberCommands.ClimbDownLeftCommand;
 import frc.robot.commands.ClimberCommands.ClimbDownRightCommand;
@@ -309,8 +313,11 @@ public class RobotContainer {
     //  AutonConfigurationConstants.kIsBlueAlience ? Rotation2d.fromDegrees(-40) : Rotation2d.fromDegrees(-35)
 
     AutonConfigurationConstants.robotPositions.put("LeftNoteShootPose", new MirrablePose2d(new Pose2d(1.85, 7, Rotation2d.fromDegrees(37.5))));
-    AutonConfigurationConstants.robotPositions.put("CenterNoteShootPose", new MirrablePose2d(new Pose2d(2.2, 5.55, new Rotation2d(0))));
+    AutonConfigurationConstants.robotPositions.put("CenterNoteShootPose", new MirrablePose2d(new Pose2d(2.23, 5.55, new Rotation2d(0))));
     AutonConfigurationConstants.robotPositions.put("RightNoteShootPose", new MirrablePose2d(new Pose2d(1.85, 4.11,  Rotation2d.fromDegrees(-37.5))));
+
+    AutonConfigurationConstants.robotPositions.put("CenterNoteShootPoseFar", new MirrablePose2d(new Pose2d(2.27, 5.55, new Rotation2d(0))));
+
 
     AutonConfigurationConstants.robotPositions.put("LeftNoteIntakePose", new MirrablePose2d(new Pose2d(2.6, 7.00, new Rotation2d(0))));
     AutonConfigurationConstants.robotPositions.put("CenterNoteIntakePose", new MirrablePose2d(new Pose2d(2.6, 5.55, new Rotation2d(0))));
@@ -321,9 +328,11 @@ public class RobotContainer {
 
     AutonConfigurationConstants.robotPositions.put("LeftNoteShootPoseInside", new MirrablePose2d(new Pose2d(2.2, 6.2, Rotation2d.fromDegrees(20))));
     AutonConfigurationConstants.robotPositions.put("FarLeftNoteIntakePose", new MirrablePose2d(new Pose2d(7.93, 5.5116, new Rotation2d(0))));
-    AutonConfigurationConstants.robotPositions.put("FarFarLeftNoteIntakePose", new MirrablePose2d(new Pose2d(8.03, 7.188, new Rotation2d(0))));// 7.188, new Rotation2d(0))));
+    AutonConfigurationConstants.robotPositions.put("FarFarLeftNoteIntakePose", new MirrablePose2d(new Pose2d(8.18, 7.188, new Rotation2d(0))));// 7.188, new Rotation2d(0))));
+    AutonConfigurationConstants.robotPositions.put("FarFarLeftNoteIntakePoseLeft", new MirrablePose2d(new Pose2d(7.93 + 15, 7.188+.5, new Rotation2d(0))));// 7.188, new Rotation2d(0))));
+
     //AutonConfigurationConstants.robotPositions.put("FarLeftNoteIntakePose", new MirrablePose2d(new Pose2d(7.8, 5.5116, new Rotation2d(0))));
-    AutonConfigurationConstants.robotPositions.put("LeftNoteNextToNoteShootPose", new MirrablePose2d(new Pose2d(2.5, 7, Rotation2d.fromDegrees(37))));// 7.188, new Rotation2d(0))));
+    AutonConfigurationConstants.robotPositions.put("LeftNoteNextToNoteShootPose", new MirrablePose2d(new Pose2d(2.31 +.05, 6.7+.05, Rotation2d.fromDegrees(25))));// 7.188, new Rotation2d(0))));
 
 
     //AutonConfigurationConstatns.robotPositions.put("CenterNoteLeavePose", new MirrablePose2d(new Pose2d(2.20, 5.55, new Rotation2d(0)), !AutonConfigurationConstatns.kIsBlueAlience));
@@ -338,8 +347,8 @@ public class RobotContainer {
       case "Left":
         MirrablePose2d startingPoseLeft = null;
         startingPoseLeft = AutonConfigurationConstants.kLeftStartingPose;
-        
-        this.m_driveSubsystem.setRobotPose(startingPoseLeft.getPose(!AutonConfigurationConstants.kIsBlueAlliance));
+        Pose2d startingPose = startingPoseLeft.getPose(!AutonConfigurationConstants.kIsBlueAlliance);
+        this.m_driveSubsystem.setRobotPose(new Pose2d(startingPose.getTranslation(), this.m_driveSubsystem.getHeadingInRotation2d()));
         break;
       
       case "Center":
@@ -470,24 +479,23 @@ public class RobotContainer {
 
         return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeft);
      
-      case "Left:ShootPreloadedFarFarLeftFarLeft":
-        AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(new RampShooterToAnyRPM(m_shooterSubsystem, ShooterConstants.kLeftFarShootingPoseRPM, ShooterConstants.kLeftFarShootingPoseVoltage));
-        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createGoToPositionCommand("LeftNoteShootPose"));
-        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
-        //AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(disableVision());
-        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createGoToPositionCommand("LeftNoteIntakeZero"));
+      case "Left:ShootPreloadedFarFarLeftFarLeft":         
+        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new RampShooterAtDifferentSpeedAutonCommand(m_shooterSubsystem));
 
-        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createIntakeCommand("LeftNoteIntakePose", AutonConfigurationConstants.kLeftNoteIntakeDownTime));
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createGoToPositionCommand("LeftNoteNextToNoteShootPose"));
-        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new WaitCommandWrapper(.5));
+        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
+        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(disableVision());
+
+        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new PickupFromGroundCommand(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem, m_ledSubsystem));//createIntakeCommand("LeftNoteNextToNoteShootPose", .5));//PickupFromGroundCommand(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem, m_ledSubsystem));//createIntakeCommand("LeftNoteNextToNoteShootPose", AutonConfigurationConstants.kLeftNoteIntakeDownTime));
+        //AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createGoToPositionCommand("LeftNoteNextToNoteShootPose"));
+        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new WaitCommandWrapper(1.7));
 
         //AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(enableVision());
         //AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createGoToPositionCommand("LeftNoteShootPoseInside"));
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
-        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(disableVision());
-        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createIntakeCommand("FarFarLeftNoteIntakePose", 0));
+        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createIntakeCommand("FarFarLeftNoteIntakePoseLeft", 0));
+        AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(enableVision());
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(createGoToPositionCommand("LeftNoteNextToNoteShootPose"));
-        //AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(enableVision());
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kLeft_ShootPreloadedFarFarLeftFarLeft.add(new StopShooterCommand(m_shooterSubsystem));
 
@@ -506,9 +514,9 @@ public class RobotContainer {
         return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kCenter_ShootPreloadedCenter);
 
       case "Center:ShootPreloadedCenterFarFarLeft":
+        AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(new RampShooterAtDifforentSpeedCommand(m_shooterSubsystem));
         AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(disableVision());
-        AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(new  RampShooterAtDifferentSpeedAutonCommand(m_shooterSubsystem));
-        AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(createGoToPositionCommand("CenterNoteShootPose"));
+        AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(createGoToPositionCommand("CenterNoteShootPoseFar"));
         AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
         AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(createIntakeCommand("CenterNoteIntakePose", AutonConfigurationConstants.kLeftNoteIntakeDownTime));
         AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(new WaitCommandWrapper(1.2));
@@ -517,7 +525,7 @@ public class RobotContainer {
         AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(enableVision());
         AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(createGoToPositionCommand("CenterNoteShootPose"));
         AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
-        AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(new StopShooterCommand(m_shooterSubsystem));
+        //AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft.add(new StopShooterCommand(m_shooterSubsystem));
 
         return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kCenter_ShootPreloadedCenterFarFarLeft);
       }
@@ -526,6 +534,18 @@ public class RobotContainer {
 
   }
 
+  public  void displayGreenWhenAtAngle() {
+    boolean degreesEqual = Math.abs( this.m_driveSubsystem.getHeadingInRotation2d().getDegrees() - AutonConfigurationConstants.robotPositions.get("LeftNoteNextToNoteShootPose").
+     getPose(!AutonConfigurationConstants.kIsBlueAlliance).getRotation().getDegrees()) <= 1;
+     SmartDashboard.putBoolean("Degree Equal", degreesEqual);
+    if(degreesEqual && AutonConfigurationConstants.kInAuto) {
+      Commands.runOnce(this::setLEDColor, this.m_ledSubsystem);
+    }
+  }
+
+  public void setLEDColor() {
+    this.m_ledSubsystem.setSolidColor(new int[] {255, 0, 0});
+  }
 
   private Command stop() {
     return Commands.runOnce(this::stopUpChain);
@@ -557,6 +577,14 @@ public class RobotContainer {
         AutonConfigurationConstants.robotPositions.get(poseName).getPose(!AutonConfigurationConstants.kIsBlueAlliance)), waitTime));
   }
 
+  public Command createIntakeCommandClose(String poseName, double waitTime) {
+    return new ParallelRaceGroupCommand(new PickupFromGroundCommand(m_intakeSubsystem, m_pivotSubsystem,
+     m_intakeSensorSubsystem, this.m_ledSubsystem),
+      new GoToPositionAfterTimeWithPIDSClose(
+        new GoToPositionWithPIDSAutoClose(m_driveSubsystem, 
+        AutonConfigurationConstants.robotPositions.get(poseName).getPose(!AutonConfigurationConstants.kIsBlueAlliance)), waitTime));
+  }
+
   /*
    * Given the name of a target field position, create a command that moves to the position
    */
@@ -564,6 +592,12 @@ public class RobotContainer {
     return new GoToPositionWithPIDSAuto(this.m_driveSubsystem,
           AutonConfigurationConstants.robotPositions.get(poseName).getPose(!AutonConfigurationConstants.kIsBlueAlliance));
   }
+
+  public GoToPositionWithPIDSAutoClose createGoToPositionCommandClose(String poseName) {
+    return new GoToPositionWithPIDSAutoClose(this.m_driveSubsystem,
+          AutonConfigurationConstants.robotPositions.get(poseName).getPose(!AutonConfigurationConstants.kIsBlueAlliance));
+  }
+
 
   /*
    * Given the name of a target field position and a percentage at which to start shooting, create a command that moves to a position and shoots during transit

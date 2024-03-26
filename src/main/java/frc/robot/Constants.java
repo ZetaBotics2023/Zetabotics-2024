@@ -142,7 +142,7 @@ public final class Constants {
     public static final double kFModuleDriveController = 0;
     public static final double kIZoneModuleDriveController = 0.0;
 
-    public static final double kPModuleTurningController = .1;
+    public static final double kPModuleTurningController = .1001;
     public static final double kIModuleTurningController = 0;
     public static final double kDModuleTurningController = 0;
     public static final double kFModuleTurningController = 0;
@@ -221,10 +221,11 @@ public final class Constants {
   };
 
   public static final class AutoConstants {
+
     public static final PIDConstants kTranslationAutoPID = new PIDConstants(1.95, 0, .0001);
     public static final PIDConstants kRotationAutoPID = new PIDConstants(20, 0, 0);//new PIDConstants(3.5, 0.0, 0.0);
-    public static final double kMaxAutonSpeedInMetersPerSecond = 2.1;
-    public static final double kMaxAutonAccelerationInMetersPerSecondSqr = 3;
+    public static final double kMaxAutonSpeedInMetersPerSecond = 4.3;
+    public static final double kMaxAutonAccelerationInMetersPerSecondSqr = 5;
 
     public static final double kAutoSlowDownSpeed = .75;
     public static final double kAutoSlowRate = 1.6;
@@ -232,7 +233,7 @@ public final class Constants {
 
     // Auto Constrants
 
-    public static final double kMaxTranslationSpeedMPSAuto = 4.3;
+    public static final double kMaxTranslationSpeedMPSAuto = 7;//4.3;
     public static final double kMaxTranslationAccelerationAuto = 10;//4.1;// 2;//4.1;
     public static final TrapezoidProfile.Constraints kTranslationAutoControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxTranslationSpeedMPSAuto, kMaxTranslationAccelerationAuto);
@@ -241,13 +242,13 @@ public final class Constants {
     public static final double kTranslationAutoPIDControllerPositionalTolerance = .05;// .05;
 
 
-    public static final double kTranslationAutoPIDControllerP = .927
+    public static final double kTranslationAutoPIDControllerP = .9265;//(PID that worked for center make this center).9268//5;///.9265; //.928
     ;//.93;//65;//1.5;//.9265;//1.8;
-    public static final double kTranslationAutoPIDControllerI = 0;
+    public static final double kTranslationAutoPIDControllerI = 0;//.00000001;
     public static final double kTranslationAutoPIDControllerD = 0;
 
     // Heading Auto
-    public static final double kHeadingPIDControllerAutoP = .0585;//.0375;//.0586;//.06;//.035;
+    public static final double kHeadingPIDControllerAutoP = .0585;//.0585;//.0375;//.0586;//.06;//.035;
     public static final double kHeadingPIDControllerAutoI = 0;//.00005;
     public static final double kHeadingPIDControllerAutoD = 0;
     public static final double kHeadingPIDControllerToleranceAuto = 2;
@@ -273,7 +274,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kTranslationControllerConstraintsLowVoltage = new TrapezoidProfile.Constraints(
         kMaxTranslationSpeedMPSLowVoltage, kMaxTranslationAccelerationLowVoltage);
 
-    public static final double kTranslationPIDControllerP = .9265;//1.8// 1.4;//1.5;
+    public static final double kTranslationPIDControllerP = .93;//.9265;//1.8// 1.4;//1.5;
     public static final double kTranslationPIDControllerI = 0;
     public static final double kTranslationPIDControllerD = 0;
 
@@ -294,7 +295,7 @@ public final class Constants {
     public static final double kTranslationPIDControllerPositionalToleranceHigh = .2;
     public static final double kTranslationPIDControllerPositionalTolerance = .07;
 
-    public static final double kHeadingPIDControllerP = .0585;//.035;
+    public static final double kHeadingPIDControllerP = .0586;//.035;
     public static final double kHeadingPIDControllerI = 0;//.00005;
     public static final double kHeadingPIDControllerD = 0;
 
@@ -327,9 +328,9 @@ public final class Constants {
   }
 
   public static final class WPILIBTrajectoryConstants {
-    public static final double kMaxSpeedMetersPerSecond = 4.1;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 4;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 4.1;
+    public static final double kMaxSpeedMetersPerSecond = 4.3;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 5;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI * 4;
 
     public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
@@ -337,10 +338,10 @@ public final class Constants {
                 kMaxAccelerationMetersPerSecondSquared)
                       .setKinematics(SwerveDriveConstants.kDriveKinematics);
 
-    public static final PIDController kXController = new PIDController(1.95, 0, .0001);
-    public static final PIDController kYController = new PIDController(1.95, 0, .0001);
+    public static final PIDController kXController = new PIDController(3, 0, 0);
+    public static final PIDController kYController = new PIDController(3, 0, 0);
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-    public static final ProfiledPIDController kThetaController = new ProfiledPIDController(20, 0, 0, kThetaControllerConstraints);
+    public static final ProfiledPIDController kThetaController = new ProfiledPIDController(3, 0, 0, kThetaControllerConstraints);
     
   }
 
@@ -363,7 +364,6 @@ public final class Constants {
     public static final ArrayList<Command> kCenter_ShootPreloadedCenterRight = new ArrayList<Command>();
     public static final ArrayList<Command> kCenter_ShootPreloadedCenterFarFarLeft = new ArrayList<Command>();
 
-
     public static final ArrayList<Command> kRight_ShootPreloaded = new ArrayList<Command>();;
     public static final ArrayList<Command> kRight_ShootPreloadedRight = new ArrayList<Command>();
     public static final ArrayList<Command> kRight_ShootPreloadedRightCenter = new ArrayList<Command>();
@@ -372,7 +372,7 @@ public final class Constants {
     public static final ArrayList<Command> kLeft_ShootPreloadedFarFarLeftFarLeft = new ArrayList<Command>();
 
     public static final MirrablePose2d kLeftStartingPose = new MirrablePose2d(
-        new Pose2d(1.5134 - Units.inchesToMeters(3), 7, new Rotation2d()));
+        new Pose2d(1.5134 - Units.inchesToMeters(3), 7, Rotation2d.fromDegrees(25)));
     public static final MirrablePose2d kCenterStartingPose = new MirrablePose2d(
         new Pose2d(1.5134 - Units.inchesToMeters(3), 5.55, new Rotation2d()));
     public static final MirrablePose2d kRightStartingPose = new MirrablePose2d(
@@ -381,10 +381,11 @@ public final class Constants {
     public static final MirrablePose2d kLeftFarNoteStartingPose = new MirrablePose2d(
         new Pose2d(1.5134, 6.2, new Rotation2d(0)));
 
-    public static final double kLeftNoteIntakeDownTime = .4;//1;// .9;//.75;
-    public static final double kCenterNoteIntakeDownTime = .5;
+    public static final double kLeftNoteIntakeDownTime = .3;//1;// .9;//.75;
+    public static final double kCenterNoteIntakeDownTime = .3;
     public static final double kRightNoteIntakeDownTime = 1;
     public static boolean kSTOP = false;
+    public static boolean kInAuto = false; 
   }
 
   public static final class ShooterConstants {
@@ -414,7 +415,7 @@ public final class Constants {
     public static double kLeftFarShootingPoseVoltage = 5;
 
     public static final double kShootTime = 10;
-    public static final double kShootTimeAuto = .3;
+    public static final double kShootTimeAuto = .4;
     public static final double kShooterRPMTolerance = 100;
 
     public static double kShooterRPMChange = 0;
@@ -446,7 +447,7 @@ public final class Constants {
     public static final int kIntakeMotorControllerID = 15;
     public static final int distenceSensorID = 0;
 
-    public static final double kPivotThroughBoreZeroOffset = 0.105469 * 360;//93.75;
+    public static final double kPivotThroughBoreZeroOffset = 0.083008 * 360;//0.105469 * 360;//93.75;
 
     public static final double kFarthestNotePositionMillimeters = 480;//480;
 
@@ -480,7 +481,7 @@ public final class Constants {
     public static final double kIZoneIntakePositionController = .5 / 360;
 
     // Rotation constants
-    public static final double kGroundPickupPivotRotationDegrees = 194.16;//190.5;// 189;
+    public static final double kGroundPickupPivotRotationDegrees = 194.16 + 8;//190.5;// 189;
     public static final double kGroundPickupIntakeRPM = 3000;//5200;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
