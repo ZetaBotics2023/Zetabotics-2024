@@ -15,7 +15,7 @@ import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 
 
-public class GoToPositionWithPIDSAutoClose extends Command{
+public class GoToPositionWithPIDSAutoCenter extends Command{
 
     DriveSubsystem m_driveSubsystem;
     Pose2d rbootPose;
@@ -25,18 +25,18 @@ public class GoToPositionWithPIDSAutoClose extends Command{
     private ProfiledPIDController translationYController;
     private ProfiledPIDController headingPIDController;
     
-    public GoToPositionWithPIDSAutoClose(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose) {
+    public GoToPositionWithPIDSAutoCenter(DriveSubsystem m_driveSubsystem, Pose2d goalEndPose) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.goalEndPose = goalEndPose;
 
         this.translationXController = new ProfiledPIDController(
-            1.5, AutoConstants.kTranslationAutoPIDControllerI, AutoConstants.kTranslationAutoPIDControllerD, AutoConstants.kTranslationAutoControllerConstraints);
+            .9268, AutoConstants.kTranslationAutoPIDControllerI, AutoConstants.kTranslationAutoPIDControllerD, AutoConstants.kTranslationAutoControllerConstraints);
         this.translationXController.setTolerance(AutoConstants.kTranslationAutoPIDControllerPositionalTolerance, AutoConstants.kTranslationAutoPIDControllerVelocityTolerance);
         this.translationXController.setIntegratorRange(-.3, .3);
         this.translationXController.reset(this.m_driveSubsystem.getRobotPose().getX());
 
         this.translationYController = new ProfiledPIDController(
-            1.5, AutoConstants.kTranslationAutoPIDControllerI, AutoConstants.kTranslationAutoPIDControllerD, AutoConstants.kTranslationAutoControllerConstraints);
+            .9268, AutoConstants.kTranslationAutoPIDControllerI, AutoConstants.kTranslationAutoPIDControllerD, AutoConstants.kTranslationAutoControllerConstraints);
         this.translationYController.setTolerance(AutoConstants.kTranslationAutoPIDControllerPositionalTolerance, AutoConstants.kTranslationAutoPIDControllerVelocityTolerance);
         this.translationYController.setIntegratorRange(-.3, .3);
         this.translationYController.reset(this.m_driveSubsystem.getRobotPose().getY());

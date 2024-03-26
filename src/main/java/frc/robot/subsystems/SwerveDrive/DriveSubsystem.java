@@ -112,7 +112,7 @@ public class DriveSubsystem extends SubsystemBase {
         //visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
         //visionTab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
         AutoBuilder.configureHolonomic(
-                this.poseEstimator::getEstimatedPosition, // Robot pose supplier
+                this.m_poseEstimatorSubsystem::getCurrentPose, // Robot pose supplier
                 this::setRobotPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
@@ -128,33 +128,7 @@ public class DriveSubsystem extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
         );
-
-         AutoBuilder.configureHolonomic(
-            this.poseEstimator::getEstimatedPosition, // Robot pose supplier
-            this::setRobotPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-                    4.5, // Max module speed, in m/s
-                    0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig() // Default path replanning config. See the API for the options here
-            ),
-            () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              // This will flip the path being followed to the red side of the field.
-              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            },
-            this // Reference to this subsystem to set requirements
-    );
-  }
+      }
         //SmartDashBoard.updateValues(); 
         //this.m_gyro.getYaw().setUpdateFrequency(100);
         //this.m_gyro.optimizeBusUtilization()

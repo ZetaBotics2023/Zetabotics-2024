@@ -49,8 +49,8 @@ public class PhotonVisionPoseEstimator extends SubsystemBase {
 
     private SwerveDrivePoseEstimator poseEstimator;
     private PhotonPoseEstimator leftEstimator;
-    private PhotonPoseEstimator centerEstimator;
-    private PhotonPoseEstimator rightEstimator;
+    //private PhotonPoseEstimator centerEstimator;
+    //private PhotonPoseEstimator rightEstimator;
 
     private OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;
 
@@ -64,14 +64,15 @@ public class PhotonVisionPoseEstimator extends SubsystemBase {
         aprilTagLayout.setOrigin(this.originPosition);
         this.leftEstimator = new PhotonPoseEstimator(aprilTagLayout, PoseStrategy.AVERAGE_BEST_TARGETS, this.leftCamera,
                 VisionConstants.kLeftCameraToRobot);
+    /* 
         this.centerEstimator = new PhotonPoseEstimator(aprilTagLayout, PoseStrategy.AVERAGE_BEST_TARGETS, this.centerCamera,
                 VisionConstants.kCenterCameraToRobot);
         this.rightEstimator = new PhotonPoseEstimator(aprilTagLayout, PoseStrategy.AVERAGE_BEST_TARGETS, this.rightCamera,
                 VisionConstants.kRightCameraToRobot);
-
+    */
         this.leftEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
-        this.centerEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
-        this.rightEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
+        //this.centerEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
+        //this.rightEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
 
         poseEstimator = new SwerveDrivePoseEstimator(
                 SwerveDriveConstants.kDriveKinematics,
@@ -94,7 +95,7 @@ public class PhotonVisionPoseEstimator extends SubsystemBase {
         
         if(VisionConstants.useVision) {
             estimatorChecker(leftEstimator);
-            estimatorChecker(rightEstimator);
+            //estimatorChecker(rightEstimator);
             //estimatorChecker(centerEstimator);
 
         }
@@ -103,7 +104,8 @@ public class PhotonVisionPoseEstimator extends SubsystemBase {
           // Flip the pose when red, since the dashboard field photo cannot be rotated
           dashboardPose = flipAlliance(dashboardPose);
         }
-        field2d.setRobotPose(dashboardPose);    }
+        field2d.setRobotPose(dashboardPose);    
+    }
 
     private void estimatorChecker(PhotonPoseEstimator photonEstimator) {
         photonEstimator.update().ifPresent(robotPose -> {

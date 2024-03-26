@@ -3,12 +3,12 @@ package frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class GoToPositionAfterTimeWithPIDSClose extends Command{
-    private GoToPositionWithPIDSAutoClose goToPosition;
+public class GoToPositionAfterTimeWithPIDSCenter extends Command{
+    private GoToPositionWithPIDSAutoCenter goToPosition;
     private double waitTime;
     private WaitCommand waitCommand;
-    public GoToPositionAfterTimeWithPIDSClose(GoToPositionWithPIDSAutoClose goToPosition, double waitTime) {
-        this.goToPosition = goToPosition;
+    public GoToPositionAfterTimeWithPIDSCenter(GoToPositionWithPIDSAutoCenter goToPositionWithPIDSAuto, double waitTime) {
+        this.goToPosition = goToPositionWithPIDSAuto;
         this.waitTime = waitTime;
     }
 

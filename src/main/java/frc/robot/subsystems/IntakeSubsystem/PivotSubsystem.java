@@ -52,6 +52,7 @@ public class PivotSubsystem extends SubsystemBase {
     private double targetPositionDegrees = 0;
     private double pivotPose = 0;
     private boolean hasReachedSetPoint = false;
+    private boolean hasSetPID = false;
 
     public PivotSubsystem() {
         this.m_leftPivot = new TalonFX(IntakeConstants.kLeftPivotID);
@@ -109,9 +110,6 @@ public class PivotSubsystem extends SubsystemBase {
         this.m_rightPivot.optimizeBusUtilization();
         this.pivotEncoder.optimizeBusUtilization();
 
-
-
-
         this.pivotPose = rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) + IntakeConstants.kPivotThroughBoreZeroOffset;
 
         Timer.delay(1);
@@ -122,31 +120,41 @@ public class PivotSubsystem extends SubsystemBase {
 
         //SmartDashBoard.putNumber("Pivot Angle(no offset)", this.pivotPose);// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));
         //SmartDashBoard.putNumber("Pivot Angle(offset)", rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) - IntakeConstants.kPivotThroughBoreZeroOffset);// + IntakeConstants.kPivotThroughBoreZeroOffset);
-        //SmartDashBoard.putNumber("Desired Pivot Angle", targetPositionDegrees);
-        double directionOfMovement = Math.abs(this.targetPositionDegrees - this.pivotPose) > 3 ? Math.signum(this.targetPositionDegrees - this.pivotPose) : 0;
-        this.hasReachedSetPoint = Math.abs(this.targetPositionDegrees - this.pivotPose) < 5;
+        //SmartDashBoard.putNumber("Desired Pivot Angle", targetPositionDegrees);'
+        double distenceFromGoal = Math.abs(this.targetPositionDegrees - pivotPose);
+
+        double directionOfMovement = distenceFromGoal > 3 ? Math.signum(this.targetPositionDegrees - this.pivotPose) : 0;
+        this.hasReachedSetPoint = distenceFromGoal < 5;
+        double curretSpeed = this.m_leftPivot.get();
         //SmartDashBoard.putBoolean("Should Pivot", this.hasReachedSetPoint);
         //SmartDashBoard.putNumber("dir of move", directionOfMovement);
-        double distenceFromGoal = Math.abs(this.targetPositionDegrees - pivotPose);
+        
         if(directionOfMovement == 1) {
-            if(hasReachedSetPoint) {
+            if(!this.hasSetPID && hasReachedSetPoint) {
+                this.hasSetPID = true;
                 this.m_leftPivot.setControl(this.positionalControl.withPosition(
                     degreesToRotations(targetPositionDegrees + IntakeConstants.kPivotThroughBoreZeroOffset)));
-            } else if(distenceFromGoal < 24) {
+            } else if(distenceFromGoal < 24 && curretSpeed != 0) {
+                this.hasSetPID = false;
                 this.m_leftPivot.set(0 * directionOfMovement);
-            } else {
+            } else if(curretSpeed != .7 * directionOfMovement) {
+                this.hasSetPID = false;
                 this.m_leftPivot.set( .7 * directionOfMovement);
             }
         } else if(directionOfMovement == -1) {
-            if(hasReachedSetPoint) {
-            this.m_leftPivot.setControl(this.positionalControl.withPosition(
+            if(!this.hasSetPID && hasReachedSetPoint) {
+                this.hasSetPID = true;
+                this.m_leftPivot.setControl(this.positionalControl.withPosition(
                 degreesToRotations(targetPositionDegrees + IntakeConstants.kPivotThroughBoreZeroOffset)));
-            } else if(distenceFromGoal < 35) {
+            } else if(distenceFromGoal < 35 && curretSpeed != 0) {
+                this.hasSetPID = false;
                 this.m_leftPivot.set(0 * directionOfMovement);
-            } else {
+            } else if(curretSpeed != .7 * directionOfMovement) {
+                this.hasSetPID = false;
                 this.m_leftPivot.set( .7* directionOfMovement);
             }
-        } else {
+        } else if(curretSpeed != 0) {
+            this.hasSetPID = false;
             this.m_leftPivot.set(0);
         }
     }
