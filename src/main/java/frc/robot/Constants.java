@@ -352,6 +352,8 @@ public final class Constants {
     public static final ArrayList<Command> kLeft_ShootPreloaded = new ArrayList<Command>();
     public static final ArrayList<Command> kLeft_ShootPreloadedLeft = new ArrayList<Command>();
     public static final ArrayList<Command> kLeft_ShootPreloadedLeftCenter = new ArrayList<Command>();
+    public static final ArrayList<Command> kLeft_ShootPreloadedLeftCenterFarFarLeft = new ArrayList<Command>();
+
     public static final ArrayList<Command> kLeft_ShootPreloadedLeftCenterRight = new ArrayList<Command>();
 
     public static final ArrayList<Command> kCenter_ShootPreloaded = new ArrayList<Command>();;

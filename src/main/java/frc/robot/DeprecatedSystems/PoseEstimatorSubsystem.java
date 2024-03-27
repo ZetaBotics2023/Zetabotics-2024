@@ -64,7 +64,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private final DriveSubsystem m_driveSubsystem;
   private final SwerveDrivePoseEstimator poseEstimator;
   private final Field2d field2d = new Field2d();
+
   private final PhotonPoseEstimator leftEstimator;
+  private final PhotonPoseEstimator rightEstimator;
+
 
   private double previousPipelineTimestamp = 0;
   private OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;
@@ -72,18 +75,24 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private final ArrayList<Double> xValues = new ArrayList<Double>();
   private final ArrayList<Double> yValues = new ArrayList<Double>();
 
-  private PhotonCamera photonCamera;
+  private PhotonCamera leftCamera = new PhotonCamera("LeftCamera");
+  private PhotonCamera rightCamera = new PhotonCamera("RightCamera");
 
-  public PoseEstimatorSubsystem(PhotonCamera photonCamera, DriveSubsystem m_driveSubsystem) {
+
+  public PoseEstimatorSubsystem(DriveSubsystem m_driveSubsystem) {
     this.m_driveSubsystem = m_driveSubsystem;
-    this.photonCamera = photonCamera;
+    
     // try {
     var layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
     layout.setOrigin(originPosition);
     // The Pose Strategy may be incorrect
-    this.leftEstimator = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, photonCamera,
+    this.leftEstimator = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, leftCamera,
         Constants.VisionConstants.kLeftCameraToRobot);
     this.leftEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
+    this.rightEstimator = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, leftCamera,
+        Constants.VisionConstants.kRightCameraToRobot);
+    this.rightEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
+
 
     
     // } catch (IOException e) {
@@ -152,6 +161,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         
     try {
       leftEstimator.update().ifPresent(robotPose -> {
+        if (robotPose != null) {
+            // New pose from vision
+            Pose2d robotPose2d = robotPose.estimatedPose.toPose2d();
+            poseEstimator.addVisionMeasurement(new Pose2d(robotPose2d.getTranslation(), this.m_driveSubsystem.getHeadingInRotation2d()), robotPose.timestampSeconds,
+                VisionConstants.kVisionMeasurementStdDevs);
+        }
+    });
+    rightEstimator.update().ifPresent(robotPose -> {
         if (robotPose != null) {
             // New pose from vision
             Pose2d robotPose2d = robotPose.estimatedPose.toPose2d();

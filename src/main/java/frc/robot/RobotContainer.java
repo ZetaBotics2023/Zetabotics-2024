@@ -381,12 +381,28 @@ public class RobotContainer {
       AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(createGoToPositionCommand("CenterNoteShootPose"));
       AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new WaitCommandWrapper(1.2));
       AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
-      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(disableVision());
-      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(createIntakeCommandCenter("FarFarLeftNoteIntakePose", AutonConfigurationConstants.kLeftNoteIntakeDownTime));
+
 
       AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new StopShooterCommand(m_shooterSubsystem));
 
       return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter);
+
+    case "Left:ShootPreloadedLeftCenterFarFarLeft":
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(new RampShooterAtDifforentSpeedCommand(m_shooterSubsystem));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(createGoToPositionCommand("LeftNoteShootPose"));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(createIntakeCommand("LeftNoteIntakePose", AutonConfigurationConstants.kLeftNoteIntakeDownTime));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(createGoToPositionCommand("CenterNoteShootPose"));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(createIntakeCommand("CenterNoteIntakePose", AutonConfigurationConstants.kCenterNoteIntakeDownTime + .3));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(createGoToPositionCommand("CenterNoteShootPose"));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(new WaitCommandWrapper(1.2));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(new HandOffToShooterAuton(m_intakeSubsystem, m_pivotSubsystem, m_intakeSensorSubsystem));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(disableVision());
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(createIntakeCommandCenter("FarFarLeftNoteIntakePose", AutonConfigurationConstants.kLeftNoteIntakeDownTime));
+      AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft.add(new StopShooterCommand(m_shooterSubsystem));
+
+      return GenerateAuto.generateAuto(autonName, AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenterFarFarLeft);
     
     case "Left:ShootPreloadedLeftCenterRight":
       AutonConfigurationConstants.kLeft_ShootPreloadedLeftCenter.add(new RampShooterAtDifforentSpeedCommand(m_shooterSubsystem));

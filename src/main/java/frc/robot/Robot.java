@@ -26,14 +26,18 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
+  private static double loopTime = .02;
+  
+  public Robot() {
+    super(loopTime); // Periodic methods will now be called every 30 ms.
+  }
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
-    CommandScheduler.getInstance().setPeriod(.02);
+    CommandScheduler.getInstance().setPeriod(loopTime);
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.

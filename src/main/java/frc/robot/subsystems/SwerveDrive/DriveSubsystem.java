@@ -96,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         //NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight-zeta");
 
-        this.m_poseEstimatorSubsystem = new PoseEstimatorSubsystem(new PhotonCamera("LeftCamera"), this);//PhotonVisionPoseEstimator(this);
+        this.m_poseEstimatorSubsystem = new PoseEstimatorSubsystem(this);//PhotonVisionPoseEstimator(this);
         //ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
         //visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
         //visionTab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
