@@ -2,20 +2,20 @@ package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ClimberConstants;
-import frc.robot.subsystems.ClimberSubsystem.ClimberSubsystem;
+import frc.robot.subsystems.ClimberSubsystem.LeftClimberSubsystem;
 
 public class ClimbDownLeftCommand extends Command {
     
-    private ClimberSubsystem climberSubsystem;
+    private LeftClimberSubsystem climberSubsystem;
 
-    public ClimbDownLeftCommand(ClimberSubsystem climberSubsystem) {
+    public ClimbDownLeftCommand(LeftClimberSubsystem climberSubsystem) {
         this.climberSubsystem = climberSubsystem;
-        addRequirements(climberSubsystem);
+        //addRequirements(climberSubsystem);
     }
     
     @Override
     public void initialize() {
-        this.climberSubsystem.setPercentOutput(ClimberConstants.kClimbDownPercentOutput, 0);
+        this.climberSubsystem.setPercentOutput(ClimberConstants.kClimbDownPercentOutput);
     }
 
     @Override

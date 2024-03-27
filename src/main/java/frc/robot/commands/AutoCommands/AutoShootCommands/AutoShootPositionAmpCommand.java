@@ -22,7 +22,7 @@ import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.MirrablePose2d;
 
-public class AutoShootPositionRightCommand extends Command{
+public class AutoShootPositionAmpCommand extends Command{
     private DriveSubsystem m_driveSubsystem;
     private ShooterSubsystem m_shooterSubsystem;
     private IntakeSubsystem m_intakeSubsystem;
@@ -38,7 +38,7 @@ public class AutoShootPositionRightCommand extends Command{
 
     private CTRELEDSubsystem m_ledSubsystem;
 
-    public AutoShootPositionRightCommand(DriveSubsystem m_driveSubsystem, ShooterSubsystem m_shooterSubsystem, 
+    public AutoShootPositionAmpCommand(DriveSubsystem m_driveSubsystem, ShooterSubsystem m_shooterSubsystem, 
     IntakeSubsystem m_intakeSubsystem, PivotSubsystem m_pivotSubsystem, IntakeSensorSubsystem m_intakeSensorSubsystem, CTRELEDSubsystem m_ledSubsystem) {
         this.m_driveSubsystem = m_driveSubsystem;
         this.m_shooterSubsystem = m_shooterSubsystem;
@@ -61,7 +61,7 @@ public class AutoShootPositionRightCommand extends Command{
         this.stopShooterCommmand = new StopShooterCommand(this.m_shooterSubsystem);
         this.handOffToShooterCommand = new HandOffToShooterCommand(this.m_intakeSubsystem, this.m_pivotSubsystem, this.m_intakeSensorSubsystem);
 
-        MirrablePose2d shootingPose = AutonConfigurationConstants.kIsBlueAlliance ? ShooterConstants.kRightShootingPose : ShooterConstants.kLeftShootingPose;
+        MirrablePose2d shootingPose = new MirrablePose2d(new Pose2d(1.85, 7.53, Rotation2d.fromDegrees(46.6)));//AutonConfigurationConstants.kIsBlueAlliance ? ShooterConstants.kRightShootingPose : ShooterConstants.kLeftShootingPose;
         this.goToPosition = new GoToPoseitionWithPIDS(m_driveSubsystem, shootingPose.getPose(!AutonConfigurationConstants.kIsBlueAlliance), this.m_ledSubsystem);
 
         goToPosition.schedule();

@@ -19,7 +19,6 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.IntakeCommands.HandOffToShooterAuton;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.MirrablePose2d;
 
 
 public class GoToPoseAutonWhileShootingWithPIDS extends Command{

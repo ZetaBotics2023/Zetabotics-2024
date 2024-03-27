@@ -1,10 +1,7 @@
 package frc.robot.commands.AutoCommands;
 
-import com.ctre.phoenix6.controls.CoastOut;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.ShooterConstants;
 
 public class WaitCommandWrapper extends Command{
     private double waitTime;

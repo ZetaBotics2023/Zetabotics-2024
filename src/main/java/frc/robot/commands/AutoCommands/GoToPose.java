@@ -14,7 +14,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,8 +34,6 @@ public class GoToPose {
       );
 
     //SmartDashboard.putNumber("Goal X Pose Auto", path.getPoint(path.numPoints()-1).position.getX());
-    SmartDashboard.putNumber("Gaol Rotation", path.getPoint(path.numPoints()-1).rotationTarget.getTarget().getDegrees());
-
     return AutoBuilder.followPath(path);
       
 }

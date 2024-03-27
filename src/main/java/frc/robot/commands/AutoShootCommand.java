@@ -13,7 +13,6 @@ import frc.robot.commands.ShooterCommands.StopShooterCommand;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSensorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.PivotSubsystem;
-import frc.robot.subsystems.IntakeSubsystem.REVPivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.ShooterSubsystem;
 
 public class AutoShootCommand extends Command{

@@ -6,19 +6,15 @@ package frc.robot;
 
 import java.util.Optional;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.utils.BatteryCharge;
-import frc.robot.utils.ButtonBoard;
 import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.utils.InTeleop;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -37,9 +33,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    
+    CommandScheduler.getInstance().setPeriod(.02);
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    
     m_robotContainer = new RobotContainer();
     //CameraServer.startAutomaticCapture();
     checkDriverStationUpdate();
@@ -54,14 +52,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    this.m_robotContainer.displayGreenWhenAtAngle();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
+    // block in order for anything in the Command-based framework to work
     CommandScheduler.getInstance().run();
+
     checkDriverStationUpdate();
-    BatteryCharge.updateBatteryVoltage();
     //SmartDashBoard.putNumber("Batter Voltage", BatteryCharge.getAverageVoltage());
   }
 
@@ -92,7 +89,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    ShooterConstants.kShooterRPMChange = 0;
     checkDriverStationUpdate();
     VisionConstants.useVision = true;
    // This makes sure that the autonomous stops running when

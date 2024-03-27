@@ -26,10 +26,11 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-//SmartDashBoard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveDriveConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 import frc.robot.utils.InTeleop;
 import frc.robot.Constants.AutonConfigurationConstants;
@@ -63,8 +64,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private final DriveSubsystem m_driveSubsystem;
   private final SwerveDrivePoseEstimator poseEstimator;
   private final Field2d field2d = new Field2d();
-  private final PhotonPoseEstimator photonPoseEstimatorY;
-  private final PhotonPoseEstimator photonPoseEstimatorX;
+  private final PhotonPoseEstimator leftEstimator;
 
   private double previousPipelineTimestamp = 0;
   private OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;
@@ -81,14 +81,11 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     var layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
     layout.setOrigin(originPosition);
     // The Pose Strategy may be incorrect
-    this.photonPoseEstimatorY = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_LAST_POSE, photonCamera,
-        Constants.VisionConstants.robotToCam);
-    this.photonPoseEstimatorY.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
+    this.leftEstimator = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, photonCamera,
+        Constants.VisionConstants.kLeftCameraToRobot);
+    this.leftEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
 
-    photonPoseEstimatorX = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, photonCamera,
-        Constants.VisionConstants.robotToCam);
-    photonPoseEstimatorX.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
-
+    
     // } catch (IOException e) {
     // DriverStation.reportError("Failed to load AprilTagFieldLayout",
     // e.getStackTrace());
@@ -115,7 +112,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
    * @param currentAlliance alliance
    */
   public void setAlliance(Optional<Alliance> alliance) {
-    var fieldTags = photonPoseEstimatorY.getFieldTags();
+    var fieldTags = leftEstimator.getFieldTags();
 
     Alliance currentAlliance = alliance.orElse(Alliance.Blue);
     boolean allianceChanged = false;
@@ -152,95 +149,28 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     poseEstimator.update(
         m_driveSubsystem.getHeadingInRotation2d(),
         m_driveSubsystem.getModulePositions());
-
-    // Conversion so robot appears where it actually is on field instead of always
-    // on blue.
-    // xValues.add(getCurrentPose().getX());
-    // yValues.add(getCurrentPose().getY());
-    // double xAverage = xValues.stream().mapToDouble(a ->
-    // a).average().getAsDouble();
-    // double yAverage = yValues.stream().mapToDouble(a ->
-    // a).average().getAsDouble();
-    // double summation = 0.0;
-    // for (int i = 0; i < xValues.size(); i++) {
-    // summation += (Math.pow(xValues.get(i) - xAverage, 2) +
-    // Math.pow(yValues.get(i) - yAverage, 2));
-    // }
-    // double RMS = Math.sqrt((1.0 / (double) xValues.size() * summation));
-    // System.out.println("RMS: " + RMS);
-    // If the pose estimator exists, we have a frame, and it's a new frame, and
-    // we're in the field, use the measurement
+        
     try {
-          
-      if (photonPoseEstimatorY != null) {
-          this.photonPoseEstimatorX.setLastPose(getCurrentPose());
-          this.photonPoseEstimatorY.setLastPose(getCurrentPose());
-        // Update pose estimator with the best visible target
-        photonPoseEstimatorY.update().ifPresent(estimatedRobotPoseY -> {
-          photonPoseEstimatorX.update().ifPresent(estimatedRobotPoseX -> {
-            var estimatedPoseY = estimatedRobotPoseY.estimatedPose; // TODO: Change var to the real deal
-            var estimatedPoseX = estimatedRobotPoseX.estimatedPose; // TODO: Change var to the real deal
-            // Make sure we have a new measurement, and that it's on the field
-            if (estimatedRobotPoseY.timestampSeconds != previousPipelineTimestamp
-                && estimatedPoseX.getX() > 0.0 && estimatedPoseX.getX() <= FieldConstants.kLength
-                && estimatedPoseY.getY() > 0.0 && estimatedPoseY.getY() <= FieldConstants.kWidth) {
-              previousPipelineTimestamp = estimatedRobotPoseY.timestampSeconds;
-
-              boolean yTagsAmbiguityUseable = true;
-              boolean xTagsAmbiguityUseable = true;
-
-              PhotonPipelineResult cameraResults = this.photonCamera.getLatestResult();
-              for (int i = 0; i < cameraResults.getTargets().size(); i++) {
-                for (int j = 0; j < estimatedRobotPoseY.targetsUsed.size(); j++) {
-                  if (this.photonCamera.getLatestResult().getTargets().get(i)
-                      .getFiducialId() == estimatedRobotPoseY.targetsUsed.get(j).getFiducialId()) {
-                    if (estimatedRobotPoseY.targetsUsed.get(j).getPoseAmbiguity() > .4) {
-                      yTagsAmbiguityUseable = false;
-                    }
-                  }
-                }
-                for (int j = 0; j < estimatedRobotPoseX.targetsUsed.size(); j++) {
-                  if (this.photonCamera.getLatestResult().getTargets().get(i)
-                      .getFiducialId() == estimatedRobotPoseX.targetsUsed.get(j).getFiducialId()) {
-                    if (estimatedRobotPoseX.targetsUsed.get(j).getPoseAmbiguity() > .4) {
-                      xTagsAmbiguityUseable = false;
-                    }
-                  }
-                }
-              }
-              
-              if (AutonConfigurationConstants.kIsBlueAlliance) {
-                if(xTagsAmbiguityUseable && yTagsAmbiguityUseable) { 
-                poseEstimator.addVisionMeasurement(
-                    new Pose2d(estimatedPoseX.toPose2d().getX(), estimatedPoseY.toPose2d().getY(),
-                        this.m_driveSubsystem.getHeadingInRotation2d()),
-                    (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
-                }
-              } else {
-                if(xTagsAmbiguityUseable && yTagsAmbiguityUseable) {
-                  poseEstimator.addVisionMeasurement(
-                    new Pose2d(estimatedPoseY.toPose2d().getX(), estimatedPoseY.toPose2d().getY(),
-                        this.m_driveSubsystem.getHeadingInRotation2d()),
-                    (estimatedRobotPoseY.timestampSeconds + estimatedRobotPoseY.timestampSeconds) / 2);
-                }
-              }
-            }
-          });
-        });
-      }
+      leftEstimator.update().ifPresent(robotPose -> {
+        if (robotPose != null) {
+            // New pose from vision
+            Pose2d robotPose2d = robotPose.estimatedPose.toPose2d();
+            poseEstimator.addVisionMeasurement(new Pose2d(robotPose2d.getTranslation(), this.m_driveSubsystem.getHeadingInRotation2d()), robotPose.timestampSeconds,
+                VisionConstants.kVisionMeasurementStdDevs);
+        }
+    }); 
     } catch(Exception e){
-      //SmartDashBoard.putBoolean("Failed Vision", true);
+      SmartDashboard.putBoolean("Failed Vision", true);
     }
-
+    
     Pose2d dashboardPose = getCurrentPose();
     if (originPosition == OriginPosition.kRedAllianceWallRightSide) {
       // Flip the pose when red, since the dashboard field photo cannot be rotated
       dashboardPose = flipAlliance(dashboardPose);
     }
     field2d.setRobotPose(dashboardPose);
-    //SmartDashBoard.putNumber("Robot X", this.poseEstimator.getEstimatedPosition().getX());
-    //SmartDashBoard.putNumber("Robot Y", this.poseEstimator.getEstimatedPosition().getY());
-
+    SmartDashboard.putNumber("Robot X", this.poseEstimator.getEstimatedPosition().getX());
+    SmartDashboard.putNumber("Robot Y", this.poseEstimator.getEstimatedPosition().getY());
   }
 
   private String getFomattedPose() {

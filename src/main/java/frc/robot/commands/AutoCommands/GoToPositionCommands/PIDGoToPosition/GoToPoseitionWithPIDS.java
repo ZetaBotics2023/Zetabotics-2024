@@ -5,21 +5,15 @@
 
 package frc.robot.commands.AutoCommands.GoToPositionCommands.PIDGoToPosition;
 
-import javax.xml.namespace.QName;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.subsystems.LEDSubsystem.CTRELEDSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDSubsystem.RGBColor;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
-import frc.robot.utils.BatteryCharge;
 
 
 public class GoToPoseitionWithPIDS extends Command{
@@ -33,10 +27,6 @@ public class GoToPoseitionWithPIDS extends Command{
     private ProfiledPIDController headingPIDController;
 
     private CTRELEDSubsystem m_ledSubsystem;
-
-    private boolean firstLimitCrossed = false;
-    private boolean secondLimitCrossed = false;
-    private boolean thirdLimitCrossed = false;
 
     public boolean highTolorence = false;
 
@@ -69,10 +59,7 @@ public class GoToPoseitionWithPIDS extends Command{
 
     public void initialize() {
         SwerveDriveConstants.driverController = false;
-        this.firstLimitCrossed = false;
-        this.secondLimitCrossed = false;
-        this.thirdLimitCrossed = false;
-
+    
         this.translationXController.reset(this.m_driveSubsystem.getRobotPose().getX());
         this.translationYController.reset(this.m_driveSubsystem.getRobotPose().getY());
         this.headingPIDController.reset(this.m_driveSubsystem.getRobotPose().getRotation().getDegrees());
@@ -116,63 +103,4 @@ public class GoToPoseitionWithPIDS extends Command{
             this.translationYController.atGoal() &&
             this.headingPIDController.atGoal();        
         }
-
-    public void updateControllersForVoltage() {
-        if(BatteryCharge.getAverageVoltage() < AutoConstants.kFirstBatteryPIDLimit && !this.firstLimitCrossed) {
-            this.firstLimitCrossed = true;
-
-            this.translationXController.setP(AutoConstants.kTranslationPIDControllerPFirstBatteryPIDLimit);
-            this.translationXController.setI(AutoConstants.kTranslationPIDControllerIFirstBatteryPIDLimit);
-            this.translationXController.setD(AutoConstants.kTranslationPIDControllerDFirstBatteryPIDLimit);
-
-            this.translationYController.setP(AutoConstants.kTranslationPIDControllerPFirstBatteryPIDLimit);
-            this.translationYController.setI(AutoConstants.kTranslationPIDControllerIFirstBatteryPIDLimit);
-            this.translationYController.setD(AutoConstants.kTranslationPIDControllerDFirstBatteryPIDLimit);
-
-            this.headingPIDController.setP(AutoConstants.kHeadingPIDControllerPFirstBatteryPIDLimit);
-            this.headingPIDController.setI(AutoConstants.kHeadingPIDControllerIFirstBatteryPIDLimit);
-            this.headingPIDController.setD(AutoConstants.kHeadingPIDControllerDFirstBatteryPIDLimit);
-
-        } 
-
-        if (BatteryCharge.getAverageVoltage() < AutoConstants.kSecondBatteryPIDLimit && !this.secondLimitCrossed) {
-            this.secondLimitCrossed = true;
-
-            this.translationXController.setP(AutoConstants.kTranslationPIDControllerPSecondBatteryPIDLimit);
-            this.translationXController.setI(AutoConstants.kTranslationPIDControllerISecondBatteryPIDLimit);
-            this.translationXController.setD(AutoConstants.kTranslationPIDControllerDSecondBatteryPIDLimit);
-
-            this.translationYController.setP(AutoConstants.kTranslationPIDControllerPSecondBatteryPIDLimit);
-            this.translationYController.setI(AutoConstants.kTranslationPIDControllerISecondBatteryPIDLimit);
-            this.translationYController.setD(AutoConstants.kTranslationPIDControllerDSecondBatteryPIDLimit);
-
-            this.headingPIDController.setP(AutoConstants.kHeadingPIDControllerPSecondBatteryPIDLimit);
-            this.headingPIDController.setI(AutoConstants.kHeadingPIDControllerISecondBatteryPIDLimit);
-            this.headingPIDController.setD(AutoConstants.kHeadingPIDControllerDSecondBatteryPIDLimit);
-
-        }
-        if(BatteryCharge.getAverageVoltage() < AutoConstants.kThirdBatteryPIDLimit && !this.thirdLimitCrossed) {
-            this.thirdLimitCrossed = true;
-
-            this.translationXController.setP(AutoConstants.kTranslationPIDControllerPThirdBatteryPIDLimit);
-            this.translationXController.setI(AutoConstants.kTranslationPIDControllerIThirdBatteryPIDLimit);
-            this.translationXController.setD(AutoConstants.kTranslationPIDControllerDThirdBatteryPIDLimit);
-
-            this.translationYController.setP(AutoConstants.kTranslationPIDControllerPThirdBatteryPIDLimit);
-            this.translationYController.setI(AutoConstants.kTranslationPIDControllerIThirdBatteryPIDLimit);
-            this.translationYController.setD(AutoConstants.kTranslationPIDControllerDThirdBatteryPIDLimit);
-
-            this.headingPIDController.setP(AutoConstants.kHeadingPIDControllerPThirdBatteryPIDLimit);
-            this.headingPIDController.setI(AutoConstants.kHeadingPIDControllerIThirdBatteryPIDLimit);
-            this.headingPIDController.setD(AutoConstants.kHeadingPIDControllerDThirdBatteryPIDLimit);
-
-            this.translationXController.setConstraints(AutoConstants.kTranslationControllerConstraintsLowVoltage);
-            this.translationYController.setConstraints(AutoConstants.kTranslationControllerConstraintsLowVoltage);
-            this.headingPIDController.setConstraints(AutoConstants.kThetaControllerConstraintsLowVoltage);
-        }
-        //SmartDashBoard.putBoolean("First Limit", firstLimitCrossed);
-        //SmartDashBoard.putBoolean("Second Limit", secondLimitCrossed);
-        //SmartDashBoard.putBoolean("Thrid Limit", secondLimitCrossed);
-
-    }
 }

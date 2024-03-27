@@ -1,14 +1,13 @@
 package frc.robot.subsystems.SwerveDrive;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.Matrix;
@@ -24,27 +23,17 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //SmartDashBoard.Field2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants.WPILIBTrajectoryConstants;
+import frc.robot.DeprecatedSystems.PoseEstimatorSubsystem;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveDriveConstants;
-import frc.robot.DeprecatedSystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.Vision.PhotonVisionPoseEstimator;
-import frc.robot.utils.InTeleop;
-import frc.robot.utils.LimelightUtil;
-import frc.robot.utils.VisionPose;
 
 /*
  * The subsystem that controls our swerve drive
@@ -80,7 +69,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private Matrix<N3, N1> visionMeasurementStdDevs = new Matrix<N3, N1>(Nat.N3(), Nat.N1(), new double[] {0.5, 0.5, 0.9});
 
-    private PhotonVisionPoseEstimator m_poseEstimatorSubsystem;
+    private PoseEstimatorSubsystem m_poseEstimatorSubsystem;
     public DriveSubsystem() {
         this.frontLeftSwerveModule =  new SwerveModule(
             SwerveDriveConstants.kFrontLeftDriveMotorId, SwerveDriveConstants.kFrontLeftTurnMotorId, SwerveDriveConstants.kFrontLeftTurnEncoderId,
@@ -105,12 +94,13 @@ public class DriveSubsystem extends SubsystemBase {
         this.poseEstimator = new SwerveDrivePoseEstimator(SwerveDriveConstants.kDriveKinematics, this.m_gyro.getRotation2d(), 
         getModulePositions(), startingPose);
 
-        NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight-zeta");
+        //NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight-zeta");
 
-        this.m_poseEstimatorSubsystem = new PhotonVisionPoseEstimator(this);
+        this.m_poseEstimatorSubsystem = new PoseEstimatorSubsystem(new PhotonCamera("LeftCamera"), this);//PhotonVisionPoseEstimator(this);
         //ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
         //visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
         //visionTab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
+         
         AutoBuilder.configureHolonomic(
                 this.m_poseEstimatorSubsystem::getCurrentPose, // Robot pose supplier
                 this::setRobotPose, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -128,7 +118,9 @@ public class DriveSubsystem extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
         );
+        
       }
+      
         //SmartDashBoard.updateValues(); 
         //this.m_gyro.getYaw().setUpdateFrequency(100);
         //this.m_gyro.optimizeBusUtilization()
@@ -153,40 +145,24 @@ public class DriveSubsystem extends SubsystemBase {
     }
     // Resets the desiredChassisSpeeds to null to stop it from "sticking" to the last states
     desiredChassisSpeeds = null;
-    updateDashboard();
+    //updateDashboard();
   }
 
   /*
    * Use our pose estimator to update our odometry measurements
    */
- private void updateOdometry() {
-    this.poseEstimator.update(this.m_gyro.getRotation2d(), getModulePositions());
-    
-    VisionPose estimatedPose = LimelightUtil.getBotpose();
-    Pose2d currentEstimatedPose = this.poseEstimator.getEstimatedPosition();
-
-    boolean withInOneMeterX = Math.abs(currentEstimatedPose.getX() - estimatedPose.getPose().getX()) <= 1;
-
-    boolean withInOneMeterY = Math.abs(currentEstimatedPose.getY() - estimatedPose.getPose().getY()) <= 1;
-
-    boolean withInOneMeter = withInOneMeterX && withInOneMeterY;
-    if(estimatedPose.isValidTarget()) { //&& withInOneMeter) {
-      this.poseEstimator.addVisionMeasurement(estimatedPose.getPose(), estimatedPose.getTimeStamp(), this.visionMeasurementStdDevs);
-    }
-    this.field2d.setRobotPose(this.poseEstimator.getEstimatedPosition());
-    
-  }
+ 
 
   /*
    * Posts helpful debugging info to //SmartDashBoard
    */
   private void updateDashboard() {
-    if(_updateCount++ >= 0)
-    {
-      _updateCount = 0;
+    //if(_updateCount++ >= 0)
+    //{
+     // _updateCount = 0;
 
-      SmartDashboard.putNumber("FL MPS", Math.abs(this.frontLeftSwerveModule.getDriveMotorSpeedInMetersPerSecond()));
-      SmartDashboard.putNumber("FL Angle", this.frontLeftSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
+      //SmartDashboard.putNumber("FL MPS", Math.abs(this.frontLeftSwerveModule.getDriveMotorSpeedInMetersPerSecond()));
+      //SmartDashboard.putNumber("FL Angle", this.frontLeftSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
       //SmartDashBoard.putNumber("FL Angle From Swerve Module Position", this.frontLeftSwerveModule.getPosition().angle.getDegrees());
       //SmartDashBoard.putNumber("FL Distence", this.frontLeftSwerveModule.getDistance());
       //SmartDashBoard.putNumber("FL Distence In Meters From SwerveModule Position", this.frontLeftSwerveModule.getPosition().distanceMeters);
@@ -201,7 +177,7 @@ public class DriveSubsystem extends SubsystemBase {
       //SmartDashBoard.putNumber("BR Angle", this.backRightSwerveModule.getTurningEncoderAngleDegrees().getDegrees());
 
       //SmartDashBoard.putNumber("Robot Heading in Degrees", this.m_gyro.getAngle()); 
-      }
+     // }
     }
 
    /*
@@ -383,7 +359,7 @@ public class DriveSubsystem extends SubsystemBase {
     //this.poseEstimator.resetPosition(newPose.getRotation(), getModulePositions(), newPose);
   }
 
-  public PhotonVisionPoseEstimator getPoseEstimatorSubsystem() {
+  public PoseEstimatorSubsystem getPoseEstimatorSubsystem() {
     return m_poseEstimatorSubsystem;
   }
 

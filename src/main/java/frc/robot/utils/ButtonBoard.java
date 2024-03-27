@@ -1,22 +1,11 @@
 package frc.robot.utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
-
-import edu.wpi.first.math.Pair;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionCenterCommand;
-import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionLeftCommand;
-import frc.robot.commands.AutoCommands.AutoShootCommands.AutoShootPositionRightCommand;  
+import edu.wpi.first.wpilibj2.command.button.Trigger;  
 
 public class ButtonBoard {
 

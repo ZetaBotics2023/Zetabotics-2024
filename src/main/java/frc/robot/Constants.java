@@ -10,8 +10,6 @@ import java.util.Optional;
 
 import com.pathplanner.lib.util.PIDConstants;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
@@ -22,12 +20,10 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.SequentialGroupCommand;
@@ -152,7 +148,7 @@ public final class Constants {
     public static final double kAbsoluteTurningEncoderCPR = 4096.0;
     public static final double kNeoEncoderCPR = 4096.0;
     public static final double kMaxRPM = 5676.0;
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.80945463);// 3.83931974);//0.1016;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.733428923);// 3.83931974);//0.1016;
     public static final double kDriveGearRatio = (50.0 * 17.0 * 45.0) / (14.0 * 27.0 * 15.0);// 6.75/1.0;
     public static final double kTurningGearRatio = 150.0 / 7.0;
 
@@ -234,7 +230,7 @@ public final class Constants {
     // Auto Constrants
 
     public static final double kMaxTranslationSpeedMPSAuto = 7;//4.3;
-    public static final double kMaxTranslationAccelerationAuto = 10;//4.1;// 2;//4.1;
+    public static final double kMaxTranslationAccelerationAuto = 7;//4.1;// 2;//4.1;
     public static final TrapezoidProfile.Constraints kTranslationAutoControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxTranslationSpeedMPSAuto, kMaxTranslationAccelerationAuto);
 
@@ -264,7 +260,7 @@ public final class Constants {
     public static final double kSecondBatteryPIDLimit = 10;
     public static final double kThirdBatteryPIDLimit = 9;
 
-    public static final double kMaxTranslationSpeedMPS = 4.3;
+    public static final double kMaxTranslationSpeedMPS = 20;//4.3;
     public static final double kMaxTranslationAcceleration = 10;
     public static final TrapezoidProfile.Constraints kTranslationControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxTranslationSpeedMPS, kMaxTranslationAcceleration);
@@ -423,7 +419,7 @@ public final class Constants {
     public static final MirrablePose2d kLeftShootingPose = new MirrablePose2d(
         new Pose2d(2.1, 6.6, Rotation2d.fromDegrees(24)));
     public static final MirrablePose2d kCenterShootingPose = new MirrablePose2d(
-        new Pose2d(2.3, 5.55, new Rotation2d()));// 2.3
+        new Pose2d(2.3 + .1, 5.55, new Rotation2d()));// 2.3
     public static final MirrablePose2d kRightShootingPose = new MirrablePose2d(
         new Pose2d(2.1, 4.6, Rotation2d.fromDegrees(-26)));
   }
