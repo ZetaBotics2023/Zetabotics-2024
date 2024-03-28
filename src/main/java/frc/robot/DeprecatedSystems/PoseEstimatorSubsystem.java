@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.estimation.VisionEstimation;
 import org.photonvision.proto.Photon;
 import org.photonvision.targeting.PhotonPipelineResult;
 
@@ -78,6 +79,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private PhotonCamera leftCamera = new PhotonCamera("LeftCamera");
   private PhotonCamera rightCamera = new PhotonCamera("RightCamera");
 
+  public VisionUpdaterThread updater;
+
 
   public PoseEstimatorSubsystem(DriveSubsystem m_driveSubsystem) {
     this.m_driveSubsystem = m_driveSubsystem;
@@ -89,11 +92,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     this.leftEstimator = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, leftCamera,
         Constants.VisionConstants.kLeftCameraToRobot);
     this.leftEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
-    this.rightEstimator = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, leftCamera,
+    this.rightEstimator = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, rightCamera,
         Constants.VisionConstants.kRightCameraToRobot);
     this.rightEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
-
-
     
     // } catch (IOException e) {
     // DriverStation.reportError("Failed to load AprilTagFieldLayout",
@@ -113,6 +114,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
     tab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
     tab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
+    
+    this.updater = new VisionUpdaterThread(leftEstimator, rightEstimator, poseEstimator, m_driveSubsystem);
+    this.updater.start();
   }
 
   /**
@@ -157,28 +161,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     // Update pose estimator with drivetrain sensors
     poseEstimator.update(
         m_driveSubsystem.getHeadingInRotation2d(),
-        m_driveSubsystem.getModulePositions());
-        
-    try {
-      leftEstimator.update().ifPresent(robotPose -> {
-        if (robotPose != null) {
-            // New pose from vision
-            Pose2d robotPose2d = robotPose.estimatedPose.toPose2d();
-            poseEstimator.addVisionMeasurement(new Pose2d(robotPose2d.getTranslation(), this.m_driveSubsystem.getHeadingInRotation2d()), robotPose.timestampSeconds,
-                VisionConstants.kVisionMeasurementStdDevs);
-        }
-    });
-    rightEstimator.update().ifPresent(robotPose -> {
-        if (robotPose != null) {
-            // New pose from vision
-            Pose2d robotPose2d = robotPose.estimatedPose.toPose2d();
-            poseEstimator.addVisionMeasurement(new Pose2d(robotPose2d.getTranslation(), this.m_driveSubsystem.getHeadingInRotation2d()), robotPose.timestampSeconds,
-                VisionConstants.kVisionMeasurementStdDevs);
-        }
-    }); 
-    } catch(Exception e){
-      SmartDashboard.putBoolean("Failed Vision", true);
-    }
+        m_driveSubsystem.getModulePositions());    
+    
+      
     
     Pose2d dashboardPose = getCurrentPose();
     if (originPosition == OriginPosition.kRedAllianceWallRightSide) {

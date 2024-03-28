@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
   private static double loopTime = .02;
   
   public Robot() {
-    super(loopTime); // Periodic methods will now be called every 30 ms.
+    super(loopTime);
   }
   /**
    * This function is run when the robot is first started up and should be used for any

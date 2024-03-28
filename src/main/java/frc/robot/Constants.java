@@ -445,7 +445,7 @@ public final class Constants {
     public static final int kIntakeMotorControllerID = 15;
     public static final int distenceSensorID = 0;
 
-    public static final double kPivotThroughBoreZeroOffset = 0.083008 * 360;//0.105469 * 360;//93.75;
+    public static final double kPivotThroughBoreZeroOffset = 0.262207 * 360;//0.083008 * 360;//0.105469 * 360;//93.75;
 
     public static final double kFarthestNotePositionMillimeters = 480;//480;
 
@@ -479,7 +479,7 @@ public final class Constants {
     public static final double kIZoneIntakePositionController = .5 / 360;
 
     // Rotation constants
-    public static final double kGroundPickupPivotRotationDegrees = 194.16 + 8;//190.5;// 189;
+    public static final double kGroundPickupPivotRotationDegrees = 196.61148;//194.16 + 8;//190.5;// 189;
     public static final double kGroundPickupIntakeRPM = 3000;//5200;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
