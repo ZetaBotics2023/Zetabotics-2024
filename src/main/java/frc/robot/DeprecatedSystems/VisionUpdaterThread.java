@@ -37,7 +37,7 @@ public class VisionUpdaterThread extends Thread {
                         // New pose from vision
                         Pose2d robotPose2d = robotPose.estimatedPose.toPose2d();
                         poseEstimator.addVisionMeasurement(
-                        new Pose2d(robotPose2d.getTranslation(), this.m_driveSubsystem.getHeadingInRotation2d()),
+                        new Pose2d(robotPose2d.getX() - .1, robotPose2d.getY() - .1, this.m_driveSubsystem.getHeadingInRotation2d()),
                         robotPose.timestampSeconds,
                          VisionConstants.kVisionMeasurementStdDevs);
                     }});
@@ -46,7 +46,7 @@ public class VisionUpdaterThread extends Thread {
                         // New pose from vision
                         Pose2d robotPose2d = robotPose.estimatedPose.toPose2d();
                         poseEstimator.addVisionMeasurement(
-                        new Pose2d(robotPose2d.getTranslation(), this.m_driveSubsystem.getHeadingInRotation2d()),
+                        new Pose2d(robotPose2d.getX() - .1, robotPose2d.getY() - .1, this.m_driveSubsystem.getHeadingInRotation2d()),
                         robotPose.timestampSeconds,
                         VisionConstants.kVisionMeasurementStdDevs);
                     }});

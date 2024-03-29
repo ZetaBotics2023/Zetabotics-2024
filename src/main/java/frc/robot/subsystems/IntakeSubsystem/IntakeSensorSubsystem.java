@@ -2,6 +2,7 @@ package frc.robot.subsystems.IntakeSubsystem;
 
 import com.playingwithfusion.TimeOfFlight;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -22,7 +23,7 @@ public class IntakeSensorSubsystem extends SubsystemBase{
      */
     @Override
     public void periodic() {
-        //SmartDashBoard.putNumber("Distance Sensor Value", this.distanceSensor.getRange());
+        SmartDashboard.putNumber("Distance Sensor Value", this.distanceSensor.getRange());
     }
 
     /**

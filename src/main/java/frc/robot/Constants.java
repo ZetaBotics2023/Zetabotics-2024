@@ -421,9 +421,9 @@ public final class Constants {
     public static final MirrablePose2d kLeftShootingPose = new MirrablePose2d(
         new Pose2d(2.1, 6.6, Rotation2d.fromDegrees(24)));
     public static final MirrablePose2d kCenterShootingPose = new MirrablePose2d(
-        new Pose2d(2.3 + .1, 5.55, new Rotation2d()));// 2.3
+        new Pose2d(2.3 + .12, 5.55, new Rotation2d()));// 2.3
     public static final MirrablePose2d kRightShootingPose = new MirrablePose2d(
-        new Pose2d(2.1, 4.6, Rotation2d.fromDegrees(-26)));
+        new Pose2d(2.2, 4.6, Rotation2d.fromDegrees(-26)));
   }
 
   public static final class ClimberConstants {

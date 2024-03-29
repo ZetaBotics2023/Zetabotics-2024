@@ -89,12 +89,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     var layout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
     layout.setOrigin(originPosition);
     // The Pose Strategy may be incorrect
-    this.leftEstimator = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, leftCamera,
+    this.leftEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, leftCamera,
         Constants.VisionConstants.kLeftCameraToRobot);
-    this.leftEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
-    this.rightEstimator = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, rightCamera,
+    this.leftEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+    this.rightEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, rightCamera,
         Constants.VisionConstants.kRightCameraToRobot);
-    this.rightEstimator.setMultiTagFallbackStrategy(PoseStrategy.AVERAGE_BEST_TARGETS);
+    this.rightEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     
     // } catch (IOException e) {
     // DriverStation.reportError("Failed to load AprilTagFieldLayout",
@@ -159,9 +159,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Update pose estimator with drivetrain sensors
-    poseEstimator.update(
+    try {
+      poseEstimator.update(
         m_driveSubsystem.getHeadingInRotation2d(),
         m_driveSubsystem.getModulePositions());    
+    } catch(Exception e) {
+      SmartDashboard.putBoolean("Pose Estimater Crash", true);
+    }
+    
     
       
     
