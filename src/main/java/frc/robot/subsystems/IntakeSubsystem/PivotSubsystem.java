@@ -14,6 +14,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -73,6 +74,11 @@ public class PivotSubsystem extends SubsystemBase {
         this.m_rightConfig.Feedback.SensorToMechanismRatio = 1.0;
         this.m_leftConfig.Feedback.RotorToSensorRatio = IntakeConstants.kPivotGearRatio;
         this.m_rightConfig.Feedback.RotorToSensorRatio = IntakeConstants.kPivotGearRatio;
+        this.m_leftConfig.Voltage.PeakForwardVoltage = 12;
+        this.m_rightConfig.Voltage.PeakForwardVoltage = 12;
+        this.m_leftConfig.Voltage.PeakReverseVoltage = -12;
+        this.m_rightConfig.Voltage.PeakReverseVoltage = -12;
+
        // this.m_leftConfig.Feedback.FeedbackRotorOffset = -0.628906;
 
         this.m_leftPivot.getConfigurator().apply(this.m_leftConfig);
@@ -101,18 +107,20 @@ public class PivotSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
+        SmartDashboard.putNumber("PivotPose", this.pivotEncoder.getAbsolutePosition().getValueAsDouble());
+         
         this.pivotPose = rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) - IntakeConstants.kPivotThroughBoreZeroOffset;
 
-        //SmartDashBoard.putNumber("Pivot Angle(no offset)", this.pivotPose);// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));
-        //SmartDashBoard.putNumber("Pivot Angle(offset)", rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) - IntakeConstants.kPivotThroughBoreZeroOffset);// + IntakeConstants.kPivotThroughBoreZeroOffset);
-        //SmartDashBoard.putNumber("Desired Pivot Angle", targetPositionDegrees);'
+        SmartDashboard.putNumber("Pivot Angle(no offset)", this.pivotPose);// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));// rotationsToDegrees(this.m_leftPivot.getPosition().getValueAsDouble()));
+        SmartDashboard.putNumber("Pivot Angle(offset)", rotationsToDegrees(this.pivotEncoder.getAbsolutePosition().getValueAsDouble()) - IntakeConstants.kPivotThroughBoreZeroOffset);// + IntakeConstants.kPivotThroughBoreZeroOffset);
+        SmartDashboard.putNumber("Desired Pivot Angle", targetPositionDegrees);
         double distenceFromGoal = Math.abs(this.targetPositionDegrees - pivotPose);
 
         double directionOfMovement = distenceFromGoal > 3 ? Math.signum(this.targetPositionDegrees - this.pivotPose) : 0;
         this.hasReachedSetPoint = distenceFromGoal < 5;
         double curretSpeed = this.m_leftPivot.get();
-        //SmartDashBoard.putBoolean("Should Pivot", this.hasReachedSetPoint);
-        //SmartDashBoard.putNumber("dir of move", directionOfMovement);
+        SmartDashboard.putBoolean("Should Pivot", this.hasReachedSetPoint);
+        SmartDashboard.putNumber("dir of move", directionOfMovement);
         
         if(directionOfMovement == 1) {
             if(!this.hasSetPID && hasReachedSetPoint) {

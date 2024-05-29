@@ -100,24 +100,6 @@ public class DriveSubsystem extends SubsystemBase {
         //ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
         //visionTab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
         //visionTab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
-         
-        AutoBuilder.configureHolonomic(
-                this.m_poseEstimatorSubsystem::getCurrentPose, // Robot pose supplier
-                this::setRobotPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        AutoConstants.kTranslationAutoPID, // Translation PID constants
-                        AutoConstants.kRotationAutoPID, // Rotation PID constants
-                        AutoConstants.kMaxAutonSpeedInMetersPerSecond , // Max module speed, in m/s
-                        SwerveDriveConstants.kRadiusFromCenterToFarthestSwerveModule, // Drive base radius in meters. Distance from robot center to furthest module.
-                        new ReplanningConfig(true, false) // Default path replanning config. See the API for the options here
-                ),
-                () -> {
-                    return false;
-                },
-                this // Reference to this subsystem to set requirements
-        );
         
       }
       

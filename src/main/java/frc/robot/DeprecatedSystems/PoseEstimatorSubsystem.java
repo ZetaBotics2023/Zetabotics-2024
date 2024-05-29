@@ -167,9 +167,6 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
       SmartDashboard.putBoolean("Pose Estimater Crash", true);
     }
     
-    
-      
-    
     Pose2d dashboardPose = getCurrentPose();
     if (originPosition == OriginPosition.kRedAllianceWallRightSide) {
       // Flip the pose when red, since the dashboard field photo cannot be rotated

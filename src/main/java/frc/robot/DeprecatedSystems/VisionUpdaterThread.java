@@ -7,6 +7,7 @@ import org.photonvision.PhotonPoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.AutonConfigurationConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.SwerveDrive.DriveSubsystem;
 
@@ -30,7 +31,7 @@ public class VisionUpdaterThread extends Thread {
     public void run() {
         SmartDashboard.putNumber("Updated Vision", numberOfVisionUpdates++);
         while(true) {
-        if(this.poseEstimator.getEstimatedPosition().getX() < 5) {
+        if(!AutonConfigurationConstants.kInAuto || this.poseEstimator.getEstimatedPosition().getX() < 5) {
             try {
                 leftEstimator.update().ifPresent(robotPose -> {
                     if (robotPose != null) {

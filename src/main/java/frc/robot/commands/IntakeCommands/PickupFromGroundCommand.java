@@ -69,6 +69,6 @@ public class PickupFromGroundCommand extends Command {
      */
     @Override
     public boolean isFinished() {
-        return this.intakeSensorSubsystem.isNoteInIntake();
+        return this.intakeSensorSubsystem.isNoteInIntake() && !IntakeConstants.pivotOverride;
     }
 }

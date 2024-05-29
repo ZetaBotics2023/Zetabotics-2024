@@ -419,11 +419,11 @@ public final class Constants {
     public static double kShooterRPMChange = 0;
 
     public static final MirrablePose2d kLeftShootingPose = new MirrablePose2d(
-        new Pose2d(2.1, 6.6, Rotation2d.fromDegrees(24)));
+        new Pose2d(2.02, 6.6, Rotation2d.fromDegrees(24)));
     public static final MirrablePose2d kCenterShootingPose = new MirrablePose2d(
-        new Pose2d(2.3 + .12, 5.55, new Rotation2d()));// 2.3
+        new Pose2d(2.3 + .5, 5.55, new Rotation2d()));// 2.3
     public static final MirrablePose2d kRightShootingPose = new MirrablePose2d(
-        new Pose2d(2.2, 4.6, Rotation2d.fromDegrees(-26)));
+        new Pose2d(2.12, 4.6, Rotation2d.fromDegrees(-26)));
   }
 
   public static final class ClimberConstants {
@@ -442,10 +442,12 @@ public final class Constants {
     public static final int kLeftPivotID = 25;
     public static final int kRightPivotID = 26;
 
+    public static boolean pivotOverride = false;
+
     public static final int kIntakeMotorControllerID = 15;
     public static final int distenceSensorID = 0;
 
-    public static final double kPivotThroughBoreZeroOffset = 0.262207 * 360;//0.083008 * 360;//0.105469 * 360;//93.75;
+    public static final double kPivotThroughBoreZeroOffset = 0.258057 * 360;//0.423828 * 360;//0.083008 * 360;//0.105469 * 360;//93.75;
 
     public static final double kFarthestNotePositionMillimeters = 480;//480;
 
@@ -479,7 +481,7 @@ public final class Constants {
     public static final double kIZoneIntakePositionController = .5 / 360;
 
     // Rotation constants
-    public static final double kGroundPickupPivotRotationDegrees = 196.61148;//194.16 + 8;//190.5;// 189;
+    public static final double kGroundPickupPivotRotationDegrees = (0.799072 - 0.258057) * 360;//(0.972168 - 0.423828) * 360;//196.61148;//194.16 + 8;//190.5;// 189;
     public static final double kGroundPickupIntakeRPM = 3000;//5200;
 
     public static final double kHumanPlayerPickupPivotRotationDegrees = 0.0;
