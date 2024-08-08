@@ -414,7 +414,7 @@ public final class Constants {
 
     public static final double kShootTime = 10;
     public static final double kShootTimeAuto = .4;
-    public static final double kShooterRPMTolerance = 100;
+    public static final double kShooterRPMTolerance = 200;
 
     public static double kShooterRPMChange = 0;
 
@@ -447,7 +447,7 @@ public final class Constants {
     public static final int kIntakeMotorControllerID = 15;
     public static final int distenceSensorID = 0;
 
-    public static final double kPivotThroughBoreZeroOffset = 0.258057 * 360;//0.423828 * 360;//0.083008 * 360;//0.105469 * 360;//93.75;
+    public static final double kPivotThroughBoreZeroOffset = 0.258301 * 360;//0.423828 * 360;//0.083008 * 360;//0.105469 * 360;//93.75;
 
     public static final double kFarthestNotePositionMillimeters = 480;//480;
 

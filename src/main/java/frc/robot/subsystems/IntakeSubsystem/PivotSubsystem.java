@@ -74,10 +74,10 @@ public class PivotSubsystem extends SubsystemBase {
         this.m_rightConfig.Feedback.SensorToMechanismRatio = 1.0;
         this.m_leftConfig.Feedback.RotorToSensorRatio = IntakeConstants.kPivotGearRatio;
         this.m_rightConfig.Feedback.RotorToSensorRatio = IntakeConstants.kPivotGearRatio;
-        this.m_leftConfig.Voltage.PeakForwardVoltage = 12;
-        this.m_rightConfig.Voltage.PeakForwardVoltage = 12;
-        this.m_leftConfig.Voltage.PeakReverseVoltage = -12;
-        this.m_rightConfig.Voltage.PeakReverseVoltage = -12;
+        this.m_leftConfig.Voltage.PeakForwardVoltage = 0;
+        this.m_rightConfig.Voltage.PeakForwardVoltage = 0;
+        this.m_leftConfig.Voltage.PeakReverseVoltage = -0;
+        this.m_rightConfig.Voltage.PeakReverseVoltage = -0;
 
        // this.m_leftConfig.Feedback.FeedbackRotorOffset = -0.628906;
 
