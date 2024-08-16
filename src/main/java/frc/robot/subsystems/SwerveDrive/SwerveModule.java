@@ -39,7 +39,7 @@ public class SwerveModule{
   private CANcoder turningAbsoluteEncoder;
   private RelativeEncoder turningRelativeEncoder;
 
-  private double absoluteEncoderOffset;
+  //private double absoluteEncoderOffset;
 
   public SwerveModule(int driveMotorId, int turningMotorId, int turningAbsoluteEncoderId, double turningEncoderOffset, double turningEncoderMagOffset, boolean driveMotorRev,
    boolean turnMotorRev) {
@@ -111,7 +111,7 @@ public class SwerveModule{
 
     Timer.delay(1);
 
-    this.absoluteEncoderOffset = turningEncoderOffset;
+    //this.absoluteEncoderOffset = turningEncoderOffset;
     resetTurningMotorToAbsolute(turningEncoderOffset);
   }
 
@@ -124,6 +124,7 @@ public class SwerveModule{
   
   }
 
+  /*
   private double getTurningEncoderAngleRadiens() {
     return Math.toRadians(getTurningEncoderAngleDegrees().getDegrees());
   }
@@ -131,6 +132,7 @@ public class SwerveModule{
   private double degreesToCPR(double degrees) {
     return (degrees / 360) * SwerveModuleConstants.kNeoEncoderCPR;
   }
+   */
 
   public Rotation2d getTurningEncoderAngleDegrees() {
     return Rotation2d.fromDegrees(this.turningRelativeEncoder.getPosition() * 360 / SwerveModuleConstants.kTurningGearRatio);//this.turningAbsoluteEncoder.getAbsolutePosition().getValueAsDouble() * 360);

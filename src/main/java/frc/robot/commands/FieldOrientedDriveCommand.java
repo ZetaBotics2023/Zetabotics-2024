@@ -70,6 +70,7 @@ public class FieldOrientedDriveCommand extends Command {
 
   @Override
   public void execute() {
+    //TODO: Yeah kill these slew rate limiters, they look annoying for the CPU
     double translationX = this.translationXLimiter.calculate(this.translationXSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond);
     double translationY = this.translationYLimiter.calculate(this.translationYSupplier.getAsDouble() * SwerveDriveConstants.kMaxSpeedMetersPerSecond);
     double rotation = this.rotationLimiter.calculate(this.rotationSupplier.getAsDouble() * SwerveDriveConstants.kMaxRotationAnglePerSecond);

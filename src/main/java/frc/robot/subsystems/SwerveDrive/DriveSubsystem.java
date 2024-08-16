@@ -2,16 +2,16 @@ package frc.robot.subsystems.SwerveDrive;
 
 import java.util.List;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
+//import org.photonvision.PhotonCamera;
+//import org.photonvision.PhotonPoseEstimator;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.ReplanningConfig;
+//import com.pathplanner.lib.auto.AutoBuilder;
+//import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+//import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
+//import edu.wpi.first.math.Matrix;
+//import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,11 +19,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
+//import edu.wpi.first.math.numbers.N1;
+//import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+//import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 //SmartDashBoard.Field2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -31,9 +31,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants.WPILIBTrajectoryConstants;
 import frc.robot.DeprecatedSystems.PoseEstimatorSubsystem;
-import frc.robot.Constants.AutoConstants;
+//import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveDriveConstants;
-import frc.robot.subsystems.Vision.PhotonVisionPoseEstimator;
+//import frc.robot.subsystems.Vision.PhotonVisionPoseEstimator;
 
 /*
  * The subsystem that controls our swerve drive
@@ -47,7 +47,7 @@ public class DriveSubsystem extends SubsystemBase {
     private final SwerveModule backLeftSwerveModule;
     private final SwerveModule backRightSwerveModule;
 
-    private int _updateCount;
+    //private int _updateCount;
 
     //private static final Matrix<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, 0.1);//gray matter has lower
 
@@ -65,9 +65,9 @@ public class DriveSubsystem extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator;
     private final Pose2d startingPose = new Pose2d(0, 0, new Rotation2d(0));
 
-    private final Field2d field2d = new Field2d();
+    //private final Field2d field2d = new Field2d();
 
-    private Matrix<N3, N1> visionMeasurementStdDevs = new Matrix<N3, N1>(Nat.N3(), Nat.N1(), new double[] {0.5, 0.5, 0.9});
+    //private Matrix<N3, N1> visionMeasurementStdDevs = new Matrix<N3, N1>(Nat.N3(), Nat.N1(), new double[] {0.5, 0.5, 0.9});
 
     private PoseEstimatorSubsystem m_poseEstimatorSubsystem;
     public DriveSubsystem() {
@@ -117,6 +117,8 @@ public class DriveSubsystem extends SubsystemBase {
       if (desiredChassisSpeeds.vxMetersPerSecond == 0.0 && desiredChassisSpeeds.vyMetersPerSecond == 0.0
           && desiredChassisSpeeds.omegaRadiansPerSecond == 0.0) {
         SwerveModuleState[] currentStates = getModuleStates();
+
+        //TODO: We may want to just call this on all four states individually, the for loop may introduce slight overhead
         for(int i = 0; i < currentStates.length; i++) {
             desiredStates[i].angle = currentStates[i].angle;
         }
@@ -138,7 +140,7 @@ public class DriveSubsystem extends SubsystemBase {
   /*
    * Posts helpful debugging info to //SmartDashBoard
    */
-  private void updateDashboard() {
+  /*private void updateDashboard() {
     //if(_updateCount++ >= 0)
     //{
      // _updateCount = 0;
@@ -161,11 +163,13 @@ public class DriveSubsystem extends SubsystemBase {
       //SmartDashBoard.putNumber("Robot Heading in Degrees", this.m_gyro.getAngle()); 
      // }
     }
+  */
 
    /*
     * Returns an array containing the positions of all swerve modules
     */
   public SwerveModulePosition[] getModulePositions() {
+    //TODO: We don't really need to set this array to a variable before returning it, even though it *probably* doesn't affect performance much
     SwerveModulePosition[] positions = {
         this.frontLeftSwerveModule.getPosition(),
         this.frontRightSwerveModule.getPosition(),
@@ -179,6 +183,7 @@ public class DriveSubsystem extends SubsystemBase {
    * Returns an array containing the states of all swerve modules
    */
   private SwerveModuleState[] getModuleStates() {
+    //TODO: See getModulePosition's todo
     SwerveModuleState[] swerveModuleStates = {
         this.frontLeftSwerveModule.getState(),
         this.frontRightSwerveModule.getState(),
@@ -280,6 +285,7 @@ public class DriveSubsystem extends SubsystemBase {
   public double getCurrentChassisSpeeds()
   {
     ChassisSpeeds currentSpeeds = SwerveDriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+    //TODO: Ew sqrt bad (I see it's the pythagorean theorem so probably not fixable)
     double linearVeloicity = Math.sqrt((currentSpeeds.vxMetersPerSecond * currentSpeeds.vxMetersPerSecond) * (currentSpeeds.vyMetersPerSecond * currentSpeeds.vyMetersPerSecond));
     return linearVeloicity;
   }
@@ -287,6 +293,7 @@ public class DriveSubsystem extends SubsystemBase {
   public Rotation2d getCurrentChassisHeading()
   {
     ChassisSpeeds currentSpeeds = SwerveDriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+    //TODO: Ew atan2 bad. Is there no more efficient way to get the heading?
     Rotation2d robotHeading = new Rotation2d(Math.atan2(currentSpeeds.vyMetersPerSecond, currentSpeeds.vxMetersPerSecond));
     return robotHeading;
   }
@@ -307,6 +314,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void lockSwerves(){
     // Crank all the swerve turning motors 45 degrees one way or the other
+    //TODO: We don't need to be constructing new locking states every time we lock the swerves. Make them into constants or something.
     SwerveModuleState m_frontLeftLockupState = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
     SwerveModuleState m_frontRightLockupState = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
     SwerveModuleState m_rearLeftLockupState = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
@@ -317,6 +325,7 @@ public class DriveSubsystem extends SubsystemBase {
     this.backRightSwerveModule.setDesiredState(m_rearRightLockupState);
   }
 
+  /* 
   private String getFomattedPose() {
     Pose2d pose = this.poseEstimator.getEstimatedPosition();
     return String.format("(%.2f, %.2f) %.2f degrees",
@@ -324,6 +333,7 @@ public class DriveSubsystem extends SubsystemBase {
         pose.getY(),
         pose.getRotation().getDegrees());
   }
+  */
 
   public Pose2d getRobotPose() {
     return this.m_poseEstimatorSubsystem.getCurrentPose();// this.poseEstimator.getEstimatedPosition();
@@ -342,6 +352,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public PoseEstimatorSubsystem getPoseEstimatorSubsystem() {
+    //TODO: Inherently inefficient (brought to you by the Anti Getter/Setter Initiative)
+    // (this is a joke)
     return m_poseEstimatorSubsystem;
   }
 
@@ -349,6 +361,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void resetRobotHeading() {
     Pose2d estimatedPose = this.poseEstimator.getEstimatedPosition();
+    //TODO: We are just making a new pose named estimatedPose that's already a Pose2D. We don't need to be constructing a new Pose2d using the same values!
+    //TODO: (cont'd) Since we have to reset rotation, just set rotation to a new Rotation2d on the estimatedPose variable, then pass it in by itself.
     this.poseEstimator.resetPosition(m_gyro.getRotation2d(), getModulePositions(), new Pose2d(estimatedPose.getX(), estimatedPose.getY(), new Rotation2d()));
   }
 
